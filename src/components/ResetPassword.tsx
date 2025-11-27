@@ -137,7 +137,7 @@ export const ResetPassword = () => {
             </p>
             <button
               onClick={() => window.location.href = '/'}
-              className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-bold transition-all hover:scale-105"
+              className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-white rounded-xl font-bold transition-all hover:scale-105"
             >
               Quay Về Trang Chủ
             </button>
@@ -176,7 +176,7 @@ export const ResetPassword = () => {
         <div className="bg-gray-800/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-gray-700 animate-fade-in-scale">
           <div className="flex items-center gap-4 mb-8">
             <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-xl">
-              <Lock className="w-8 h-8 text-gray-900" />
+              <Lock className="w-8 h-8 text-white" />
             </div>
             <div>
               <h2 className="text-3xl font-black text-white">Mật Khẩu Mới</h2>
@@ -313,7 +313,7 @@ export const ResetPassword = () => {
             <button
               type="submit"
               disabled={loading || password !== confirmPassword || password.length < 6}
-              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 py-4 rounded-xl font-black text-lg transition-all hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative overflow-hidden group"
+              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white py-4 rounded-xl font-black text-lg transition-all hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 relative overflow-hidden group"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
                 {loading ? (
@@ -335,3 +335,4 @@ export const ResetPassword = () => {
     </div>
   );
 };
+

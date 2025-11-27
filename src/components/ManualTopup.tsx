@@ -119,7 +119,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
       case 'rejected':
         return 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-white';
     }
   };
 
@@ -130,8 +130,8 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
         <div className="flex gap-3">
           <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-bold text-gray-900 mb-2">📱 Hướng Dẫn Nạp Xu Thủ Công</h3>
-            <ol className="text-sm text-gray-700 space-y-2">
+            <h3 className="font-bold text-white mb-2">📱 Hướng Dẫn Nạp Xu Thủ Công</h3>
+            <ol className="text-sm text-gray-300 space-y-2">
               <li className="flex gap-2">
                 <span className="font-bold">1.</span>
                 <span>Chọn gói xu bên dưới</span>
@@ -156,48 +156,48 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
       {/* Bank Info */}
       {selectedPackage && (
         <div className="bg-white rounded-2xl p-6 border-2 border-gray-200">
-          <h3 className="font-bold text-gray-900 mb-4">💳 Thông Tin Chuyển Khoản</h3>
+          <h3 className="font-bold text-white mb-4">💳 Thông Tin Chuyển Khoản</h3>
           
           <div className="space-y-3 mb-6">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Ngân hàng:</span>
-              <span className="font-bold text-gray-900">MBBank</span>
+              <span className="text-gray-300">Ngân hàng:</span>
+              <span className="font-bold text-white">MBBank</span>
             </div>
             
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Số TK:</span>
+              <span className="text-gray-300">Số TK:</span>
               <div className="flex items-center gap-2">
-                <span className="font-bold text-gray-900">0877724374</span>
+                <span className="font-bold text-white">0877724374</span>
                 <button
                   onClick={() => handleCopy('0877724374')}
                   className="p-1 hover:bg-gray-100 rounded"
                 >
-                  {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4 text-gray-600" />}
+                  {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4 text-gray-300" />}
                 </button>
               </div>
             </div>
             
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Chủ TK:</span>
-              <span className="font-bold text-gray-900">MAI TRAN THIEN TAM</span>
+              <span className="text-gray-300">Chủ TK:</span>
+              <span className="font-bold text-white">MAI TRAN THIEN TAM</span>
             </div>
             
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">Số tiền:</span>
+              <span className="text-gray-300">Số tiền:</span>
               <span className="font-bold text-blue-600 text-xl">{formatPrice(selectedPackage.price_vnd)}</span>
             </div>
             
             <div className="border-t pt-3">
-              <div className="text-gray-600 mb-2">Nội dung CK (gợi ý):</div>
+              <div className="text-gray-300 mb-2">Nội dung CK (gợi ý):</div>
               <div className="flex items-center gap-2 bg-yellow-100 p-3 rounded-lg border-2 border-yellow-300">
-                <span className="font-mono font-bold text-gray-900 flex-1">
+                <span className="font-mono font-bold text-white flex-1">
                   NAP XU {user?.email?.split('@')[0] || 'USER'}
                 </span>
                 <button
                   onClick={() => handleCopy(`NAP XU ${user?.email?.split('@')[0] || 'USER'}`)}
                   className="p-2 hover:bg-yellow-200 rounded-lg transition-colors"
                 >
-                  {copied ? <Check className="w-5 h-5 text-green-600" /> : <Copy className="w-5 h-5 text-gray-600" />}
+                  {copied ? <Check className="w-5 h-5 text-green-600" /> : <Copy className="w-5 h-5 text-gray-300" />}
                 </button>
               </div>
             </div>
@@ -205,7 +205,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
 
           {/* Note Input */}
           <div className="mb-4">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-300 mb-2">
               Ghi chú (tùy chọn)
             </label>
             <textarea
@@ -228,7 +228,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
 
           <button
             onClick={() => setSelectedPackage(null)}
-            className="w-full mt-3 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+            className="w-full mt-3 py-3 bg-gray-100 text-gray-300 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
           >
             Hủy
           </button>
@@ -241,7 +241,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
           setShowHistory(!showHistory);
           if (!showHistory) loadRequests();
         }}
-        className="w-full py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+        className="w-full py-3 bg-gray-100 text-gray-300 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
       >
         {showHistory ? 'Ẩn Lịch Sử' : '📜 Xem Lịch Sử Yêu Cầu'}
       </button>
@@ -249,7 +249,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
       {/* History */}
       {showHistory && (
         <div className="bg-white rounded-2xl p-6 border-2 border-gray-200">
-          <h3 className="font-bold text-gray-900 mb-4">Lịch Sử Yêu Cầu Nạp Xu</h3>
+          <h3 className="font-bold text-white mb-4">Lịch Sử Yêu Cầu Nạp Xu</h3>
           
           {requests.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
@@ -262,7 +262,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       {getStatusIcon(req.status)}
-                      <span className="font-bold text-gray-900">
+                      <span className="font-bold text-white">
                         {formatPrice(req.amount_vnd)}
                       </span>
                     </div>
@@ -271,7 +271,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
                     </div>
                   </div>
                   
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-300">
                     Nhận: {req.coins_amount} xu
                   </div>
                   
@@ -293,3 +293,4 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
     </div>
   );
 };
+

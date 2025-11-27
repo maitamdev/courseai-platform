@@ -88,8 +88,8 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Cửa Hàng Khóa Học</h2>
-        <p className="text-gray-600">Mua khóa học để học sâu hơn và kiếm thêm xu!</p>
+        <h2 className="text-2xl font-bold text-white mb-2">Cửa Hàng Khóa Học</h2>
+        <p className="text-gray-300">Mua khóa học để học sâu hơn và kiếm thêm xu!</p>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -113,7 +113,7 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
 
               <div className="p-5">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="font-bold text-lg text-gray-900 flex-1">{course.title}</h3>
+                  <h3 className="font-bold text-lg text-white flex-1">{course.title}</h3>
                   {purchased && <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 ml-2" />}
                 </div>
 
@@ -121,7 +121,7 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
                   {levelText[course.level]}
                 </span>
 
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                <p className="text-gray-300 text-sm mb-4 line-clamp-2">
                   {course.description}
                 </p>
 
@@ -160,7 +160,7 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-bold text-gray-900">Xác nhận mua hàng</h3>
+              <h3 className="text-xl font-bold text-white">Xác nhận mua hàng</h3>
               <button
                 onClick={() => {
                   setSelectedCourse(null);
@@ -173,23 +173,23 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
             </div>
 
             <div className="mb-6">
-              <h4 className="font-semibold text-gray-900 mb-2">{selectedCourse.title}</h4>
-              <p className="text-gray-600 text-sm mb-4">{selectedCourse.description}</p>
+              <h4 className="font-semibold text-white mb-2">{selectedCourse.title}</h4>
+              <p className="text-gray-300 text-sm mb-4">{selectedCourse.description}</p>
 
               <div className="bg-gray-50 rounded-lg p-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Giá:</span>
+                  <span className="text-gray-300">Giá:</span>
                   <span className="font-semibold text-orange-600 flex items-center gap-1">
                     <Coins className="w-4 h-4" />
                     {selectedCourse.price} xu
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Xu hiện tại:</span>
+                  <span className="text-gray-300">Xu hiện tại:</span>
                   <span className="font-semibold">{profile?.total_coins || 0} xu</span>
                 </div>
                 <div className="border-t pt-2 flex justify-between text-sm">
-                  <span className="text-gray-600">Còn lại:</span>
+                  <span className="text-gray-300">Còn lại:</span>
                   <span className={`font-bold ${
                     (profile?.total_coins || 0) >= selectedCourse.price
                       ? 'text-green-600'
@@ -221,3 +221,4 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
     </div>
   );
 };
+

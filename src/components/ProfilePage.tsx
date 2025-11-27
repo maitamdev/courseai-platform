@@ -148,7 +148,7 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                 onClick={() => setActiveTab('info')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                   activeTab === 'info'
-                    ? 'bg-yellow-400 text-gray-900 font-semibold'
+                    ? 'bg-yellow-400 text-white font-semibold'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -160,7 +160,7 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                 onClick={() => setActiveTab('courses')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                   activeTab === 'courses'
-                    ? 'bg-yellow-400 text-gray-900 font-semibold'
+                    ? 'bg-yellow-400 text-white font-semibold'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -172,7 +172,7 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                 onClick={() => setActiveTab('transactions')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                   activeTab === 'transactions'
-                    ? 'bg-yellow-400 text-gray-900 font-semibold'
+                    ? 'bg-yellow-400 text-white font-semibold'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -180,21 +180,21 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                 <span>Lịch sử giao dịch</span>
               </button>
 
-              <div className="border-t border-gray-200 my-4"></div>
+              <div className="border-t border-gray-700 my-4"></div>
 
-              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
                 <Award className="w-5 h-5" />
                 <span>Phiếu giảm giá</span>
               </button>
 
-              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
                 <Settings className="w-5 h-5" />
                 <span>Cài đặt</span>
               </button>
 
-              <div className="border-t border-gray-200 my-4"></div>
+              <div className="border-t border-gray-700 my-4"></div>
 
-              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors font-semibold">
+              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/20 transition-colors font-semibold">
                 <LogOut className="w-5 h-5" />
                 <span>Đăng xuất</span>
               </button>
@@ -204,12 +204,12 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
             <div className="p-4 bg-gray-900/50 border-t border-gray-700">
               <div className="grid grid-cols-2 gap-3">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-600">{profile?.total_coins || 0}</div>
-                  <div className="text-xs text-gray-600">Xu</div>
+                  <div className="text-2xl font-bold text-yellow-400">{profile?.total_coins || 0}</div>
+                  <div className="text-xs text-gray-400">Xu</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{profile?.level || 1}</div>
-                  <div className="text-xs text-gray-600">Level</div>
+                  <div className="text-2xl font-bold text-blue-400">{profile?.level || 1}</div>
+                  <div className="text-xs text-gray-400">Level</div>
                 </div>
               </div>
             </div>
@@ -231,18 +231,18 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                       type="text"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       placeholder="Nhập họ tên"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Tên đăng nhập</label>
+                    <label className="block text-sm font-semibold text-gray-300 mb-2">Tên đăng nhập</label>
                     <input
                       type="text"
                       value={formData.username}
                       onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       placeholder="Nhập tên đăng nhập"
                     />
                   </div>
@@ -250,22 +250,22 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                    <label className="block text-sm font-semibold text-gray-300 mb-2">Email</label>
                     <input
                       type="email"
                       value={user?.email || ''}
                       disabled
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500"
+                      className="w-full px-4 py-2 bg-gray-900/30 border border-gray-600 rounded-lg text-gray-400"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Số điện thoại</label>
+                    <label className="block text-sm font-semibold text-gray-300 mb-2">Số điện thoại</label>
                     <input
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                       placeholder="Nhập số điện thoại"
                     />
                   </div>
@@ -273,31 +273,31 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
 
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Ngày sinh</label>
+                    <label className="block text-sm font-semibold text-gray-300 mb-2">Ngày sinh</label>
                     <input
                       type="date"
                       value={formData.birthday}
                       onChange={(e) => setFormData({ ...formData, birthday: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Giới tính</label>
+                    <label className="block text-sm font-semibold text-gray-300 mb-2">Giới tính</label>
                     <select
                       value={formData.gender}
                       onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                     >
-                      <option value="Nam">Nam</option>
-                      <option value="Nữ">Nữ</option>
-                      <option value="Khác">Khác</option>
+                      <option value="Nam" className="bg-gray-800">Nam</option>
+                      <option value="Nữ" className="bg-gray-800">Nữ</option>
+                      <option value="Khác" className="bg-gray-800">Khác</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Mã khách hàng</label>
+                  <label className="block text-sm font-semibold text-gray-300 mb-2">Mã khách hàng</label>
                   <input
                     type="text"
                     value={user?.id.slice(0, 13).toUpperCase() || ''}
@@ -309,7 +309,7 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={handleSaveProfile}
-                    className="px-6 py-2 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+                    className="px-6 py-2 bg-yellow-400 text-white rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
                   >
                     Lưu thay đổi
                   </button>
@@ -331,7 +331,7 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                   <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-white mb-2">Chưa có khóa học nào</h3>
                   <p className="text-gray-400 mb-6">Hãy khám phá và mua khóa học để bắt đầu học!</p>
-                  <button className="px-6 py-2 bg-yellow-400 text-gray-900 rounded-lg font-semibold hover:bg-yellow-500">
+                  <button className="px-6 py-2 bg-yellow-400 text-white rounded-lg font-semibold hover:bg-yellow-500">
                     Xem khóa học
                   </button>
                 </div>
@@ -364,7 +364,7 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                           </div>
                         </div>
                         <div className="flex-shrink-0 self-center">
-                          <div className="px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg text-sm font-semibold group-hover:bg-yellow-500 transition-colors">
+                          <div className="px-4 py-2 bg-yellow-400 text-white rounded-lg text-sm font-semibold group-hover:bg-yellow-500 transition-colors">
                             Học ngay →
                           </div>
                         </div>
@@ -417,3 +417,4 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
     </div>
   );
 };
+

@@ -182,7 +182,7 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center z-10">
-          <h2 className="text-2xl font-bold text-gray-900">{course.title}</h2>
+          <h2 className="text-2xl font-bold text-white">{course.title}</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -209,7 +209,7 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
                 </div>
               </div>
 
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Nội dung khóa học</h3>
+              <h3 className="text-2xl font-bold text-white mb-4">Nội dung khóa học</h3>
 
               <div className="space-y-4">
                 {sections.map((section) => {
@@ -223,10 +223,10 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
                         className="w-full p-6 bg-gray-50 hover:bg-gray-100 transition-colors flex justify-between items-center"
                       >
                         <div className="text-left">
-                          <h4 className="font-bold text-lg text-gray-900 mb-1">
+                          <h4 className="font-bold text-lg text-white mb-1">
                             {section.title}
                           </h4>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-gray-300">
                             {sectionLessons.length} bài học
                           </p>
                         </div>
@@ -254,9 +254,9 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
                                   {getLessonIcon(lesson.lesson_type)}
                                 </div>
                                 <div>
-                                  <h5 className="font-medium text-gray-900">{lesson.title}</h5>
+                                  <h5 className="font-medium text-white">{lesson.title}</h5>
                                   {lesson.video_duration && (
-                                    <span className="text-sm text-gray-600">
+                                    <span className="text-sm text-gray-300">
                                       {formatDuration(lesson.video_duration)}
                                     </span>
                                   )}
@@ -282,10 +282,10 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
             <div className="md:col-span-1">
               <div className="sticky top-24 bg-white border-2 border-gray-200 rounded-2xl p-6">
                 <div className="text-center mb-6">
-                  <div className="text-4xl font-black text-gray-900 mb-2">
+                  <div className="text-4xl font-black text-white mb-2">
                     {course.price_coins}
                   </div>
-                  <div className="text-gray-600">xu</div>
+                  <div className="text-gray-300">xu</div>
                 </div>
 
                 {isPurchased ? (
@@ -304,19 +304,19 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
 
                 <div className="mt-6 space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Giảng viên</span>
+                    <span className="text-gray-300">Giảng viên</span>
                     <span className="font-medium">{course.instructor_name}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Thời lượng</span>
+                    <span className="text-gray-300">Thời lượng</span>
                     <span className="font-medium">{course.duration_hours}h</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Số bài học</span>
+                    <span className="text-gray-300">Số bài học</span>
                     <span className="font-medium">{totalLessons}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Học viên</span>
+                    <span className="text-gray-300">Học viên</span>
                     <span className="font-medium">{course.student_count}</span>
                   </div>
                 </div>
@@ -335,3 +335,4 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
     </div>
   );
 };
+

@@ -32,7 +32,7 @@ export const Navbar = ({ activeTab, onTabChange }: NavbarProps) => {
                 className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all whitespace-nowrap ${
                   isActive
                     ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
-                    : 'text-gray-700 hover:bg-gray-100 hover:scale-105'
+                    : 'text-gray-300 hover:bg-gray-100 hover:scale-105'
                 }`}
               >
                 <Icon className="w-5 h-5" />
@@ -45,3 +45,4 @@ export const Navbar = ({ activeTab, onTabChange }: NavbarProps) => {
     </nav>
   );
 };
+

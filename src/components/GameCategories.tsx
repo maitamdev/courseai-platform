@@ -163,7 +163,7 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
             <div className="flex gap-4 justify-center">
               <button
                 onClick={onTreasureQuestClick}
-                className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg font-bold transition-all hover:scale-105"
+                className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg font-bold transition-all hover:scale-105"
               >
                 🏆 Kho Báu Bị Mất
               </button>
@@ -295,7 +295,7 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
                           className={`w-4 h-4 ${
                             star <= levelProgress.stars
                               ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-gray-600'
+                              : 'text-gray-300'
                           }`}
                         />
                       ))}
@@ -306,7 +306,7 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
                     disabled={!isUnlocked}
                     className={`w-full py-2 rounded-lg font-bold transition-all ${
                       isUnlocked
-                        ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900'
+                        ? 'bg-yellow-400 hover:bg-yellow-500 text-white'
                         : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}
                   >
@@ -344,3 +344,4 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
     </div>
   );
 };
+

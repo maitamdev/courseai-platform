@@ -60,7 +60,7 @@ export const PaymentHistory = () => {
       case 'failed':
         return <XCircle className="w-5 h-5 text-red-600" />;
       default:
-        return <Clock className="w-5 h-5 text-gray-600" />;
+        return <Clock className="w-5 h-5 text-gray-300" />;
     }
   };
 
@@ -89,7 +89,7 @@ export const PaymentHistory = () => {
       case 'failed':
         return 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-white';
     }
   };
 
@@ -105,14 +105,14 @@ export const PaymentHistory = () => {
     return (
       <div className="text-center py-12">
         <Clock className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-        <p className="text-gray-600">Chưa có lịch sử nạp xu</p>
+        <p className="text-gray-300">Chưa có lịch sử nạp xu</p>
       </div>
     );
   }
 
   return (
     <div className="bg-white rounded-3xl shadow-lg p-6">
-      <h3 className="text-xl font-bold text-gray-900 mb-6">📜 Lịch Sử Nạp Xu</h3>
+      <h3 className="text-xl font-bold text-white mb-6">📜 Lịch Sử Nạp Xu</h3>
       
       <div className="space-y-4">
         {sessions.map((session) => (
@@ -124,10 +124,10 @@ export const PaymentHistory = () => {
               <div className="flex items-center gap-3">
                 {getStatusIcon(session.status)}
                 <div>
-                  <div className="font-bold text-gray-900">
+                  <div className="font-bold text-white">
                     {formatPrice(session.amount_vnd)}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-300">
                     {session.coins_amount} xu
                   </div>
                 </div>
@@ -150,10 +150,11 @@ export const PaymentHistory = () => {
       
       <button
         onClick={fetchHistory}
-        className="w-full mt-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+        className="w-full mt-6 py-3 bg-gray-100 text-gray-300 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
       >
         Tải lại
       </button>
     </div>
   );
 };
+

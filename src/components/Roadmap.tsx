@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Play, CheckCircle, Lock, Book, Code2, Award, ChevronDown, ChevronUp } from 'lucide-react';
+import { Play, CheckCircle, Lock, Book, Code2, Award, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -145,7 +145,7 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
       case 'quiz':
         return <Award className="w-5 h-5 text-purple-600" />;
       default:
-        return <Book className="w-5 h-5 text-gray-600" />;
+        return <Book className="w-5 h-5 text-gray-300" />;
     }
   };
 
@@ -168,8 +168,8 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
     return (
       <div className="text-center py-20">
         <Lock className="w-20 h-20 text-gray-400 mx-auto mb-6" />
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Chưa có khóa học</h2>
-        <p className="text-xl text-gray-600 mb-8">
+        <h2 className="text-3xl font-bold text-white mb-4">Chưa có khóa học</h2>
+        <p className="text-xl text-gray-300 mb-8">
           Bạn chưa mua khóa học nào. Hãy mua khóa học để bắt đầu học tập!
         </p>
       </div>
@@ -179,45 +179,52 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-4xl font-black text-gray-900 mb-4">Lộ Trình Học Của Bạn</h1>
-        <p className="text-xl text-gray-600">
+        <h1 className="text-4xl font-black text-white mb-4">Lộ Trình Học Của Bạn</h1>
+        <p className="text-xl text-gray-300">
           Các khóa học bạn đã mua - bắt đầu học ngay!
         </p>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-4">
         {purchasedCourses.map((course) => {
           const isExpanded = expandedCourses.has(course.id);
           const courseSections = sections[course.id] || [];
 
           return (
-            <div key={course.id} className="bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:border-blue-400 transition-all">
+            <div key={course.id} className="bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-xl border border-gray-700 overflow-hidden hover:border-yellow-400 transition-all">
               <button
                 onClick={() => onCourseSelect?.(course.id)}
-                className="w-full p-8 text-left hover:bg-gray-50 transition-colors group"
+                className="w-full p-5 text-left hover:bg-gray-700/50 transition-colors group flex items-center gap-4"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{course.title}</h2>
-                    <p className="text-gray-600 mb-3">{course.description}</p>
-                    <div className="flex gap-6 text-sm text-gray-700">
-                      <div className="flex items-center gap-2">
-                        <Award className="w-4 h-4" />
-                        <span>{course.instructor_name}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Play className="w-4 h-4" />
-                        <span>{course.duration_hours} giờ</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Book className="w-4 h-4" />
-                        <span>{courseSections.length} chương</span>
-                      </div>
+                {/* Icon */}
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Book className="w-8 h-8 text-white" />
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-xl font-bold text-white mb-1 group-hover:text-yellow-400 transition-colors truncate">{course.title}</h2>
+                  <p className="text-sm text-gray-400 mb-2 line-clamp-1">{course.description}</p>
+                  <div className="flex gap-4 text-xs text-gray-400">
+                    <div className="flex items-center gap-1">
+                      <Award className="w-3 h-3" />
+                      <span>{course.instructor_name}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Play className="w-3 h-3" />
+                      <span>{course.duration_hours}h</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Book className="w-3 h-3" />
+                      <span>{courseSections.length} chương</span>
                     </div>
                   </div>
-                  <div className="ml-4 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold group-hover:bg-blue-700 transition-colors">
-                    Xem lộ trình →
-                  </div>
+                </div>
+
+                {/* Button */}
+                <div className="px-5 py-2.5 bg-yellow-400 text-gray-900 rounded-lg font-bold group-hover:bg-yellow-500 transition-colors flex items-center gap-2 flex-shrink-0">
+                  Xem lộ trình
+                  <ChevronRight className="w-4 h-4" />
                 </div>
               </button>
             </div>
@@ -229,7 +236,7 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
         <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-900">{selectedLesson.title}</h2>
+              <h2 className="text-2xl font-bold text-white">{selectedLesson.title}</h2>
               <button
                 onClick={() => setSelectedLesson(null)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -251,18 +258,18 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
               )}
 
               <div className="bg-gray-50 rounded-2xl p-6 mb-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Mô tả</h3>
-                <p className="text-gray-700 leading-relaxed">{selectedLesson.description}</p>
+                <h3 className="text-xl font-bold text-white mb-3">Mô tả</h3>
+                <p className="text-gray-300 leading-relaxed">{selectedLesson.description}</p>
               </div>
 
               {selectedLesson.lesson_type === 'exercise' && (
                 <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <Code2 className="w-6 h-6 text-green-600" />
                     Bài tập thực hành
                   </h3>
                   <div className="bg-white rounded-xl p-4 mb-4 font-mono text-sm">
-                    <code className="text-gray-800">
+                    <code className="text-white">
                       // Viết code của bạn ở đây<br />
                       function solve() {'{'}<br />
                       &nbsp;&nbsp;// Your solution<br />
@@ -277,11 +284,11 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
 
               {selectedLesson.lesson_type === 'quiz' && (
                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <Award className="w-6 h-6 text-purple-600" />
                     Quiz kiểm tra
                   </h3>
-                  <p className="text-gray-700 mb-4">Hoàn thành quiz để tiếp tục!</p>
+                  <p className="text-gray-300 mb-4">Hoàn thành quiz để tiếp tục!</p>
                   <button className="px-6 py-3 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition-all">
                     Bắt đầu quiz
                   </button>
@@ -289,7 +296,7 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
               )}
 
               <div className="flex gap-4 mt-6">
-                <button className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300 transition-all">
+                <button className="flex-1 px-6 py-3 bg-gray-200 text-gray-300 rounded-xl font-bold hover:bg-gray-300 transition-all">
                   Bài trước
                 </button>
                 <button className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:shadow-lg transition-all">
@@ -303,3 +310,4 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
     </div>
   );
 };
+

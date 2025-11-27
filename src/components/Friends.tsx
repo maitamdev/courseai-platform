@@ -327,7 +327,7 @@ export const Friends = () => {
           onClick={() => setActiveTab('friends')}
           className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
             activeTab === 'friends'
-              ? 'bg-yellow-400 text-gray-900'
+              ? 'bg-yellow-400 text-white'
               : 'bg-gray-800/60 text-gray-300 hover:bg-gray-700'
           }`}
         >
@@ -338,7 +338,7 @@ export const Friends = () => {
           onClick={() => setActiveTab('activity')}
           className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
             activeTab === 'activity'
-              ? 'bg-yellow-400 text-gray-900'
+              ? 'bg-yellow-400 text-white'
               : 'bg-gray-800/60 text-gray-300 hover:bg-gray-700'
           }`}
         >
@@ -349,7 +349,7 @@ export const Friends = () => {
           onClick={() => setActiveTab('leaderboard')}
           className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
             activeTab === 'leaderboard'
-              ? 'bg-yellow-400 text-gray-900'
+              ? 'bg-yellow-400 text-white'
               : 'bg-gray-800/60 text-gray-300 hover:bg-gray-700'
           }`}
         >
@@ -360,7 +360,7 @@ export const Friends = () => {
           onClick={() => setActiveTab('requests')}
           className={`px-6 py-3 rounded-xl font-bold transition-all relative whitespace-nowrap ${
             activeTab === 'requests'
-              ? 'bg-yellow-400 text-gray-900'
+              ? 'bg-yellow-400 text-white'
               : 'bg-gray-800/60 text-gray-300 hover:bg-gray-700'
           }`}
         >
@@ -376,7 +376,7 @@ export const Friends = () => {
           onClick={() => setActiveTab('search')}
           className={`px-6 py-3 rounded-xl font-bold transition-all whitespace-nowrap ${
             activeTab === 'search'
-              ? 'bg-yellow-400 text-gray-900'
+              ? 'bg-yellow-400 text-white'
               : 'bg-gray-800/60 text-gray-300 hover:bg-gray-700'
           }`}
         >
@@ -395,7 +395,7 @@ export const Friends = () => {
               <p className="text-gray-400 mb-6">Hãy tìm và kết bạn với những người học cùng!</p>
               <button
                 onClick={() => setActiveTab('search')}
-                className="px-6 py-3 bg-yellow-400 text-gray-900 rounded-xl font-bold hover:bg-yellow-500 transition-all"
+                className="px-6 py-3 bg-yellow-400 text-white rounded-xl font-bold hover:bg-yellow-500 transition-all"
               >
                 Tìm Bạn Bè
               </button>
@@ -408,7 +408,7 @@ export const Friends = () => {
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl font-black text-gray-900">
+                    <span className="text-2xl font-black text-white">
                       {friend.friend_username?.[0]?.toUpperCase() || '?'}
                     </span>
                   </div>
@@ -448,7 +448,7 @@ export const Friends = () => {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setSelectedFriend(friend.friend_id)}
-                    className="flex-1 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg text-sm font-bold transition-all"
+                    className="flex-1 py-2 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg text-sm font-bold transition-all"
                   >
                     <Gift className="w-4 h-4 inline mr-1" />
                     Tặng Xu
@@ -482,7 +482,7 @@ export const Friends = () => {
                 className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-6 border border-gray-700 flex items-center gap-4"
               >
                 <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-black text-gray-900">
+                  <span className="text-2xl font-black text-white">
                     {request.sender_username?.[0]?.toUpperCase() || '?'}
                   </span>
                 </div>
@@ -541,7 +541,7 @@ export const Friends = () => {
             </div>
             <button
               onClick={searchUsers}
-              className="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-bold transition-all"
+              className="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-white rounded-xl font-bold transition-all"
             >
               Tìm Kiếm
             </button>
@@ -555,7 +555,7 @@ export const Friends = () => {
               >
                 <div className="flex items-start gap-4 mb-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl font-black text-gray-900">
+                    <span className="text-2xl font-black text-white">
                       {result.username?.[0]?.toUpperCase() || '?'}
                     </span>
                   </div>
@@ -600,7 +600,7 @@ export const Friends = () => {
                 ) : (
                   <button
                     onClick={() => sendFriendRequest(result.id)}
-                    className="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-bold transition-all"
+                    className="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-white rounded-xl font-bold transition-all"
                   >
                     <UserPlus className="w-5 h-5 inline mr-2" />
                     Kết Bạn
@@ -689,7 +689,7 @@ export const Friends = () => {
                     )}
                   </div>
                   <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-2xl font-black text-gray-900">
+                    <span className="text-2xl font-black text-white">
                       {entry.friend_username?.[0]?.toUpperCase() || '?'}
                     </span>
                   </div>
@@ -722,7 +722,7 @@ export const Friends = () => {
           <div className="bg-gray-800 rounded-3xl p-8 max-w-md w-full border border-gray-700 animate-scale-in">
             <div className="text-center mb-6">
               <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Gift className="w-10 h-10 text-gray-900" />
+                <Gift className="w-10 h-10 text-white" />
               </div>
               <h2 className="text-2xl font-black text-white mb-2">Tặng Xu Cho Bạn</h2>
               <p className="text-gray-400">
@@ -766,7 +766,7 @@ export const Friends = () => {
               <button
                 onClick={() => sendCoins(selectedFriend, coinAmount)}
                 disabled={sendingCoins}
-                className="flex-1 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-yellow-400 hover:bg-yellow-500 text-white rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {sendingCoins ? (
                   <>
@@ -787,3 +787,4 @@ export const Friends = () => {
     </div>
   );
 };
+

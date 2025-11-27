@@ -79,7 +79,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
             </p>
             <button
               onClick={onGetStarted}
-              className="px-10 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-xl hover:shadow-2xl"
+              className="px-10 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-xl hover:shadow-2xl"
             >
               BẮT ĐẦU KHÓA HỌC
             </button>
@@ -113,7 +113,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                 >
                   <div className="flex-shrink-0">
                     <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
-                      <Icon className="w-8 h-8 text-gray-900" />
+                      <Icon className="w-8 h-8 text-white" />
                     </div>
                   </div>
                   <div>
@@ -173,7 +173,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                   <Code2 className="w-16 h-16 text-white" />
                 </div>
                 <div className="p-6">
-                  <div className="inline-block px-3 py-1 bg-yellow-400 text-gray-900 text-xs font-bold rounded-full mb-3">
+                  <div className="inline-block px-3 py-1 bg-yellow-400 text-white text-xs font-bold rounded-full mb-3">
                     {course.level}
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
@@ -182,7 +182,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                   <p className="text-white/70 text-sm mb-4">{course.lessons}</p>
                   <button
                     onClick={onGetStarted}
-                    className="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-lg transition-all"
+                    className="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-white font-bold rounded-lg transition-all"
                   >
                     Xem chi tiết
                   </button>
@@ -196,10 +196,10 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
       {/* CTA Section */}
       <section className="bg-yellow-400/90 backdrop-blur-md w-full py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-black text-gray-900 mb-4">
+          <h2 className="text-4xl font-black text-white mb-4">
             Sẵn Sàng Bắt Đầu Học?
           </h2>
-          <p className="text-xl text-gray-800 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
             Tham gia cùng hàng ngàn học viên đang học lập trình hiệu quả
           </p>
           <button
@@ -213,3 +213,4 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
     </div>
   );
 };
+

@@ -51,7 +51,7 @@ export const LessonCard = ({ lesson, completed, onClick }: LessonCardProps) => {
 
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+            <h3 className="text-xl font-bold text-white group-hover:text-blue-600 transition-colors">
               {lesson.title}
             </h3>
             <span className={`text-xs px-3 py-1 rounded-full font-semibold border-2 ${difficultyBadgeColors[lesson.difficulty]}`}>
@@ -59,7 +59,7 @@ export const LessonCard = ({ lesson, completed, onClick }: LessonCardProps) => {
             </span>
           </div>
 
-          <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+          <p className="text-gray-300 text-sm mb-4 leading-relaxed">
             {lesson.description}
           </p>
 
@@ -80,3 +80,4 @@ export const LessonCard = ({ lesson, completed, onClick }: LessonCardProps) => {
     </button>
   );
 };
+

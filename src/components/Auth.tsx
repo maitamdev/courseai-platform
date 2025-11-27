@@ -82,8 +82,8 @@ export const Auth = () => {
       <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce-in">
         <Mail className="w-10 h-10 text-white" />
       </div>
-      <h2 className="text-2xl font-black text-gray-900 mb-4">Kiểm Tra Email</h2>
-      <p className="text-gray-600 mb-6 leading-relaxed">
+      <h2 className="text-2xl font-black text-white mb-4">Kiểm Tra Email</h2>
+      <p className="text-gray-300 mb-6 leading-relaxed">
         {success || 'Chúng tôi đã gửi một email xác nhận đến'}<br />
         <span className="font-bold text-blue-600">{email}</span>
       </p>
@@ -114,20 +114,20 @@ export const Auth = () => {
           setError('');
           setSuccess('');
         }}
-        className="text-gray-600 hover:text-gray-800 font-semibold flex items-center gap-2 mb-6"
+        className="text-gray-300 hover:text-white font-semibold flex items-center gap-2 mb-6"
       >
         <ArrowLeft className="w-4 h-4" />
         Quay lại
       </button>
 
-      <h2 className="text-2xl font-black text-gray-900 mb-2">Quên Mật Khẩu?</h2>
-      <p className="text-gray-600 mb-6">
+      <h2 className="text-2xl font-black text-white mb-2">Quên Mật Khẩu?</h2>
+      <p className="text-gray-300 mb-6">
         Nhập email của bạn và chúng tôi sẽ gửi link đặt lại mật khẩu.
       </p>
 
       <form onSubmit={handleForgotPassword} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
             Email
           </label>
           <input
@@ -169,7 +169,7 @@ export const Auth = () => {
           className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all transform ${
             view === 'login'
               ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-105'
+              : 'bg-gray-100 text-gray-300 hover:bg-gray-200 hover:scale-105'
           }`}
         >
           Đăng nhập
@@ -183,7 +183,7 @@ export const Auth = () => {
           className={`flex-1 py-3 px-4 rounded-xl font-semibold transition-all transform ${
             view === 'signup'
               ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:scale-105'
+              : 'bg-gray-100 text-gray-300 hover:bg-gray-200 hover:scale-105'
           }`}
         >
           Đăng ký
@@ -193,7 +193,7 @@ export const Auth = () => {
       <form onSubmit={view === 'login' ? handleLogin : handleSignup} className="space-y-4">
         {view === 'signup' && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Tên người dùng
             </label>
             <input
@@ -208,7 +208,7 @@ export const Auth = () => {
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-300 mb-1">
             Email
           </label>
           <input
@@ -223,7 +223,7 @@ export const Auth = () => {
 
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-300">
               Mật khẩu
             </label>
             {view === 'login' && (
@@ -325,3 +325,4 @@ export const Auth = () => {
     </div>
   );
 };
+

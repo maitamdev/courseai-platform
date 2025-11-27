@@ -46,8 +46,8 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
         <div className="flex flex-col h-full overflow-hidden">
           {!isCollapsed && (
             <div className="p-6 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900 mb-1">Menu</h2>
-              <p className="text-sm text-gray-600">Khám phá và học tập</p>
+              <h2 className="text-xl font-bold text-white mb-1">Menu</h2>
+              <p className="text-sm text-gray-300">Khám phá và học tập</p>
             </div>
           )}
 
@@ -67,7 +67,7 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
                         isActive
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                          : 'text-gray-700 hover:bg-gray-100'
+                          : 'text-gray-300 hover:bg-gray-100'
                       } ${isCollapsed ? 'justify-center' : ''}`}
                       title={isCollapsed ? item.label : ''}
                     >
@@ -85,9 +85,9 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Trophy className="w-5 h-5 text-yellow-600" />
-                  <h3 className="font-bold text-gray-900">Mẹo học tập</h3>
+                  <h3 className="font-bold text-white">Mẹo học tập</h3>
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-300">
                   Học mỗi ngày 30 phút để đạt kết quả tốt nhất!
                 </p>
               </div>
@@ -105,3 +105,4 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
     </>
   );
 };
+

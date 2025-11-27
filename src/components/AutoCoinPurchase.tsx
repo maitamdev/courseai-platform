@@ -115,8 +115,8 @@ export const AutoCoinPurchase = () => {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white rounded-3xl shadow-xl p-8">
-        <h2 className="text-3xl font-black text-gray-900 mb-2">Nạp xu tự động</h2>
-        <p className="text-gray-600 mb-8">Quét mã QR và xu sẽ được cộng tự động sau vài giây</p>
+        <h2 className="text-3xl font-black text-white mb-2">Nạp xu tự động</h2>
+        <p className="text-gray-300 mb-8">Quét mã QR và xu sẽ được cộng tự động sau vài giây</p>
 
         {!showQR ? (
           <>
@@ -131,13 +131,13 @@ export const AutoCoinPurchase = () => {
                       : 'border-gray-200 hover:border-blue-300'
                   }`}
                 >
-                  <div className="text-3xl font-black text-gray-900 mb-2">
+                  <div className="text-3xl font-black text-white mb-2">
                     {pkg.amount.toLocaleString()}
                     {pkg.bonus > 0 && (
                       <span className="text-lg text-green-600"> +{pkg.bonus}</span>
                     )}
                   </div>
-                  <div className="text-sm text-gray-600 mb-1">xu</div>
+                  <div className="text-sm text-gray-300 mb-1">xu</div>
                   <div className="text-xl font-bold text-blue-600">
                     {pkg.price.toLocaleString()}đ
                   </div>
@@ -179,7 +179,7 @@ export const AutoCoinPurchase = () => {
                 )}
               </div>
 
-              <div className="space-y-2 text-sm text-gray-700">
+              <div className="space-y-2 text-sm text-gray-300">
                 <p><strong>Số tiền:</strong> {selectedPackage.price.toLocaleString()}đ</p>
                 <p><strong>Nội dung:</strong> {transactionId}</p>
                 <p className="text-xs text-gray-500">
@@ -194,7 +194,7 @@ export const AutoCoinPurchase = () => {
                   setShowQR(false);
                   setChecking(false);
                 }}
-                className="flex-1 bg-gray-200 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
+                className="flex-1 bg-gray-200 text-gray-300 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all"
               >
                 Hủy
               </button>
@@ -224,3 +224,4 @@ export const AutoCoinPurchase = () => {
     </div>
   );
 };
+

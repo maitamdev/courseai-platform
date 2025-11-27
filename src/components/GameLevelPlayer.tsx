@@ -164,13 +164,13 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-6">
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-6 border-2 border-blue-200">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <Code2 className="w-6 h-6 text-blue-600" />
                   Nhiệm vụ
                 </h3>
-                <p className="text-gray-700 leading-relaxed mb-4">{level.description}</p>
+                <p className="text-gray-300 leading-relaxed mb-4">{level.description}</p>
                 <div className="bg-white rounded-xl p-4 font-mono text-sm border-2 border-blue-300">
-                  <pre className="text-gray-800 whitespace-pre-wrap">
+                  <pre className="text-white whitespace-pre-wrap">
                     {level.challenge.question || 'Viết code để giải quyết vấn đề'}
                   </pre>
                 </div>
@@ -178,7 +178,7 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
 
               <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border-2 border-yellow-200">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
                     <Lightbulb className="w-6 h-6 text-yellow-600" />
                     Gợi ý
                   </h3>
@@ -196,7 +196,7 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
                   <div className="space-y-3">
                     {hints.slice(0, currentHint + 1).map((hint, index) => (
                       <div key={index} className="bg-white rounded-xl p-4 border-2 border-yellow-300">
-                        <span className="text-gray-700">💡 {hint}</span>
+                        <span className="text-gray-300">💡 {hint}</span>
                       </div>
                     ))}
                     {currentHint < hints.length - 1 && (
@@ -209,27 +209,27 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
                     )}
                   </div>
                 ) : (
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-300 text-sm">
                     Click vào nút "Xem gợi ý" nếu bạn gặp khó khăn!
                   </p>
                 )}
               </div>
 
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                   <Trophy className="w-6 h-6 text-green-600" />
                   Phần thưởng
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white rounded-xl p-4 text-center border-2 border-green-300">
                     <Coins className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                    <p className="text-2xl font-black text-gray-900">+{level.coins_reward}</p>
-                    <p className="text-sm text-gray-600">Xu</p>
+                    <p className="text-2xl font-black text-white">+{level.coins_reward}</p>
+                    <p className="text-sm text-gray-300">Xu</p>
                   </div>
                   <div className="bg-white rounded-xl p-4 text-center border-2 border-green-300">
                     <Trophy className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                    <p className="text-2xl font-black text-gray-900">+{level.xp_reward}</p>
-                    <p className="text-sm text-gray-600">XP</p>
+                    <p className="text-2xl font-black text-white">+{level.xp_reward}</p>
+                    <p className="text-sm text-gray-300">XP</p>
                   </div>
                 </div>
               </div>
@@ -312,3 +312,4 @@ function solution() {
     </div>
   );
 };
+

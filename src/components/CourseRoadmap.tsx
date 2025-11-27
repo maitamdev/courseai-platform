@@ -226,7 +226,7 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
             className={`px-6 py-4 font-semibold transition-colors ${
               activeTab === 'content'
                 ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-300 hover:text-white'
             }`}
           >
             Nội dung khóa học
@@ -236,7 +236,7 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
             className={`px-6 py-4 font-semibold transition-colors ${
               activeTab === 'instructor'
                 ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-300 hover:text-white'
             }`}
           >
             Giảng viên
@@ -246,7 +246,7 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
             className={`px-6 py-4 font-semibold transition-colors ${
               activeTab === 'reviews'
                 ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-gray-300 hover:text-white'
             }`}
           >
             Đánh giá
@@ -300,8 +300,8 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
 
                   {/* Section Info */}
                   <div className="flex-1 text-left">
-                    <h3 className="text-xl font-bold text-gray-900 mb-1">{section.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">{section.description}</p>
+                    <h3 className="text-xl font-bold text-white mb-1">{section.title}</h3>
+                    <p className="text-sm text-gray-300 mb-2">{section.description}</p>
                     <div className="flex items-center gap-4 text-sm">
                       <span className={`font-semibold ${
                         status === 'completed' ? 'text-green-600' :
@@ -367,8 +367,8 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
 
                               {/* Lesson Info */}
                               <div className="flex-1">
-                                <h4 className="font-semibold text-gray-900 mb-1">{lesson.title}</h4>
-                                <div className="flex items-center gap-3 text-xs text-gray-600">
+                                <h4 className="font-semibold text-white mb-1">{lesson.title}</h4>
+                                <div className="flex items-center gap-3 text-xs text-gray-300">
                                   <span className="flex items-center gap-1">
                                     <Clock className="w-3 h-3" />
                                     {formatDuration(lesson.video_duration || 0)}
@@ -399,15 +399,15 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
           {/* Right: Resources */}
           <div className="md:col-span-1">
             <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 sticky top-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">📚 Tài liệu khóa học</h3>
+              <h3 className="text-lg font-bold text-white mb-4">📚 Tài liệu khóa học</h3>
               <div className="space-y-3">
                 <a href="#" className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                   <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
                     <FileText className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">Giáo trình.pdf</p>
-                    <p className="text-xs text-gray-600">2.5 MB</p>
+                    <p className="text-sm font-semibold text-white truncate">Giáo trình.pdf</p>
+                    <p className="text-xs text-gray-300">2.5 MB</p>
                   </div>
                 </a>
 
@@ -416,8 +416,8 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
                     <FileText className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">Bài tập.pdf</p>
-                    <p className="text-xs text-gray-600">1.8 MB</p>
+                    <p className="text-sm font-semibold text-white truncate">Bài tập.pdf</p>
+                    <p className="text-xs text-gray-300">1.8 MB</p>
                   </div>
                 </a>
 
@@ -426,25 +426,25 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
                     <FileText className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 truncate">Slide bài giảng.pdf</p>
-                    <p className="text-xs text-gray-600">3.2 MB</p>
+                    <p className="text-sm font-semibold text-white truncate">Slide bài giảng.pdf</p>
+                    <p className="text-xs text-gray-300">3.2 MB</p>
                   </div>
                 </a>
               </div>
 
               <div className="mt-6 pt-6 border-t border-gray-200">
-                <h4 className="text-sm font-bold text-gray-900 mb-3">📊 Thống kê</h4>
+                <h4 className="text-sm font-bold text-white mb-3">📊 Thống kê</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Tổng bài học:</span>
+                    <span className="text-gray-300">Tổng bài học:</span>
                     <span className="font-semibold">{sections.reduce((sum, s) => sum + s.total, 0)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Đã hoàn thành:</span>
+                    <span className="text-gray-300">Đã hoàn thành:</span>
                     <span className="font-semibold text-green-600">{completedLessons.size}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Còn lại:</span>
+                    <span className="text-gray-300">Còn lại:</span>
                     <span className="font-semibold text-orange-600">
                       {sections.reduce((sum, s) => sum + s.total, 0) - completedLessons.size}
                     </span>
@@ -458,15 +458,15 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
 
       {activeTab === 'instructor' && (
         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Giảng viên</h2>
+          <h2 className="text-2xl font-bold text-white mb-4">Giảng viên</h2>
           <div className="flex items-start gap-6">
             <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold">
               {course?.instructor_name?.charAt(0)}
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{course?.instructor_name}</h3>
-              <p className="text-gray-600 mb-4">Chuyên gia lập trình với hơn 10 năm kinh nghiệm</p>
-              <div className="flex gap-4 text-sm text-gray-600">
+              <h3 className="text-xl font-bold text-white mb-2">{course?.instructor_name}</h3>
+              <p className="text-gray-300 mb-4">Chuyên gia lập trình với hơn 10 năm kinh nghiệm</p>
+              <div className="flex gap-4 text-sm text-gray-300">
                 <span>⭐ 4.8 đánh giá</span>
                 <span>👥 {course?.student_count} học viên</span>
                 <span>📚 5 khóa học</span>
@@ -478,7 +478,7 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
 
       {activeTab === 'reviews' && (
         <div className="bg-white rounded-xl shadow-md border border-gray-200 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Đánh giá từ học viên</h2>
+          <h2 className="text-2xl font-bold text-white mb-6">Đánh giá từ học viên</h2>
           <div className="text-center py-12 text-gray-500">
             <p>Chưa có đánh giá nào</p>
           </div>
@@ -490,7 +490,7 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setSelectedLesson(null)}>
           <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-900">{selectedLesson.title}</h2>
+              <h2 className="text-2xl font-bold text-white">{selectedLesson.title}</h2>
               <button onClick={() => setSelectedLesson(null)} className="p-2 hover:bg-gray-100 rounded-full">
                 ✕
               </button>
@@ -509,17 +509,17 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
               )}
 
               <div className="bg-gray-50 rounded-xl p-6 mb-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Mô tả</h3>
-                <p className="text-gray-700 leading-relaxed">{selectedLesson.description}</p>
+                <h3 className="text-xl font-bold text-white mb-3">Mô tả</h3>
+                <p className="text-gray-300 leading-relaxed">{selectedLesson.description}</p>
               </div>
 
               {selectedLesson.content && (
                 <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Nội dung bài học</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Nội dung bài học</h3>
                   {selectedLesson.content.theory && (
                     <div className="mb-4">
-                      <h4 className="font-bold text-gray-800 mb-2">📚 Lý thuyết:</h4>
-                      <ul className="list-disc list-inside space-y-1 text-gray-700">
+                      <h4 className="font-bold text-white mb-2">📚 Lý thuyết:</h4>
+                      <ul className="list-disc list-inside space-y-1 text-gray-300">
                         {selectedLesson.content.theory.map((item: string, i: number) => (
                           <li key={i}>{item}</li>
                         ))}
@@ -528,7 +528,7 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
                   )}
                   {selectedLesson.content.examples && (
                     <div className="mb-4">
-                      <h4 className="font-bold text-gray-800 mb-2">💡 Ví dụ:</h4>
+                      <h4 className="font-bold text-white mb-2">💡 Ví dụ:</h4>
                       {selectedLesson.content.examples.map((example: string, i: number) => (
                         <pre key={i} className="bg-gray-900 text-green-400 p-4 rounded-lg mb-2 overflow-x-auto text-sm">
                           <code>{example}</code>
@@ -538,8 +538,8 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
                   )}
                   {selectedLesson.content.keyPoints && (
                     <div>
-                      <h4 className="font-bold text-gray-800 mb-2">⭐ Điểm quan trọng:</h4>
-                      <ul className="list-disc list-inside space-y-1 text-gray-700">
+                      <h4 className="font-bold text-white mb-2">⭐ Điểm quan trọng:</h4>
+                      <ul className="list-disc list-inside space-y-1 text-gray-300">
                         {selectedLesson.content.keyPoints.map((point: string, i: number) => (
                           <li key={i}>{point}</li>
                         ))}
@@ -550,7 +550,7 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
               )}
 
               <div className="flex gap-4 mt-6">
-                <button className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-300">
+                <button className="flex-1 px-6 py-3 bg-gray-200 text-gray-300 rounded-xl font-bold hover:bg-gray-300">
                   ← Bài trước
                 </button>
                 <button className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:shadow-lg">
@@ -564,3 +564,4 @@ export const CourseRoadmap = ({ courseId, onLessonSelect }: CourseRoadmapProps) 
     </div>
   );
 };
+

@@ -50,14 +50,16 @@ export const CoinPurchase = () => {
           </div>
           
           <h1 className="text-6xl font-black mb-4">
-            <span className="text-yellow-400">NAP XU </span>
-            <span className="text-white">
-              COURSE AI
+            <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 bg-clip-text text-transparent">
+              Nạp Xu Siêu Tốc
             </span>
           </h1>
           
-          <p className="text-xl text-gray-300">
-            Chọn gói xu → Quét mã QR → Nhận xu tự động
+          <p className="text-xl text-gray-300 mb-2">
+            ⚡ Quét QR → Chuyển khoản → Nhận xu ngay lập tức
+          </p>
+          <p className="text-sm text-gray-400">
+            Hỗ trợ tất cả ngân hàng Việt Nam • An toàn • Bảo mật
           </p>
         </div>
 
@@ -69,3 +71,4 @@ export const CoinPurchase = () => {
     </div>
   );
 };
+

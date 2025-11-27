@@ -60,9 +60,9 @@ export const TreasureModal = ({ treasure, onClose, onSolve }: TreasureModalProps
 
         <div className="p-6 space-y-6">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Câu đố:</h3>
+            <h3 className="font-semibold text-white mb-2">Câu đố:</h3>
             <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-orange-500">
-              <p className="text-gray-700 italic leading-relaxed">
+              <p className="text-gray-300 italic leading-relaxed">
                 "{treasure.riddle}"
               </p>
             </div>
@@ -70,7 +70,7 @@ export const TreasureModal = ({ treasure, onClose, onSolve }: TreasureModalProps
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Câu trả lời của bạn:
               </label>
               <input
@@ -109,3 +109,4 @@ export const TreasureModal = ({ treasure, onClose, onSolve }: TreasureModalProps
     </div>
   );
 };
+

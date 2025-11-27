@@ -200,14 +200,14 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
                 <div className="flex items-center justify-between pt-4 border-t border-gray-700">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
-                      <Code2 className="w-4 h-4 text-gray-900" />
+                      <Code2 className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-2xl font-black text-white">
                       {course.price_coins}
                     </span>
                     <span className="text-sm text-gray-400">xu</span>
                   </div>
-                  <button className="px-6 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-bold hover:shadow-lg transition-all hover:scale-105">
+                  <button className="px-6 py-2 bg-yellow-400 hover:bg-yellow-500 text-white rounded-xl font-bold hover:shadow-lg transition-all hover:scale-105">
                     Xem
                   </button>
                 </div>
@@ -219,3 +219,4 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
     </div>
   );
 };
+

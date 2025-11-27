@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Coins, Copy, Check, Gift, Crown, QrCode, X, RefreshCw } from 'lucide-react';
+import { Coins, Copy, Check, Gift, QrCode, X, RefreshCw } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -147,59 +147,69 @@ export const QRTopup = ({ packages }: { packages: CoinPackage[] }) => {
   return (
     <div className="space-y-8">
       {/* Coin Packages */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 max-w-[1600px] mx-auto">
-        {packages.map((pkg) => (
-          <div
-            key={pkg.id}
-            onClick={() => generateQRCode(pkg)}
-            className={`relative p-6 rounded-2xl border-2 transition-all cursor-pointer hover:scale-105 ${
-              pkg.is_popular
-                ? 'border-yellow-400 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 backdrop-blur-md shadow-2xl shadow-yellow-500/50'
-                : 'border-gray-600 bg-gray-800/80 backdrop-blur-md hover:border-yellow-400'
-            } ${selectedPackage?.id === pkg.id ? 'ring-4 ring-yellow-400' : ''}`}
-          >
-            {pkg.is_popular && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-6 py-2 rounded-full text-sm font-black shadow-xl">
-                ⭐ Phổ Biến Nhất
-              </div>
-            )}
-
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-xl">
-                <Coins className="w-10 h-10 text-gray-900" />
-              </div>
-
-              <h3 className="text-base font-black text-white mb-3">{pkg.name}</h3>
-
-              <div className="mb-4">
-                <div className="text-5xl font-black text-white mb-2 drop-shadow-lg">
-                  {pkg.coins.toLocaleString()}
-                </div>
-                <div className="text-sm text-gray-300 uppercase tracking-wider font-bold">xu</div>
-              </div>
-
-              <div className="text-2xl font-black text-yellow-400 mb-4 drop-shadow-lg">
-                {formatPrice(pkg.price_vnd)}
-              </div>
-
-              {pkg.bonus_coins > 0 && (
-                <div className="inline-flex items-center gap-1 bg-green-500/30 text-green-300 px-3 py-1.5 rounded-full text-sm font-black mb-4 border-2 border-green-400/50 shadow-lg">
-                  <Gift className="w-4 h-4" />
-                  +{pkg.bonus_coins}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8 max-w-[1800px] mx-auto">
+        {packages.map((pkg, index) => {
+          // Different styles for each package
+          const styles = [
+            { bg: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-400', icon: 'from-blue-400 to-cyan-500', badge: 'bg-blue-500/30 text-blue-300 border-blue-400/50' },
+            { bg: 'from-purple-500/20 to-pink-500/20', border: 'border-purple-400', icon: 'from-purple-400 to-pink-500', badge: 'bg-purple-500/30 text-purple-300 border-purple-400/50' },
+            { bg: 'from-green-500/20 to-emerald-500/20', border: 'border-green-400', icon: 'from-green-400 to-emerald-500', badge: 'bg-green-500/30 text-green-300 border-green-400/50' },
+            { bg: 'from-orange-500/20 to-red-500/20', border: 'border-orange-400', icon: 'from-orange-400 to-red-500', badge: 'bg-orange-500/30 text-orange-300 border-orange-400/50' },
+            { bg: 'from-yellow-500/30 to-orange-500/30', border: 'border-yellow-400', icon: 'from-yellow-400 to-orange-500', badge: 'bg-yellow-500/30 text-yellow-300 border-yellow-400/50' },
+          ];
+          const style = pkg.is_popular ? styles[4] : styles[index % 4];
+          
+          return (
+            <div
+              key={pkg.id}
+              onClick={() => generateQRCode(pkg)}
+              className={`relative p-6 rounded-lg border-3 transition-all cursor-pointer hover:scale-105 bg-gradient-to-br ${style.bg} backdrop-blur-md ${style.border} ${
+                pkg.is_popular ? 'shadow-2xl shadow-yellow-500/50 ring-4 ring-yellow-400/50' : 'hover:shadow-xl'
+              } ${selectedPackage?.id === pkg.id ? 'ring-4 ring-yellow-400' : ''}`}
+            >
+              {pkg.is_popular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-1.5 rounded-md text-xs font-black shadow-xl animate-pulse">
+                  ⭐ Phổ Biến Nhất
                 </div>
               )}
 
-              <div className="text-sm text-gray-200 mb-4 bg-gray-900/50 py-2 px-3 rounded-lg">
-                Tổng: <span className="font-black text-white">{(pkg.coins + pkg.bonus_coins).toLocaleString()} xu</span>
-              </div>
+              <div className="text-center">
+                <div className={`w-20 h-20 mx-auto mb-4 bg-gradient-to-br ${style.icon} rounded-lg flex items-center justify-center shadow-xl`}>
+                  <Coins className="w-10 h-10 text-white" />
+                </div>
 
-              <button className="w-full py-3 rounded-xl font-black text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 hover:shadow-2xl hover:shadow-yellow-500/50 hover:scale-105">
-                <QrCode className="w-5 h-5" />
-                Tạo QR
-              </button>
+                <h3 className="text-base font-black text-white mb-3">{pkg.name}</h3>
+
+                <div className="mb-3">
+                  <div className="text-5xl font-black text-white mb-1 drop-shadow-lg">
+                    {pkg.coins.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-gray-300 uppercase tracking-wider font-bold">xu</div>
+                </div>
+
+                <div className="text-2xl font-black text-yellow-400 mb-3 drop-shadow-lg">
+                  {formatPrice(pkg.price_vnd)}
+                </div>
+
+                {pkg.bonus_coins > 0 && (
+                  <div className={`inline-flex items-center gap-1.5 ${style.badge} px-3 py-1.5 rounded-md text-sm font-black mb-3 border-2 shadow-lg`}>
+                    <Gift className="w-4 h-4" />
+                    +{pkg.bonus_coins}
+                  </div>
+                )}
+
+                <div className="text-sm text-gray-200 mb-4 bg-gray-900/50 py-2 px-3 rounded-md border border-gray-700">
+                  Tổng: <span className="font-black text-white">{(pkg.coins + pkg.bonus_coins).toLocaleString()} xu</span>
+                </div>
+
+                <button className={`w-full py-3 rounded-md font-black text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r ${style.icon} text-white hover:shadow-2xl hover:scale-105`}>
+                  <QrCode className="w-5 h-5" />
+                  Tạo QR
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* QR Code Modal */}
@@ -346,3 +356,4 @@ export const QRTopup = ({ packages }: { packages: CoinPackage[] }) => {
     </div>
   );
 };
+

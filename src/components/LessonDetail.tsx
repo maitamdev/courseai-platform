@@ -79,7 +79,7 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
           <div className="flex items-center gap-3">
             {isVideo && <Play className="w-6 h-6 text-blue-600" />}
             {isExercise && <Code className="w-6 h-6 text-green-600" />}
-            <h2 className="text-2xl font-bold text-gray-900">{lesson.title}</h2>
+            <h2 className="text-2xl font-bold text-white">{lesson.title}</h2>
           </div>
           <button
             onClick={onClose}
@@ -111,7 +111,7 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
               {/* Theory */}
               {lesson.content?.theory && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <BookOpen className="w-5 h-5 text-blue-600" />
                     Kiến thức lý thuyết
                   </h3>
@@ -119,7 +119,7 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
                     {lesson.content.theory.map((item, index) => (
                       <div key={index} className="flex gap-3">
                         <span className="text-blue-600 font-bold">{index + 1}.</span>
-                        <p className="text-gray-800">{item}</p>
+                        <p className="text-white">{item}</p>
                       </div>
                     ))}
                   </div>
@@ -129,7 +129,7 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
               {/* Examples */}
               {lesson.content?.examples && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <Code className="w-5 h-5 text-green-600" />
                     Ví dụ code
                   </h3>
@@ -146,7 +146,7 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
               {/* Key Points */}
               {lesson.content?.keyPoints && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                     <CheckCircle className="w-5 h-5 text-green-600" />
                     Điểm quan trọng
                   </h3>
@@ -154,7 +154,7 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
                     {lesson.content.keyPoints.map((point, index) => (
                       <div key={index} className="flex items-start gap-2">
                         <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                        <p className="text-gray-800">{point}</p>
+                        <p className="text-white">{point}</p>
                       </div>
                     ))}
                   </div>
@@ -168,8 +168,8 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
             <>
               {/* Description */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Mô tả bài tập</h3>
-                <p className="text-gray-700 bg-gray-50 p-6 rounded-2xl">
+                <h3 className="text-xl font-bold text-white mb-4">Mô tả bài tập</h3>
+                <p className="text-gray-300 bg-gray-50 p-6 rounded-2xl">
                   {lesson.content?.description || lesson.description || 'Hoàn thành bài tập theo yêu cầu'}
                 </p>
               </div>
@@ -177,12 +177,12 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
               {/* Requirements */}
               {content.requirements && content.requirements.length > 0 && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Yêu cầu</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Yêu cầu</h3>
                   <div className="bg-blue-50 rounded-2xl p-6 space-y-2">
                     {content.requirements.map((req: string, index: number) => (
                       <div key={index} className="flex gap-3">
                         <span className="text-blue-600 font-bold">{index + 1}.</span>
-                        <p className="text-gray-800">{req}</p>
+                        <p className="text-white">{req}</p>
                       </div>
                     ))}
                   </div>
@@ -192,8 +192,8 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
               {/* Buggy Code (if exists) */}
               {lesson.content?.buggyCode && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 text-red-600">Code có lỗi</h3>
-                  <pre className="bg-red-50 border-2 border-red-200 text-gray-900 p-4 rounded-xl overflow-x-auto">
+                  <h3 className="text-xl font-bold text-white mb-4 text-red-600">Code có lỗi</h3>
+                  <pre className="bg-red-50 border-2 border-red-200 text-white p-4 rounded-xl overflow-x-auto">
                     <code>{lesson.content.buggyCode}</code>
                   </pre>
                 </div>
@@ -202,12 +202,12 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
               {/* Hints */}
               {lesson.content?.hints && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Gợi ý</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Gợi ý</h3>
                   <div className="bg-yellow-50 rounded-2xl p-6 space-y-2">
                     {lesson.content.hints.map((hint, index) => (
                       <div key={index} className="flex items-start gap-2">
                         <span className="text-yellow-600">💡</span>
-                        <p className="text-gray-800">{hint}</p>
+                        <p className="text-white">{hint}</p>
                       </div>
                     ))}
                   </div>
@@ -217,7 +217,7 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
               {/* Test Cases */}
               {lesson.content?.testCases && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Test Cases</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">Test Cases</h3>
                   <div className="space-y-2">
                     {lesson.content.testCases.map((testCase, index) => (
                       <pre key={index} className="bg-gray-100 p-4 rounded-xl">
@@ -231,7 +231,7 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
               {/* Code Editor */}
               {content.starterCode && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">💻 Code Editor</h3>
+                  <h3 className="text-xl font-bold text-white mb-4">💻 Code Editor</h3>
                   <CodeEditor
                     starterCode={content.starterCode}
                     testCases={content.testCases || []}
@@ -251,3 +251,4 @@ export const LessonDetail = ({ lesson, onClose }: LessonDetailProps) => {
     </div>
   );
 };
+

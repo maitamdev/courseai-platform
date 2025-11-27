@@ -47,15 +47,15 @@ export const TreasureMap = ({ treasures, foundTreasures, userProgress, onTreasur
         <div className="flex gap-4 text-sm flex-wrap">
           <div className="flex items-center gap-1 bg-white/80 px-3 py-1.5 rounded-full shadow-md">
             <Lock className="w-4 h-4 text-gray-500" />
-            <span className="text-gray-700 font-semibold">Khóa</span>
+            <span className="text-gray-300 font-semibold">Khóa</span>
           </div>
           <div className="flex items-center gap-1 bg-white/80 px-3 py-1.5 rounded-full shadow-md">
             <MapPin className="w-4 h-4 text-blue-600" />
-            <span className="text-gray-700 font-semibold">Có thể mở</span>
+            <span className="text-gray-300 font-semibold">Có thể mở</span>
           </div>
           <div className="flex items-center gap-1 bg-white/80 px-3 py-1.5 rounded-full shadow-md">
             <CheckCircle className="w-4 h-4 text-green-600" />
-            <span className="text-gray-700 font-semibold">Đã tìm thấy</span>
+            <span className="text-gray-300 font-semibold">Đã tìm thấy</span>
           </div>
         </div>
       </div>
@@ -202,7 +202,7 @@ export const TreasureMap = ({ treasures, foundTreasures, userProgress, onTreasur
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-bold text-gray-900">{selectedLocation}</h3>
+              <h3 className="text-xl font-bold text-white">{selectedLocation}</h3>
               <button
                 onClick={() => setSelectedLocation(null)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -238,10 +238,10 @@ export const TreasureMap = ({ treasures, foundTreasures, userProgress, onTreasur
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h4 className="font-semibold text-gray-900">
+                          <h4 className="font-semibold text-white">
                             {found ? treasure.title : '???'}
                           </h4>
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-sm text-gray-300 mt-1">
                             +{treasure.coins_reward} xu
                           </p>
                         </div>
@@ -263,3 +263,4 @@ export const TreasureMap = ({ treasures, foundTreasures, userProgress, onTreasur
     </div>
   );
 };
+

@@ -176,7 +176,7 @@ export const AIAssistant = () => {
                   className={`max-w-[75%] rounded-2xl px-4 py-2 ${
                     message.role === 'user'
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-900'
+                      : 'bg-gray-100 text-white'
                   }`}
                 >
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -184,7 +184,7 @@ export const AIAssistant = () => {
 
                 {message.role === 'user' && (
                   <div className="flex-shrink-0 w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-gray-600" />
+                    <User className="w-5 h-5 text-gray-300" />
                   </div>
                 )}
               </div>
@@ -232,3 +232,4 @@ export const AIAssistant = () => {
     </>
   );
 };
+

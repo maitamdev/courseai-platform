@@ -134,18 +134,18 @@ export const CodeEditor = ({ starterCode, testCases, rubric, solution, onSubmit 
       {/* Output */}
       {output && (
         <div className="bg-gray-100 rounded-2xl p-4">
-          <h4 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
+          <h4 className="font-bold text-white mb-2 flex items-center gap-2">
             <Clock className="w-5 h-5" />
             Kết quả
           </h4>
-          <pre className="text-sm text-gray-800 whitespace-pre-wrap font-mono">{output}</pre>
+          <pre className="text-sm text-white whitespace-pre-wrap font-mono">{output}</pre>
         </div>
       )}
 
       {/* Test Results */}
       {testResults.length > 0 && (
         <div className="bg-white rounded-2xl p-6 border-2 border-gray-200">
-          <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <h4 className="font-bold text-white mb-4 flex items-center gap-2">
             <Award className="w-5 h-5 text-yellow-600" />
             Chi tiết chấm điểm
           </h4>
@@ -172,7 +172,7 @@ export const CodeEditor = ({ starterCode, testCases, rubric, solution, onSubmit 
             ))}
           </div>
           <div className="mt-4 pt-4 border-t-2 border-gray-200 flex justify-between items-center">
-            <span className="text-lg font-bold text-gray-900">Tổng điểm:</span>
+            <span className="text-lg font-bold text-white">Tổng điểm:</span>
             <span className={`text-3xl font-black ${
               score >= 80 ? 'text-green-600' : score >= 60 ? 'text-yellow-600' : 'text-red-600'
             }`}>
@@ -194,3 +194,4 @@ export const CodeEditor = ({ starterCode, testCases, rubric, solution, onSubmit 
     </div>
   );
 };
+

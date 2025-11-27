@@ -31,10 +31,10 @@ export const LessonModal = ({ lesson, onClose, onComplete, completed }: LessonMo
       <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            <h2 className="text-2xl font-bold text-white mb-2">
               {lesson.title}
             </h2>
-            <p className="text-gray-600">{lesson.description}</p>
+            <p className="text-gray-300">{lesson.description}</p>
           </div>
           <button
             onClick={onClose}
@@ -49,8 +49,8 @@ export const LessonModal = ({ lesson, onClose, onComplete, completed }: LessonMo
             <div className="flex items-start gap-3">
               <Lightbulb className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Lý thuyết</h3>
-                <p className="text-gray-700 leading-relaxed">
+                <h3 className="font-semibold text-white mb-2">Lý thuyết</h3>
+                <p className="text-gray-300 leading-relaxed">
                   {lesson.content.theory}
                 </p>
               </div>
@@ -59,9 +59,9 @@ export const LessonModal = ({ lesson, onClose, onComplete, completed }: LessonMo
 
           <div className="bg-gray-50 rounded-xl p-5">
             <div className="flex items-start gap-3">
-              <Code className="w-6 h-6 text-gray-600 flex-shrink-0 mt-1" />
+              <Code className="w-6 h-6 text-gray-300 flex-shrink-0 mt-1" />
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-2">Ví dụ</h3>
+                <h3 className="font-semibold text-white mb-2">Ví dụ</h3>
                 <pre className="bg-gray-900 text-green-400 p-4 rounded-lg overflow-x-auto text-sm font-mono">
                   {lesson.content.example}
                 </pre>
@@ -73,8 +73,8 @@ export const LessonModal = ({ lesson, onClose, onComplete, completed }: LessonMo
             <div className="flex items-start gap-3">
               <Target className="w-6 h-6 text-orange-600 flex-shrink-0 mt-1" />
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 mb-2">Thử thách</h3>
-                <p className="text-gray-700 mb-4">
+                <h3 className="font-semibold text-white mb-2">Thử thách</h3>
+                <p className="text-gray-300 mb-4">
                   {lesson.content.challenge}
                 </p>
 
@@ -109,3 +109,4 @@ export const LessonModal = ({ lesson, onClose, onComplete, completed }: LessonMo
     </div>
   );
 };
+

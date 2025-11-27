@@ -96,7 +96,7 @@ export const ProfileStats = ({
       </div>
 
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <Target className="w-5 h-5 text-orange-600" />
           Nhiệm Vụ Hàng Ngày
         </h3>
@@ -116,13 +116,13 @@ export const ProfileStats = ({
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <h4 className="font-semibold text-gray-900">{quest.title}</h4>
-                    <p className="text-xs text-gray-600">{quest.description}</p>
+                    <h4 className="font-semibold text-white">{quest.title}</h4>
+                    <p className="text-xs text-gray-300">{quest.description}</p>
                   </div>
                   {completed && <Award className="w-5 h-5 text-green-600" />}
                 </div>
                 <div className="flex items-center justify-between text-xs mb-1">
-                  <span className="text-gray-600">
+                  <span className="text-gray-300">
                     {current}/{quest.target_value}
                   </span>
                   <span className="font-semibold text-orange-600">
@@ -144,7 +144,7 @@ export const ProfileStats = ({
       </div>
 
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <Trophy className="w-5 h-5 text-yellow-600" />
           Huy Hiệu ({earnedBadges.length}/{badges.length})
         </h3>
@@ -168,7 +168,7 @@ export const ProfileStats = ({
                     earned ? 'text-yellow-600' : 'text-gray-400'
                   }`}
                 />
-                <p className="text-xs font-semibold text-gray-900">{badge.name}</p>
+                <p className="text-xs font-semibold text-white">{badge.name}</p>
               </div>
             );
           })}
@@ -176,22 +176,23 @@ export const ProfileStats = ({
       </div>
 
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h3 className="text-lg font-bold text-gray-900 mb-4">Thống Kê</h3>
+        <h3 className="text-lg font-bold text-white mb-4">Thống Kê</h3>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
             <div className="text-3xl font-bold text-blue-600">{completedLessonsCount}</div>
-            <p className="text-xs text-gray-600 mt-1">Bài học</p>
+            <p className="text-xs text-gray-300 mt-1">Bài học</p>
           </div>
           <div>
             <div className="text-3xl font-bold text-orange-600">{foundTreasuresCount}</div>
-            <p className="text-xs text-gray-600 mt-1">Kho báu</p>
+            <p className="text-xs text-gray-300 mt-1">Kho báu</p>
           </div>
           <div>
             <div className="text-3xl font-bold text-green-600">{purchasedCoursesCount}</div>
-            <p className="text-xs text-gray-600 mt-1">Khóa học</p>
+            <p className="text-xs text-gray-300 mt-1">Khóa học</p>
           </div>
         </div>
       </div>
     </div>
   );
 };
+

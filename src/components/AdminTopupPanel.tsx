@@ -130,7 +130,7 @@ export const AdminTopupPanel = () => {
     <div className="max-w-6xl mx-auto p-6">
       <div className="bg-white rounded-3xl shadow-xl p-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-bold text-gray-900">👨‍💼 Admin - Duyệt Nạp Xu</h2>
+          <h2 className="text-3xl font-bold text-white">👨‍💼 Admin - Duyệt Nạp Xu</h2>
           <button
             onClick={loadRequests}
             className="p-3 bg-blue-100 text-blue-600 rounded-xl hover:bg-blue-200 transition-colors"
@@ -142,7 +142,7 @@ export const AdminTopupPanel = () => {
         {requests.length === 0 ? (
           <div className="text-center py-12">
             <Clock className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600">Không có yêu cầu nào đang chờ</p>
+            <p className="text-gray-300">Không có yêu cầu nào đang chờ</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -154,25 +154,25 @@ export const AdminTopupPanel = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Left: User Info */}
                   <div>
-                    <div className="text-sm text-gray-600 mb-1">User</div>
-                    <div className="font-bold text-gray-900 mb-2">
+                    <div className="text-sm text-gray-300 mb-1">User</div>
+                    <div className="font-bold text-white mb-2">
                       {req.profiles.username || req.profiles.email}
                     </div>
-                    <div className="text-sm text-gray-600 mb-4">{req.profiles.email}</div>
+                    <div className="text-sm text-gray-300 mb-4">{req.profiles.email}</div>
 
-                    <div className="text-sm text-gray-600 mb-1">Số tiền</div>
+                    <div className="text-sm text-gray-300 mb-1">Số tiền</div>
                     <div className="text-2xl font-bold text-blue-600 mb-4">
                       {formatPrice(req.amount_vnd)}
                     </div>
 
-                    <div className="text-sm text-gray-600 mb-1">Xu nhận được</div>
+                    <div className="text-sm text-gray-300 mb-1">Xu nhận được</div>
                     <div className="text-xl font-bold text-green-600 mb-4">
                       {req.coins_amount} xu
                     </div>
 
                     {req.transfer_note && (
                       <>
-                        <div className="text-sm text-gray-600 mb-1">Ghi chú</div>
+                        <div className="text-sm text-gray-300 mb-1">Ghi chú</div>
                         <div className="text-sm bg-gray-50 p-3 rounded-lg">
                           {req.transfer_note}
                         </div>
@@ -217,3 +217,4 @@ export const AdminTopupPanel = () => {
     </div>
   );
 };
+
