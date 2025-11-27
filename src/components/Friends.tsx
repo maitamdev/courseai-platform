@@ -83,21 +83,30 @@ export const Friends = () => {
   const [chatFriend, setChatFriend] = useState<Friend | null>(null);
 
   useEffect(() => {
-    if (user && !hasFetched.current) {
+    if (!user) return;
+    
+    // Use cached data immediately if available
+    if (cachedFriends && !isFriendsExpired()) {
+      if (friends.length === 0) {
+        setFriends(cachedFriends);
+      }
+      setLoading(false);
+    }
+    
+    // Only fetch once
+    if (!hasFetched.current) {
       hasFetched.current = true;
       
-      // Only fetch if cache expired
+      // Fetch if no cache or expired
       if (!cachedFriends || isFriendsExpired()) {
         fetchFriends();
-      } else {
-        setLoading(false);
       }
       
       fetchRequests();
       fetchActivities();
       fetchLeaderboard();
     }
-  }, [user, cachedFriends, isFriendsExpired]);
+  }, [user]);
 
   const fetchFriends = async () => {
     if (!user) return;

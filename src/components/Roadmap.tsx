@@ -54,16 +54,23 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
   const [loading, setLoading] = useState(!cachedCourses);
 
   useEffect(() => {
-    // Only fetch if no cache or cache expired
-    if (user && (!cachedCourses || isExpired()) && !hasFetched.current) {
+    if (!user) return;
+    
+    // Use cached data immediately if available and not expired
+    if (cachedCourses && !isExpired()) {
+      if (purchasedCourses.length === 0) {
+        setPurchasedCourses(cachedCourses);
+      }
+      setLoading(false);
+      return;
+    }
+    
+    // Only fetch if no cache or expired, and haven't fetched yet
+    if (!hasFetched.current) {
       hasFetched.current = true;
       fetchPurchasedCourses();
-    } else if (cachedCourses && !isExpired()) {
-      // Use cached data
-      setPurchasedCourses(cachedCourses);
-      setLoading(false);
     }
-  }, [user, cachedCourses, isExpired]);
+  }, [user]);
 
   const fetchPurchasedCourses = async () => {
     if (!user) return;
