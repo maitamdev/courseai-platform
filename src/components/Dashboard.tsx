@@ -10,7 +10,6 @@ import { Roadmap } from './Roadmap';
 import { ProfileStats } from './ProfileStats';
 import { AIAssistant } from './AIAssistant';
 import { Header } from './Header';
-import { Sidebar } from './Sidebar';
 import { Footer } from './Footer';
 import { HomePage } from './HomePage';
 import { CoursesByLanguage } from './CoursesByLanguage';
@@ -18,12 +17,19 @@ import { CourseDetail } from './CourseDetail';
 import { CoinPurchase } from './CoinPurchase';
 import { GameCategories } from './GameCategories';
 import { ProfilePage } from './ProfilePage';
+import { CourseRoadmap } from './CourseRoadmap';
+import { TreasureQuestGame } from './TreasureQuestGame';
+import { Friends } from './Friends';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'roadmap' | 'profile';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'roadmap' | 'profile' | 'course-roadmap' | 'treasure-quest' | 'friends';
 
 export const Dashboard = () => {
   const { user, profile, refreshProfile } = useAuth();
-  const [activeTab, setActiveTab] = useState<Tab>('home');
+  // Lưu và khôi phục tab từ localStorage
+  const [activeTab, setActiveTab] = useState<Tab>(() => {
+    const saved = localStorage.getItem('activeTab');
+    return (saved as Tab) || 'home';
+  });
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [userProgress, setUserProgress] = useState<UserProgress[]>([]);
   const [treasures, setTreasures] = useState<Treasure[]>([]);
@@ -33,6 +39,7 @@ export const Dashboard = () => {
   const [selectedTreasure, setSelectedTreasure] = useState<Treasure | null>(null);
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
   const [selectedGameLevel, setSelectedGameLevel] = useState<any>(null);
+  const [roadmapCourseId, setRoadmapCourseId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
@@ -63,6 +70,11 @@ export const Dashboard = () => {
   useEffect(() => {
     fetchData();
   }, [user]);
+
+  // Lưu activeTab vào localStorage khi thay đổi
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
 
   const isLessonCompleted = (lessonId: string) => {
     return userProgress.some((p) => p.lesson_id === lessonId && p.completed);
@@ -195,11 +207,7 @@ export const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500 flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute w-96 h-96 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob top-0 left-0"></div>
-          <div className="absolute w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 bottom-0 right-0"></div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
         <div className="text-center relative z-10">
           <div className="relative w-16 h-16 mx-auto mb-4">
             <div className="absolute inset-0 border-4 border-white/30 rounded-full"></div>
@@ -212,31 +220,80 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+    <div className="min-h-screen">
+      <Header activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <div className="lg:ml-72 pt-16 transition-all duration-300">
-        <main className="max-w-7xl mx-auto px-4 py-8 min-h-screen">
-          {activeTab === 'home' && (
+      <div className="transition-all duration-300">
+        {activeTab === 'home' ? (
+          <div className="animate-fade-in-up">
             <HomePage onGetStarted={() => setActiveTab('lessons')} />
-          )}
+          </div>
+        ) : (
+          <main className="max-w-7xl mx-auto px-4 py-8 min-h-screen">
+            {activeTab === 'lessons' && (
+              <div key="lessons" className="animate-fade-in-up">
+                <CoursesByLanguage onCourseSelect={(courseId) => {
+                  setRoadmapCourseId(courseId);
+                  setActiveTab('course-roadmap');
+                }} />
+              </div>
+            )}
 
-          {activeTab === 'lessons' && (
-            <CoursesByLanguage onCourseSelect={setSelectedCourseId} />
+          {activeTab === 'course-roadmap' && roadmapCourseId && (
+            <div key="course-roadmap" className="animate-fade-in-up">
+              <CourseRoadmap 
+                courseId={roadmapCourseId} 
+                onLessonSelect={(lessonId) => {
+                  console.log('Open lesson:', lessonId);
+                }}
+              />
+            </div>
           )}
 
           {activeTab === 'games' && (
-            <GameCategories onLevelSelect={setSelectedGameLevel} />
+            <div key="games" className="animate-fade-in-up">
+              <GameCategories 
+                onLevelSelect={setSelectedGameLevel}
+                onTreasureQuestClick={() => setActiveTab('treasure-quest')}
+              />
+            </div>
           )}
 
-          {activeTab === 'coins' && <CoinPurchase />}
+          {activeTab === 'treasure-quest' && (
+            <div key="treasure-quest" className="animate-fade-in-up">
+              <TreasureQuestGame />
+            </div>
+          )}
+
+          {activeTab === 'coins' && (
+            <div key="coins" className="animate-fade-in-up">
+              <CoinPurchase />
+            </div>
+          )}
 
           {activeTab === 'roadmap' && (
-            <Roadmap />
+            <div key="roadmap" className="animate-fade-in-up">
+              <Roadmap onCourseSelect={(courseId) => {
+                setRoadmapCourseId(courseId);
+                setActiveTab('course-roadmap');
+              }} />
+            </div>
           )}
 
-          {activeTab === 'profile' && <ProfilePage />}
+          {activeTab === 'profile' && (
+            <div key="profile" className="animate-fade-in-up">
+              <ProfilePage onCourseSelect={(courseId) => {
+                setRoadmapCourseId(courseId);
+                setActiveTab('course-roadmap');
+              }} />
+            </div>
+          )}
+
+          {activeTab === 'friends' && (
+            <div key="friends" className="animate-fade-in-up">
+              <Friends />
+            </div>
+          )}
 
           {selectedCourseId && (
             <CourseDetail
@@ -262,8 +319,9 @@ export const Dashboard = () => {
             />
           )}
 
-          <AIAssistant />
-        </main>
+            <AIAssistant />
+          </main>
+        )}
 
         <Footer />
       </div>

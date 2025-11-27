@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { BookOpen, Gamepad2, Coins, Route, User, Home, Menu, X, Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'roadmap' | 'profile';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'roadmap' | 'profile' | 'course-roadmap';
 
 type SidebarProps = {
   activeTab: Tab;
@@ -25,21 +25,21 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
     <>
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-20 left-4 z-50 p-3 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all"
+        className="lg:hidden fixed top-20 left-4 z-50 p-3 bg-white/80 backdrop-blur-xl rounded-xl shadow-lg hover:shadow-xl transition-all border border-white/30"
       >
         {isMobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="hidden lg:block fixed top-24 z-50 p-2 bg-white rounded-r-xl shadow-lg hover:shadow-xl transition-all border-l-0 border"
+        className="hidden lg:block fixed top-24 z-50 p-2 bg-white/80 backdrop-blur-xl rounded-r-xl shadow-lg hover:shadow-xl transition-all border-l-0 border border-white/30"
         style={{ left: isCollapsed ? '64px' : '272px' }}
       >
         {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
       </button>
 
       <aside
-        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white border-r border-gray-200 shadow-xl z-40 transition-all duration-300 ${
+        className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-white/80 backdrop-blur-xl border-r border-white/30 shadow-xl z-40 transition-all duration-300 ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         } ${isCollapsed ? 'lg:w-20' : 'lg:w-72'}`}
       >

@@ -1,203 +1,212 @@
-import { Code2, Sparkles, Rocket, Trophy, Target, Zap, ArrowRight, Star, Users, BookOpen } from 'lucide-react';
+import { useState } from 'react';
+import { Code2, Users, Library, GraduationCap, ChevronLeft, ChevronRight } from 'lucide-react';
 
 type HomePageProps = {
   onGetStarted: () => void;
 };
 
 export const HomePage = ({ onGetStarted }: HomePageProps) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const slides = [
+    {
+      title: 'Học Lập Trình Vui Như Chơi Game',
+      description: 'Nền tảng học code online với phương pháp gamification độc đáo. Hoàn thành bài học, săn kho báu, kiếm xu và leo top bảng xếp hạng cùng hàng ngàn học viên khác.',
+    },
+    {
+      title: 'Khóa Học Chất Lượng Cao',
+      description: 'Hơn 50+ khóa học từ cơ bản đến nâng cao về JavaScript, Python, C++, React và nhiều ngôn ngữ khác. Nội dung được biên soạn bởi các chuyên gia hàng đầu.',
+    },
+    {
+      title: 'Thực Hành Ngay Trên Trình Duyệt',
+      description: 'Code editor tích hợp sẵn, chạy code và xem kết quả ngay lập tức. Không cần cài đặt gì, học mọi lúc mọi nơi với chỉ một trình duyệt web.',
+    },
+  ];
+
+  const features = [
+    {
+      icon: GraduationCap,
+      title: 'Học Tập Linh Hoạt',
+      description: 'Học mọi lúc mọi nơi với nội dung được tối ưu cho mọi thiết bị.',
+    },
+    {
+      icon: Users,
+      title: 'Giảng Viên Chuyên Nghiệp',
+      description: 'Đội ngũ giảng viên giàu kinh nghiệm và tâm huyết với nghề.',
+    },
+    {
+      icon: Library,
+      title: 'Thư Viện Phong Phú',
+      description: 'Hàng trăm tài liệu, bài tập và dự án thực tế để thực hành.',
+    },
+  ];
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
   return (
-    <div className="space-y-20">
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-12 md:p-20 text-white">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-96 h-96 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob top-0 -left-48"></div>
-          <div className="absolute w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000 -bottom-48 -right-48"></div>
-        </div>
+    <div className="w-full">
+      {/* Hero Section with Slider */}
+      <section className="relative bg-gray-700/60 backdrop-blur-md w-full">
+        <div className="max-w-7xl mx-auto px-4 py-32 relative">
+          {/* Slider Navigation */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-8 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all border border-white/20"
+          >
+            <ChevronLeft className="w-6 h-6 text-white" />
+          </button>
 
-        <div className="relative z-10 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-              <Sparkles className="w-4 h-4" />
-              <span className="text-sm font-semibold">Học lập trình theo cách mới</span>
-            </div>
+          <button
+            onClick={nextSlide}
+            className="absolute right-8 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transition-all border border-white/20"
+          >
+            <ChevronRight className="w-6 h-6 text-white" />
+          </button>
 
-            <h1 className="text-5xl md:text-6xl font-black mb-6 leading-tight">
-              Học Code Vui Như Chơi Game
+          {/* Slide Content */}
+          <div className="text-center text-white max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-6xl font-black mb-6 leading-tight animate-fade-in">
+              {slides[currentSlide].title}
             </h1>
-
-            <p className="text-xl text-white/90 mb-8 leading-relaxed">
-              Nền tảng học lập trình online với phương pháp gamification. Hoàn thành bài học, săn kho báu, kiếm xu và leo top!
+            <p className="text-xl text-white/80 mb-10 leading-relaxed max-w-3xl mx-auto animate-fade-in">
+              {slides[currentSlide].description}
             </p>
+            <button
+              onClick={onGetStarted}
+              className="px-10 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-xl hover:shadow-2xl"
+            >
+              BẮT ĐẦU KHÓA HỌC
+            </button>
+          </div>
 
-            <div className="flex flex-wrap gap-4">
+          {/* Slide Indicators */}
+          <div className="flex justify-center gap-2 mt-12">
+            {slides.map((_, index) => (
               <button
-                onClick={onGetStarted}
-                className="group px-8 py-4 bg-white text-purple-600 rounded-xl font-bold text-lg hover:shadow-2xl transition-all flex items-center gap-2 hover:scale-105"
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all ${
+                  index === currentSlide ? 'bg-yellow-400 w-8' : 'bg-white/30 hover:bg-white/50'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="bg-gray-900/70 backdrop-blur-lg w-full py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={index}
+                  className="flex items-start gap-6 text-white"
+                >
+                  <div className="flex-shrink-0">
+                    <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
+                      <Icon className="w-8 h-8 text-gray-900" />
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                    <p className="text-white/70 leading-relaxed">{feature.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="bg-gray-800/60 backdrop-blur-md w-full py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8 text-center text-white">
+            <div>
+              <div className="text-5xl font-black mb-2 text-yellow-400">10K+</div>
+              <div className="text-lg text-white/80">Học viên</div>
+            </div>
+            <div>
+              <div className="text-5xl font-black mb-2 text-yellow-400">50+</div>
+              <div className="text-lg text-white/80">Khóa học</div>
+            </div>
+            <div>
+              <div className="text-5xl font-black mb-2 text-yellow-400">100+</div>
+              <div className="text-lg text-white/80">Bài học</div>
+            </div>
+            <div>
+              <div className="text-5xl font-black mb-2 text-yellow-400">4.9★</div>
+              <div className="text-lg text-white/80">Đánh giá</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Courses Section */}
+      <section className="bg-gray-900/70 backdrop-blur-lg w-full py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black text-white mb-4">Khóa Học Phổ Biến</h2>
+            <p className="text-xl text-white/70">Bắt đầu hành trình học code của bạn ngay hôm nay</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { title: 'JavaScript Cơ Bản', lessons: '20 bài học', level: 'Beginner', color: 'from-blue-500 to-blue-600' },
+              { title: 'Python cho AI', lessons: '25 bài học', level: 'Intermediate', color: 'from-green-500 to-green-600' },
+              { title: 'React.js Advanced', lessons: '30 bài học', level: 'Advanced', color: 'from-purple-500 to-purple-600' },
+            ].map((course, index) => (
+              <div
+                key={index}
+                className="bg-gray-700/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-600 hover:border-yellow-400 transition-all hover:scale-105 cursor-pointer group"
               >
-                <span>Bắt đầu học ngay</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-
-              <button className="px-8 py-4 bg-white/20 backdrop-blur-sm text-white rounded-xl font-bold text-lg hover:bg-white/30 transition-all border-2 border-white/30">
-                Xem demo
-              </button>
-            </div>
-
-            <div className="flex items-center gap-8 mt-8 pt-8 border-t border-white/20">
-              <div>
-                <div className="text-3xl font-black">10K+</div>
-                <div className="text-sm text-white/80">Học viên</div>
-              </div>
-              <div>
-                <div className="text-3xl font-black">50+</div>
-                <div className="text-sm text-white/80">Bài học</div>
-              </div>
-              <div>
-                <div className="text-3xl font-black">4.9</div>
-                <div className="text-sm text-white/80 flex items-center gap-1">
-                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  Đánh giá
+                <div className={`h-40 bg-gradient-to-br ${course.color} flex items-center justify-center`}>
+                  <Code2 className="w-16 h-16 text-white" />
+                </div>
+                <div className="p-6">
+                  <div className="inline-block px-3 py-1 bg-yellow-400 text-gray-900 text-xs font-bold rounded-full mb-3">
+                    {course.level}
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                    {course.title}
+                  </h3>
+                  <p className="text-white/70 text-sm mb-4">{course.lessons}</p>
+                  <button
+                    onClick={onGetStarted}
+                    className="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-lg transition-all"
+                  >
+                    Xem chi tiết
+                  </button>
                 </div>
               </div>
-            </div>
-          </div>
-
-          <div className="hidden md:block relative">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-3xl blur-2xl opacity-50 animate-pulse"></div>
-              <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl p-8 border-2 border-white/20">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 bg-white/20 rounded-xl p-4">
-                    <Code2 className="w-12 h-12" />
-                    <div>
-                      <div className="font-bold">Học JavaScript</div>
-                      <div className="text-sm text-white/80">8 bài học hoàn thành</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 bg-white/20 rounded-xl p-4">
-                    <Trophy className="w-12 h-12 text-yellow-300" />
-                    <div>
-                      <div className="font-bold">Săn kho báu</div>
-                      <div className="text-sm text-white/80">5/10 kho báu tìm được</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 bg-white/20 rounded-xl p-4">
-                    <Zap className="w-12 h-12 text-orange-300" />
-                    <div>
-                      <div className="font-bold">Tích lũy XP</div>
-                      <div className="text-sm text-white/80">Level 5 - 450 XP</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="grid md:grid-cols-3 gap-8">
-        <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-2 border-gray-100 hover:border-blue-200 group">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-            <BookOpen className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Bài học tương tác</h3>
-          <p className="text-gray-600 leading-relaxed">
-            Học qua ví dụ thực tế, làm bài tập ngay trên trình duyệt. Code, chạy và xem kết quả ngay lập tức.
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-2 border-gray-100 hover:border-orange-200 group">
-          <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-            <Target className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Săn kho báu</h3>
-          <p className="text-gray-600 leading-relaxed">
-            Giải câu đố lập trình để mở khóa kho báu trên bản đồ. Nhận xu và phần thưởng hấp dẫn.
-          </p>
-        </div>
-
-        <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border-2 border-gray-100 hover:border-green-200 group">
-          <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-            <Trophy className="w-8 h-8 text-white" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Hệ thống thành tích</h3>
-          <p className="text-gray-600 leading-relaxed">
-            Kiếm XP, lên cấp, mở khóa huy hiệu. Hoàn thành nhiệm vụ hàng ngày để nhận thưởng.
-          </p>
-        </div>
-      </section>
-
-      <section className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl p-12 md:p-16">
-        <div className="text-center mb-12">
+      {/* CTA Section */}
+      <section className="bg-yellow-400/90 backdrop-blur-md w-full py-16">
+        <div className="max-w-7xl mx-auto px-4 text-center">
           <h2 className="text-4xl font-black text-gray-900 mb-4">
-            Tại sao chọn Code Quest?
+            Sẵn Sàng Bắt Đầu Học?
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Phương pháp học hiện đại, hiệu quả và vui vẻ
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Rocket className="w-10 h-10 text-white" />
-            </div>
-            <h4 className="font-bold text-lg mb-2">Học mọi lúc</h4>
-            <p className="text-gray-600 text-sm">
-              Học online, bất cứ đâu bất cứ khi nào
-            </p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Users className="w-10 h-10 text-white" />
-            </div>
-            <h4 className="font-bold text-lg mb-2">Cộng đồng</h4>
-            <p className="text-gray-600 text-sm">
-              Kết nối với hàng ngàn học viên khác
-            </p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Zap className="w-10 h-10 text-white" />
-            </div>
-            <h4 className="font-bold text-lg mb-2">Học nhanh</h4>
-            <p className="text-gray-600 text-sm">
-              Phương pháp gamification giúp tiếp thu nhanh
-            </p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Star className="w-10 h-10 text-white" />
-            </div>
-            <h4 className="font-bold text-lg mb-2">Chất lượng</h4>
-            <p className="text-gray-600 text-sm">
-              Nội dung được biên soạn bởi chuyên gia
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-12 md:p-16 text-center text-white relative overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-64 h-64 bg-white rounded-full opacity-10 blur-3xl -top-32 -left-32 animate-blob"></div>
-          <div className="absolute w-64 h-64 bg-white rounded-full opacity-10 blur-3xl -bottom-32 -right-32 animate-blob animation-delay-2000"></div>
-        </div>
-
-        <div className="relative z-10">
-          <h2 className="text-4xl md:text-5xl font-black mb-6">
-            Sẵn sàng bắt đầu?
-          </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Tham gia cùng hàng ngàn học viên đang học lập trình một cách vui vẻ và hiệu quả
+          <p className="text-xl text-gray-800 mb-8 max-w-2xl mx-auto">
+            Tham gia cùng hàng ngàn học viên đang học lập trình hiệu quả
           </p>
           <button
             onClick={onGetStarted}
-            className="px-10 py-5 bg-white text-purple-600 rounded-xl font-bold text-lg hover:shadow-2xl transition-all inline-flex items-center gap-2 hover:scale-105"
+            className="px-10 py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-xl"
           >
-            <span>Bắt đầu miễn phí</span>
-            <ArrowRight className="w-5 h-5" />
+            ĐĂNG KÝ NGAY
           </button>
         </div>
       </section>

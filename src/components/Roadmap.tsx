@@ -30,7 +30,11 @@ type Lesson = {
   is_free: boolean;
 };
 
-export const Roadmap = () => {
+type RoadmapProps = {
+  onCourseSelect?: (courseId: string) => void;
+};
+
+export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
   const { user } = useAuth();
   const [purchasedCourses, setPurchasedCourses] = useState<Course[]>([]);
   const [sections, setSections] = useState<{ [courseId: string]: Section[] }>({});
@@ -187,14 +191,14 @@ export const Roadmap = () => {
           const courseSections = sections[course.id] || [];
 
           return (
-            <div key={course.id} className="bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden">
+            <div key={course.id} className="bg-white rounded-3xl shadow-xl border-2 border-gray-200 overflow-hidden hover:border-blue-400 transition-all">
               <button
-                onClick={() => toggleCourse(course.id)}
-                className="w-full p-8 text-left hover:bg-gray-50 transition-colors"
+                onClick={() => onCourseSelect?.(course.id)}
+                className="w-full p-8 text-left hover:bg-gray-50 transition-colors group"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">{course.title}</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">{course.title}</h2>
                     <p className="text-gray-600 mb-3">{course.description}</p>
                     <div className="flex gap-6 text-sm text-gray-700">
                       <div className="flex items-center gap-2">
@@ -211,80 +215,11 @@ export const Roadmap = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="ml-4">
-                    {isExpanded ? (
-                      <ChevronUp className="w-8 h-8 text-gray-600" />
-                    ) : (
-                      <ChevronDown className="w-8 h-8 text-gray-600" />
-                    )}
+                  <div className="ml-4 px-6 py-3 bg-blue-600 text-white rounded-xl font-bold group-hover:bg-blue-700 transition-colors">
+                    Xem lộ trình →
                   </div>
                 </div>
               </button>
-
-              {isExpanded && (
-                <div className="p-6 bg-gray-50 border-t-2 border-gray-200">
-                  <div className="space-y-4">
-                    {courseSections.map((section) => {
-                      const isSectionExpanded = expandedSections.has(section.id);
-                      const sectionLessons = lessons[section.id] || [];
-
-                      return (
-                        <div key={section.id} className="bg-white rounded-2xl border-2 border-gray-200 overflow-hidden">
-                          <button
-                            onClick={() => toggleSection(section.id)}
-                            className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
-                          >
-                            <div className="flex items-center justify-between">
-                              <div className="flex-1">
-                                <h3 className="text-xl font-bold text-gray-900 mb-1">{section.title}</h3>
-                                <p className="text-sm text-gray-600">{sectionLessons.length} bài học</p>
-                              </div>
-                              <div>
-                                {isSectionExpanded ? (
-                                  <ChevronUp className="w-6 h-6 text-gray-600" />
-                                ) : (
-                                  <ChevronDown className="w-6 h-6 text-gray-600" />
-                                )}
-                              </div>
-                            </div>
-                          </button>
-
-                          {isSectionExpanded && (
-                            <div className="p-4 bg-gray-50 border-t-2 border-gray-200">
-                              <div className="space-y-2">
-                                {sectionLessons.map((lesson) => (
-                                  <button
-                                    key={lesson.id}
-                                    onClick={() => setSelectedLesson(lesson)}
-                                    className="w-full flex items-center gap-4 p-4 bg-white rounded-xl hover:bg-blue-50 hover:border-blue-300 border-2 border-gray-200 transition-all group"
-                                  >
-                                    <div className="flex-shrink-0">
-                                      {getLessonIcon(lesson.lesson_type)}
-                                    </div>
-                                    <div className="flex-1 text-left">
-                                      <h4 className="font-semibold text-gray-900 group-hover:text-blue-600">
-                                        {lesson.title}
-                                      </h4>
-                                      {lesson.video_duration && (
-                                        <span className="text-sm text-gray-600">
-                                          {formatDuration(lesson.video_duration)}
-                                        </span>
-                                      )}
-                                    </div>
-                                    <div className="flex-shrink-0">
-                                      <Play className="w-5 h-5 text-gray-400 group-hover:text-blue-600" />
-                                    </div>
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </div>
           );
         })}

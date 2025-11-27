@@ -103,10 +103,10 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-4xl font-black text-gray-900 mb-4">
+        <h1 className="text-4xl font-black text-white mb-4">
           Khóa Học Lập Trình
         </h1>
-        <p className="text-xl text-gray-600">
+        <p className="text-xl text-gray-300">
           Chọn ngôn ngữ bạn muốn học và bắt đầu hành trình của mình
         </p>
       </div>
@@ -118,8 +118,8 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
             onClick={() => setSelectedLanguage(lang.id)}
             className={`p-6 rounded-2xl border-4 transition-all hover:scale-105 ${
               selectedLanguage === lang.id
-                ? 'border-blue-500 bg-blue-50 shadow-xl'
-                : 'border-gray-200 bg-white shadow-lg hover:border-blue-300'
+                ? 'border-yellow-400 bg-gray-700/80 backdrop-blur-md shadow-xl'
+                : 'border-gray-600 bg-gray-800/60 backdrop-blur-md shadow-lg hover:border-yellow-400/50'
             }`}
           >
             <div className="text-center">
@@ -129,7 +129,7 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
               >
                 {lang.name[0]}
               </div>
-              <h3 className="font-bold text-gray-900 mb-1">{lang.name}</h3>
+              <h3 className="font-bold text-white mb-1">{lang.name}</h3>
               <span
                 className={`text-xs px-2 py-1 rounded-full border-2 ${
                   difficultyColors[lang.difficulty as keyof typeof difficultyColors]
@@ -143,12 +143,12 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
       </div>
 
       {courses.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-3xl">
-          <Code2 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-gray-900 mb-2">
+        <div className="text-center py-12 bg-gray-800/60 backdrop-blur-md rounded-3xl border border-gray-700">
+          <Code2 className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-white mb-2">
             Chưa có khóa học
           </h3>
-          <p className="text-gray-600">
+          <p className="text-gray-400">
             Các khóa học cho ngôn ngữ này đang được cập nhật
           </p>
         </div>
@@ -157,7 +157,7 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
           {courses.map((course) => (
             <div
               key={course.id}
-              className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all overflow-hidden border-2 border-gray-100 hover:border-blue-300 group cursor-pointer"
+              className="bg-gray-800/70 backdrop-blur-lg rounded-3xl shadow-lg hover:shadow-2xl transition-all overflow-hidden border-2 border-gray-700 hover:border-yellow-400 group cursor-pointer"
               onClick={() => onCourseSelect(course.id)}
             >
               <div className="relative h-48 bg-gradient-to-br from-blue-500 via-purple-600 to-pink-500 flex items-center justify-center overflow-hidden">
@@ -169,20 +169,20 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
               </div>
 
               <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <h3 className="text-xl font-bold text-white mb-2 line-clamp-2 group-hover:text-yellow-400 transition-colors">
                   {course.title}
                 </h3>
 
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                <p className="text-gray-300 text-sm mb-4 line-clamp-2">
                   {course.description}
                 </p>
 
-                <div className="flex items-center gap-2 text-sm text-gray-700 mb-3">
+                <div className="flex items-center gap-2 text-sm text-gray-300 mb-3">
                   <Users className="w-4 h-4" />
                   <span>{course.instructor_name}</span>
                 </div>
 
-                <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
                     <span>{course.duration_hours}h</span>
@@ -197,17 +197,17 @@ export const CoursesByLanguage = ({ onCourseSelect }: CoursesByLanguageProps) =>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                <div className="flex items-center justify-between pt-4 border-t border-gray-700">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                      <Code2 className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
+                      <Code2 className="w-4 h-4 text-gray-900" />
                     </div>
-                    <span className="text-2xl font-black text-gray-900">
+                    <span className="text-2xl font-black text-white">
                       {course.price_coins}
                     </span>
-                    <span className="text-sm text-gray-600">xu</span>
+                    <span className="text-sm text-gray-400">xu</span>
                   </div>
-                  <button className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-bold hover:shadow-lg transition-all hover:scale-105">
+                  <button className="px-6 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-bold hover:shadow-lg transition-all hover:scale-105">
                     Xem
                   </button>
                 </div>

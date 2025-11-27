@@ -23,7 +23,7 @@ const AI_RESPONSES: Record<string, string> = {
   'đối tượng': 'Object lưu dữ liệu dạng key-value: let user = { name: "An", age: 16 }; Truy cập: user.name hoặc user["name"].',
   'promise': 'Promise xử lý async: new Promise((resolve, reject) => { ... }). Dùng .then() hoặc async/await để xử lý kết quả.',
   'async': 'async/await làm code bất đồng bộ dễ đọc: async function getData() { const data = await fetch(url); return data; }',
-  'default': 'Tôi là AI trợ lý Code Quest! Tôi có thể giúp bạn với: biến, hàm, vòng lặp, if/else, mảng, object, promise, async/await. Hãy hỏi tôi bất cứ điều gì về lập trình!',
+  'default': 'Tôi là AI trợ lý COURSE AI! Tôi có thể giúp bạn với: biến, hàm, vòng lặp, if/else, mảng, object, promise, async/await. Hãy hỏi tôi bất cứ điều gì về lập trình!',
 };
 
 export const AIAssistant = () => {
@@ -32,7 +32,7 @@ export const AIAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Xin chào! Tôi là trợ lý AI của Code Quest. Bạn cần giúp gì về lập trình?',
+      content: 'Xin chào! Tôi là trợ lý AI của COURSE AI. Bạn cần giúp gì về lập trình?',
       timestamp: new Date(),
     },
   ]);

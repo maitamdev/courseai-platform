@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Gamepad2, Trophy, Star, Lock, Zap } from 'lucide-react';
+import { Gamepad2, Trophy, Star, Lock, Zap, Search } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { GameLevelPlayer } from './GameLevelPlayer';
@@ -36,15 +36,17 @@ type UserProgress = {
 
 type GameCategoriesProps = {
   onLevelSelect?: (level: GameLevel) => void;
+  onTreasureQuestClick?: () => void;
 };
 
-export const GameCategories = ({ onLevelSelect }: GameCategoriesProps) => {
+export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCategoriesProps) => {
   const { user, profile } = useAuth();
   const [categories, setCategories] = useState<GameCategory[]>([]);
   const [levels, setLevels] = useState<GameLevel[]>([]);
   const [progress, setProgress] = useState<UserProgress[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedLevel, setSelectedLevel] = useState<GameLevel | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -120,21 +122,25 @@ export const GameCategories = ({ onLevelSelect }: GameCategoriesProps) => {
   };
 
   const difficultyColors = {
-    easy: 'bg-green-100 text-green-700 border-green-300',
-    medium: 'bg-yellow-100 text-yellow-700 border-yellow-300',
-    hard: 'bg-red-100 text-red-700 border-red-300',
+    easy: 'bg-green-500',
+    medium: 'bg-yellow-400',
+    hard: 'bg-red-500',
   };
 
   const difficultyLabels = {
-    easy: 'Dễ',
-    medium: 'Trung bình',
-    hard: 'Khó',
+    easy: 'Beginner',
+    medium: 'Intermediate',
+    hard: 'Advanced',
   };
+
+  const filteredLevels = levels.filter((level) =>
+    level.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
       </div>
     );
   }
@@ -142,180 +148,188 @@ export const GameCategories = ({ onLevelSelect }: GameCategoriesProps) => {
   const selectedCat = categories.find((c) => c.id === selectedCategory);
 
   return (
-    <div>
-      <div className="mb-8">
-        <h1 className="text-4xl font-black text-gray-900 mb-4">
-          Trò Chơi Lập Trình
-        </h1>
-        <p className="text-xl text-gray-600">
-          Rèn luyện kỹ năng qua các thử thách thú vị
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {categories.map((category) => {
-          const categoryLevels = levels.filter((l) => l.category_id === category.id);
-          const completedLevels = categoryLevels.filter(
-            (l) => getLevelProgress(l.id)?.completed
-          ).length;
-
-          return (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`p-6 rounded-3xl border-4 transition-all hover:scale-105 text-left ${
-                selectedCategory === category.id
-                  ? 'border-blue-500 bg-blue-50 shadow-2xl'
-                  : 'border-gray-200 bg-white shadow-lg hover:border-blue-300'
-              }`}
-            >
-              <div className="flex items-start gap-4">
-                <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center text-white flex-shrink-0"
-                  style={{ backgroundColor: category.color }}
-                >
-                  <Gamepad2 className="w-8 h-8" />
+    <div className="w-full">
+      {/* Hero Section */}
+      <section className="relative bg-gray-800/60 backdrop-blur-md rounded-3xl p-12 mb-8 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-transparent"></div>
+        <div className="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h1 className="text-5xl font-black text-white mb-4">
+              Nâng Cao Kỹ Năng<br />Với Thử Thách Thú Vị
+            </h1>
+            <p className="text-xl text-gray-300 mb-6">
+              Khám phá bộ sưu tập trò chơi tương tác được thiết kế để học lập trình trở nên vui vẻ và hiệu quả. Bắt đầu chơi và xem kỹ năng của bạn phát triển!
+            </p>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={onTreasureQuestClick}
+                className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg font-bold transition-all hover:scale-105"
+              >
+                🏆 Kho Báu Bị Mất
+              </button>
+              <button
+                onClick={() => selectedCat && setSelectedLevel(levels[0])}
+                className="px-8 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all hover:scale-105"
+              >
+                Xem Tất Cả Game
+              </button>
+            </div>
+          </div>
+          <div className="hidden md:block">
+            <div className="relative">
+              <div className="absolute inset-0 bg-yellow-400/20 rounded-3xl blur-3xl"></div>
+              <div className="relative bg-gray-900/50 backdrop-blur-lg rounded-3xl p-8 border-2 border-gray-700">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 bg-gray-800/50 rounded-xl p-4">
+                    <Gamepad2 className="w-12 h-12 text-yellow-400" />
+                    <div>
+                      <div className="font-bold text-white">Python Maze Runner</div>
+                      <div className="text-sm text-gray-400">Master loops by guiding your character</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 bg-gray-800/50 rounded-xl p-4">
+                    <Trophy className="w-12 h-12 text-yellow-400" />
+                    <div>
+                      <div className="font-bold text-white">JavaScript Tower Defense</div>
+                      <div className="text-sm text-gray-400">Learn functions and logic</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-lg text-gray-900 mb-2">
-                    {category.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-3">
-                    {category.description}
-                  </p>
-                  {categoryLevels.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all"
-                          style={{
-                            width: `${(completedLevels / categoryLevels.length) * 100}%`,
-                          }}
-                        />
-                      </div>
-                      <span className="text-xs text-gray-600 font-medium">
-                        {completedLevels}/{categoryLevels.length}
-                      </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Explore Games Section */}
+      <section>
+        <h2 className="text-3xl font-black text-white mb-6">Khám Phá Trò Chơi</h2>
+
+        {/* Search and Filters */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Tìm kiếm trò chơi..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none"
+            />
+          </div>
+          <div className="flex gap-2">
+            <select className="px-4 py-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none">
+              <option>Language</option>
+              <option>Python</option>
+              <option>JavaScript</option>
+              <option>SQL</option>
+            </select>
+            <select className="px-4 py-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none">
+              <option>Difficulty</option>
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+            </select>
+            <select className="px-4 py-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none">
+              <option>Concept</option>
+              <option>Loops</option>
+              <option>Functions</option>
+              <option>Arrays</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Game Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredLevels.map((level) => {
+            const levelProgress = getLevelProgress(level.id);
+            const isUnlocked = isLevelUnlocked(level);
+            const isCompleted = levelProgress?.completed || false;
+
+            return (
+              <div
+                key={level.id}
+                className="bg-gray-800/70 backdrop-blur-lg rounded-xl overflow-hidden border border-gray-700 hover:border-yellow-400 transition-all hover:scale-105 cursor-pointer group"
+                onClick={() => isUnlocked && setSelectedLevel(level)}
+              >
+                {/* Game Image/Preview */}
+                <div className="relative h-48 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+                  {!isUnlocked && (
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                      <Lock className="w-12 h-12 text-gray-400" />
+                    </div>
+                  )}
+                  <Gamepad2 className="w-20 h-20 text-yellow-400 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  
+                  {/* Tags */}
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    <span className={`px-2 py-1 ${difficultyColors[level.difficulty as keyof typeof difficultyColors]} text-white text-xs font-bold rounded`}>
+                      {level.difficulty}
+                    </span>
+                    <span className="px-2 py-1 bg-gray-900/80 text-white text-xs font-bold rounded">
+                      {difficultyLabels[level.difficulty as keyof typeof difficultyLabels]}
+                    </span>
+                  </div>
+
+                  {isCompleted && (
+                    <div className="absolute top-3 right-3">
+                      <Trophy className="w-6 h-6 text-yellow-400" />
                     </div>
                   )}
                 </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
 
-      {selectedCat && (
-        <div className="bg-white rounded-3xl p-8 border-2 border-gray-200 shadow-xl">
-          <div className="flex items-center gap-4 mb-8">
-            <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center text-white"
-              style={{ backgroundColor: selectedCat.color }}
-            >
-              <Gamepad2 className="w-10 h-10" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-black text-gray-900 mb-2">
-                {selectedCat.name}
-              </h2>
-              <p className="text-gray-600">{selectedCat.description}</p>
-            </div>
-          </div>
+                {/* Game Info */}
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors line-clamp-1">
+                    {level.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">
+                    {level.description}
+                  </p>
 
-          {levels.length === 0 ? (
-            <div className="text-center py-12 bg-gray-50 rounded-2xl">
-              <Trophy className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                Chưa có màn chơi
-              </h3>
-              <p className="text-gray-600">
-                Các màn chơi đang được cập nhật
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {levels.map((level) => {
-                const levelProgress = getLevelProgress(level.id);
-                const isUnlocked = isLevelUnlocked(level);
-                const isCompleted = levelProgress?.completed || false;
+                  {levelProgress && levelProgress.stars > 0 && (
+                    <div className="flex gap-1 mb-3">
+                      {[1, 2, 3].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-4 h-4 ${
+                            star <= levelProgress.stars
+                              ? 'fill-yellow-400 text-yellow-400'
+                              : 'text-gray-600'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
 
-                return (
                   <button
-                    key={level.id}
-                    onClick={() => isUnlocked && setSelectedLevel(level)}
                     disabled={!isUnlocked}
-                    className={`relative p-6 rounded-2xl border-4 transition-all ${
-                      isCompleted
-                        ? 'border-green-500 bg-green-50 hover:scale-105'
-                        : isUnlocked
-                        ? 'border-blue-500 bg-white hover:scale-105 hover:shadow-xl'
-                        : 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-60'
+                    className={`w-full py-2 rounded-lg font-bold transition-all ${
+                      isUnlocked
+                        ? 'bg-yellow-400 hover:bg-yellow-500 text-gray-900'
+                        : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}
                   >
-                    {!isUnlocked && (
-                      <div className="absolute top-2 right-2">
-                        <Lock className="w-5 h-5 text-gray-500" />
-                      </div>
-                    )}
-
-                    {isCompleted && (
-                      <div className="absolute top-2 right-2">
-                        <Trophy className="w-5 h-5 text-yellow-600" />
-                      </div>
-                    )}
-
-                    <div className="text-center">
-                      <div className="text-4xl font-black text-gray-900 mb-2">
-                        {level.level_number}
-                      </div>
-
-                      {levelProgress && levelProgress.stars > 0 && (
-                        <div className="flex justify-center gap-1 mb-2">
-                          {[1, 2, 3].map((star) => (
-                            <Star
-                              key={star}
-                              className={`w-4 h-4 ${
-                                star <= levelProgress.stars
-                                  ? 'fill-yellow-400 text-yellow-400'
-                                  : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      )}
-
-                      <h4 className="font-bold text-sm text-gray-900 mb-2 line-clamp-2">
-                        {level.title}
-                      </h4>
-
-                      <div
-                        className={`text-xs px-2 py-1 rounded-full border-2 inline-block ${
-                          difficultyColors[level.difficulty as keyof typeof difficultyColors]
-                        }`}
-                      >
-                        {difficultyLabels[level.difficulty as keyof typeof difficultyLabels]}
-                      </div>
-
-                      {isUnlocked && (
-                        <div className="mt-3 flex items-center justify-center gap-2 text-xs text-gray-600">
-                          <div className="flex items-center gap-1">
-                            <Zap className="w-3 h-3 text-orange-500" />
-                            <span>+{level.xp_reward}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Trophy className="w-3 h-3 text-yellow-600" />
-                            <span>+{level.coins_reward}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    {isUnlocked ? 'Chơi Ngay' : 'Đã Khóa'}
                   </button>
-                );
-              })}
-            </div>
-          )}
+                </div>
+              </div>
+            );
+          })}
         </div>
-      )}
+
+        {filteredLevels.length === 0 && (
+          <div className="text-center py-16 bg-gray-800/60 backdrop-blur-md rounded-3xl border border-gray-700">
+            <Gamepad2 className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-white mb-2">
+              Không tìm thấy trò chơi
+            </h3>
+            <p className="text-gray-400">
+              Thử tìm kiếm với từ khóa khác
+            </p>
+          </div>
+        )}
+      </section>
 
       {selectedLevel && (
         <GameLevelPlayer

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Play, Lock, CheckCircle, Clock, FileText, BookOpen, Code2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { LessonDetail } from './LessonDetail';
 
 type Section = {
   id: string;
@@ -36,6 +37,7 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
+  const [selectedLesson, setSelectedLesson] = useState<any>(null);
 
   useEffect(() => {
     fetchCourseData();
@@ -236,9 +238,16 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
                       {isExpanded && (
                         <div className="p-4 bg-white">
                           {sectionLessons.map((lesson) => (
-                            <div
+                            <button
                               key={lesson.id}
-                              className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-colors mb-2"
+                              onClick={() => {
+                                if (lesson.is_free || isPurchased) {
+                                  setSelectedLesson(lesson);
+                                } else {
+                                  alert('Vui lòng mua khóa học để xem bài này!');
+                                }
+                              }}
+                              className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-colors mb-2 text-left"
                             >
                               <div className="flex items-center gap-3">
                                 <div className="text-blue-600">
@@ -260,7 +269,7 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
                                   <Lock className="w-5 h-5 text-gray-400" />
                                 )}
                               </div>
-                            </div>
+                            </button>
                           ))}
                         </div>
                       )}
@@ -316,6 +325,13 @@ export const CourseDetail = ({ courseId, onClose }: CourseDetailProps) => {
           </div>
         </div>
       </div>
+
+      {selectedLesson && (
+        <LessonDetail
+          lesson={selectedLesson}
+          onClose={() => setSelectedLesson(null)}
+        />
+      )}
     </div>
   );
 };
