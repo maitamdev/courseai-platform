@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Users, UserPlus, Search, Check, X, MessageCircle, Trophy, Zap, Clock, Activity, Gift, Swords, TrendingUp, Star, Award } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { FriendChat } from './FriendChat';
 
 type Friend = {
   friend_id: string;
@@ -70,6 +71,7 @@ export const Friends = () => {
   const [sendingCoins, setSendingCoins] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState<string | null>(null);
   const [coinAmount, setCoinAmount] = useState(10);
+  const [chatFriend, setChatFriend] = useState<Friend | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -137,18 +139,50 @@ export const Friends = () => {
     if (!user) return;
 
     try {
-      const { error } = await supabase.from('friend_requests').insert({
-        sender_id: user.id,
-        receiver_id: receiverId,
-        status: 'pending',
-      });
+      // Kiểm tra xem đã có request chưa
+      const { data: existing } = await supabase
+        .from('friend_requests')
+        .select('*')
+        .or(`and(sender_id.eq.${user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${user.id})`)
+        .maybeSingle();
 
-      if (error) throw error;
-      alert('Đã gửi lời mời kết bạn!');
+      if (existing) {
+        if (existing.status === 'pending') {
+          alert('Đã có lời mời kết bạn đang chờ xử lý!');
+        } else if (existing.status === 'rejected') {
+          // Xóa request cũ và tạo mới
+          await supabase.from('friend_requests').delete().eq('id', existing.id);
+          
+          const { error } = await supabase.from('friend_requests').insert({
+            sender_id: user.id,
+            receiver_id: receiverId,
+            status: 'pending',
+          });
+
+          if (error) throw error;
+          alert('Đã gửi lại lời mời kết bạn!');
+        } else {
+          alert('Đã là bạn bè rồi!');
+        }
+      } else {
+        const { error } = await supabase.from('friend_requests').insert({
+          sender_id: user.id,
+          receiver_id: receiverId,
+          status: 'pending',
+        });
+
+        if (error) throw error;
+        alert('Đã gửi lời mời kết bạn!');
+      }
+      
       searchUsers(); // Refresh search results
     } catch (error: any) {
       console.error('Error sending request:', error);
-      alert(error.message || 'Có lỗi xảy ra!');
+      if (error.message?.includes('duplicate key')) {
+        alert('Đã có lời mời kết bạn tồn tại! Vui lòng thử lại sau.');
+      } else {
+        alert(error.message || 'Có lỗi xảy ra!');
+      }
     }
   };
 
@@ -446,6 +480,13 @@ export const Friends = () => {
                 </div>
 
                 <div className="flex gap-2">
+                  <button
+                    onClick={() => setChatFriend(friend)}
+                    className="flex-1 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-bold transition-all"
+                  >
+                    <MessageCircle className="w-4 h-4 inline mr-1" />
+                    Nhắn Tin
+                  </button>
                   <button
                     onClick={() => setSelectedFriend(friend.friend_id)}
                     className="flex-1 py-2 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg text-sm font-bold transition-all"
@@ -783,6 +824,15 @@ export const Friends = () => {
             </div>
           </div>
         </div>
+      )}
+      {/* Friend Chat Modal */}
+      {chatFriend && (
+        <FriendChat
+          friendId={chatFriend.friend_id}
+          friendName={chatFriend.friend_full_name || chatFriend.friend_username}
+          friendUsername={chatFriend.friend_username}
+          onClose={() => setChatFriend(null)}
+        />
       )}
     </div>
   );
