@@ -191,20 +191,31 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
           const courseSections = sections[course.id] || [];
 
           return (
-            <div key={course.id} className="bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-xl border border-gray-700 overflow-hidden hover:border-yellow-400 transition-all">
+            <div 
+              key={course.id} 
+              className="relative rounded-xl shadow-xl border border-gray-700 overflow-hidden hover:border-yellow-400 transition-all group"
+              style={{
+                backgroundImage: 'url(https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=1200&q=80)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            >
+              {/* Dark overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-900/95 via-gray-900/90 to-gray-900/80 group-hover:from-gray-900/90 group-hover:via-gray-900/85 group-hover:to-gray-900/75 transition-all"></div>
+              
               <button
                 onClick={() => onCourseSelect?.(course.id)}
-                className="w-full p-5 text-left hover:bg-gray-700/50 transition-colors group flex items-center gap-4"
+                className="relative w-full p-5 text-left hover:bg-white/5 transition-colors flex items-center gap-4"
               >
                 {/* Icon */}
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
                   <Book className="w-8 h-8 text-white" />
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <h2 className="text-xl font-bold text-white mb-1 group-hover:text-yellow-400 transition-colors truncate">{course.title}</h2>
-                  <p className="text-sm text-gray-400 mb-2 line-clamp-1">{course.description}</p>
+                  <p className="text-sm text-gray-300 mb-2 line-clamp-1">{course.description}</p>
                   <div className="flex gap-4 text-xs text-gray-400">
                     <div className="flex items-center gap-1">
                       <Award className="w-3 h-3" />
@@ -222,7 +233,7 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
                 </div>
 
                 {/* Button */}
-                <div className="px-5 py-2.5 bg-yellow-400 text-gray-900 rounded-lg font-bold group-hover:bg-yellow-500 transition-colors flex items-center gap-2 flex-shrink-0">
+                <div className="px-5 py-2.5 bg-yellow-400 text-gray-900 rounded-lg font-bold group-hover:bg-yellow-500 transition-colors flex items-center gap-2 flex-shrink-0 shadow-lg">
                   Xem lộ trình
                   <ChevronRight className="w-4 h-4" />
                 </div>

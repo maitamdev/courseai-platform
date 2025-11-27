@@ -32,14 +32,14 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               <Sparkles className="w-7 h-7 text-yellow-300 drop-shadow-lg animate-pulse" />
             </div>
             <div>
-              <h1 className="text-2xl font-black text-white drop-shadow-lg">COURSE AI</h1>
+              <h1 className="text-2xl font-black text-white drop-shadow-lg">CodeMind AI</h1>
               <p className="text-xs text-white/80 font-medium">Học lập trình với AI</p>
             </div>
           </div>
 
           {/* Navigation Menu - Center (Full Width) */}
           {onTabChange && (
-            <div className="flex items-center gap-2 flex-1 justify-center max-w-4xl">
+            <div className="flex items-center gap-3 flex-1 justify-center max-w-5xl">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -48,14 +48,14 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                   <button
                     key={item.id}
                     onClick={() => onTabChange(item.id)}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
                       isActive
-                        ? 'bg-yellow-400 text-white shadow-lg scale-105'
+                        ? 'bg-yellow-400 text-gray-900 shadow-lg scale-105'
                         : 'text-white/90 hover:bg-gray-700/50 hover:text-white hover:scale-105'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
-                    <span className="hidden lg:inline">{item.label}</span>
+                    <span className="hidden xl:inline">{item.label}</span>
                   </button>
                 );
               })}
@@ -64,7 +64,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
 
           {/* User Info - Right */}
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-xl border-2 border-yellow-600">
+            <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 px-4 py-2 rounded-full flex items-center gap-2 shadow-xl border-2 border-yellow-600">
               <Coins className="w-5 h-5" />
               <span className="font-black">{profile?.total_coins || 0}</span>
             </div>

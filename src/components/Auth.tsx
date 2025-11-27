@@ -311,7 +311,7 @@ export const Auth = () => {
             </div>
           </div>
           <h1 className="text-5xl font-black text-white mb-3 drop-shadow-2xl animate-slide-down">
-            COURSE AI
+            CodeMind AI
           </h1>
           <p className="text-xl text-white/90 font-medium drop-shadow-lg animate-slide-up">
             Học lập trình với AI thông minh!

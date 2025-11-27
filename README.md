@@ -1,4 +1,4 @@
-# 🤖 COURSE AI - Nền tảng học lập trình với AI
+# 🤖 CodeMind AI - Nền tảng học lập trình với AI
 
 Nền tảng học lập trình hiện đại với AI trợ giảng, hệ thống nạp xu tự động qua QR Code và khóa học đa ngôn ngữ.
 

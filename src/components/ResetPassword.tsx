@@ -168,7 +168,7 @@ export const ResetPassword = () => {
             </div>
           </div>
           <h1 className="text-5xl font-black text-white mb-3 drop-shadow-2xl">
-            COURSE AI
+            CodeMind AI
           </h1>
           <p className="text-gray-400">Đặt lại mật khẩu của bạn</p>
         </div>

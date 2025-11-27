@@ -8,7 +8,7 @@ export const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Code2 className="w-8 h-8 text-yellow-400" />
-              <h3 className="text-2xl font-bold">COURSE AI</h3>
+              <h3 className="text-2xl font-bold">CodeMind AI</h3>
             </div>
             <p className="text-gray-400 mb-4">
               Nền tảng học lập trình online với phương pháp gamification, giúp bạn học code vui như chơi game.
@@ -133,7 +133,7 @@ export const Footer = () => {
         <div className="border-t border-gray-700 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              © 2024 COURSE AI. All rights reserved.
+              © 2024 CodeMind AI. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm text-gray-400">
               <a href="#" className="hover:text-white transition-colors">
