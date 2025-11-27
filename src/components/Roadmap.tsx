@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Play, CheckCircle, Lock, Book, Code2, Award, ChevronDown, ChevronUp, ChevronRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useCache } from '../hooks/useCache';
 
 type Course = {
   id: string;
@@ -36,17 +37,33 @@ type RoadmapProps = {
 
 export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
   const { user } = useAuth();
-  const [purchasedCourses, setPurchasedCourses] = useState<Course[]>([]);
+  const hasFetched = useRef(false);
+  
+  // Cache purchased courses
+  const { data: cachedCourses, setCache: setCachedCourses, isExpired } = useCache<Course[]>({
+    key: `roadmap-courses-${user?.id}`,
+    ttl: 10 * 60 * 1000, // 10 minutes
+  });
+  
+  const [purchasedCourses, setPurchasedCourses] = useState<Course[]>(cachedCourses || []);
   const [sections, setSections] = useState<{ [courseId: string]: Section[] }>({});
   const [lessons, setLessons] = useState<{ [sectionId: string]: Lesson[] }>({});
   const [expandedCourses, setExpandedCourses] = useState<Set<string>>(new Set());
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!cachedCourses);
 
   useEffect(() => {
-    fetchPurchasedCourses();
-  }, [user]);
+    // Only fetch if no cache or cache expired
+    if (user && (!cachedCourses || isExpired()) && !hasFetched.current) {
+      hasFetched.current = true;
+      fetchPurchasedCourses();
+    } else if (cachedCourses && !isExpired()) {
+      // Use cached data
+      setPurchasedCourses(cachedCourses);
+      setLoading(false);
+    }
+  }, [user, cachedCourses, isExpired]);
 
   const fetchPurchasedCourses = async () => {
     if (!user) return;
@@ -69,6 +86,7 @@ export const Roadmap = ({ onCourseSelect }: RoadmapProps) => {
         if (coursesError) throw coursesError;
         if (courses) {
           setPurchasedCourses(courses);
+          setCachedCourses(courses); // Cache the courses
           courses.forEach((course) => fetchCourseSections(course.id));
         }
       }

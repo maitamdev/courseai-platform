@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Users, UserPlus, Search, Check, X, MessageCircle, Trophy, Zap, Clock, Activity, Gift, Swords, TrendingUp, Star, Award } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { FriendChat } from './FriendChat';
+import { useCache } from '../hooks/useCache';
 
 type Friend = {
   friend_id: string;
@@ -60,27 +61,43 @@ type LeaderboardEntry = {
 
 export const Friends = () => {
   const { user } = useAuth();
+  const hasFetched = useRef(false);
+  
+  // Cache friends data
+  const { data: cachedFriends, setCache: setCachedFriends, isExpired: isFriendsExpired } = useCache<Friend[]>({
+    key: `friends-list-${user?.id}`,
+    ttl: 5 * 60 * 1000, // 5 minutes
+  });
+  
   const [activeTab, setActiveTab] = useState<'friends' | 'requests' | 'search' | 'activity' | 'leaderboard'>('friends');
-  const [friends, setFriends] = useState<Friend[]>([]);
+  const [friends, setFriends] = useState<Friend[]>(cachedFriends || []);
   const [requests, setRequests] = useState<FriendRequest[]>([]);
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [activities, setActivities] = useState<FriendActivity[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!cachedFriends);
   const [sendingCoins, setSendingCoins] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState<string | null>(null);
   const [coinAmount, setCoinAmount] = useState(10);
   const [chatFriend, setChatFriend] = useState<Friend | null>(null);
 
   useEffect(() => {
-    if (user) {
-      fetchFriends();
+    if (user && !hasFetched.current) {
+      hasFetched.current = true;
+      
+      // Only fetch if cache expired
+      if (!cachedFriends || isFriendsExpired()) {
+        fetchFriends();
+      } else {
+        setLoading(false);
+      }
+      
       fetchRequests();
       fetchActivities();
       fetchLeaderboard();
     }
-  }, [user]);
+  }, [user, cachedFriends, isFriendsExpired]);
 
   const fetchFriends = async () => {
     if (!user) return;
@@ -93,7 +110,10 @@ export const Friends = () => {
         .order('friends_since', { ascending: false });
 
       if (error) throw error;
-      if (data) setFriends(data);
+      if (data) {
+        setFriends(data);
+        setCachedFriends(data); // Cache friends list
+      }
     } catch (error) {
       console.error('Error fetching friends:', error);
     } finally {
