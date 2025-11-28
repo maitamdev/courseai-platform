@@ -213,24 +213,33 @@ export const Messages = () => {
     return () => clearInterval(interval);
   }, [selectedFriend, user]);
 
-  // Scroll to bottom only when new message is added
-  const prevMessageCountRef = useRef(0);
-  const shouldScrollRef = useRef(true);
+  // Scroll to bottom only on initial load or when user sends a message
+  const hasInitialScrolledRef = useRef(false);
+  const lastMessageIdRef = useRef<string | null>(null);
   
   useEffect(() => {
-    // Only scroll if new messages were added (not just fetched same messages)
-    if (messages.length > prevMessageCountRef.current && shouldScrollRef.current) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messages.length === 0) {
+      hasInitialScrolledRef.current = false;
+      return;
     }
-    prevMessageCountRef.current = messages.length;
-  }, [messages]);
+    
+    const lastMessage = messages[messages.length - 1];
+    const isNewMessageFromMe = lastMessage.sender_id === user?.id && lastMessage.id !== lastMessageIdRef.current;
+    
+    // Scroll only on: 1) Initial load, 2) When I send a new message
+    if (!hasInitialScrolledRef.current || isNewMessageFromMe) {
+      messagesEndRef.current?.scrollIntoView({ behavior: hasInitialScrolledRef.current ? 'smooth' : 'auto' });
+      hasInitialScrolledRef.current = true;
+    }
+    
+    lastMessageIdRef.current = lastMessage.id;
+  }, [messages, user?.id]);
 
-  // Track if user scrolled up
-  const handleMessagesScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLDivElement;
-    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 100;
-    shouldScrollRef.current = isAtBottom;
-  };
+  // Reset scroll flag when changing chat
+  useEffect(() => {
+    hasInitialScrolledRef.current = false;
+    lastMessageIdRef.current = null;
+  }, [selectedFriend?.friend_id]);
 
   // Recording timer
   useEffect(() => {
@@ -899,7 +908,7 @@ export const Messages = () => {
 
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-5 space-y-4 min-h-0" onScroll={handleMessagesScroll}>
+              <div className="flex-1 overflow-y-auto p-5 space-y-4 min-h-0">
                 {groupByDate(messages).map((g, i) => (
                   <div key={i}>
                     <div className="flex justify-center mb-4">
