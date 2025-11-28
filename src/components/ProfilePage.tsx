@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { User, BookOpen, Coins, Calendar, LogOut, Settings, Award, ShoppingBag } from 'lucide-react';
+import { User, BookOpen, Coins, Calendar, LogOut, Settings, Award, ShoppingBag, Camera } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { AvatarSelector } from './AvatarSelector';
 
 type PurchasedCourse = {
   id: string;
@@ -22,10 +23,11 @@ type CoinTransaction = {
 };
 
 export const ProfilePage = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<'info' | 'courses' | 'transactions'>('info');
   const [purchasedCourses, setPurchasedCourses] = useState<PurchasedCourse[]>([]);
   const [transactions, setTransactions] = useState<CoinTransaction[]>([]);
+  const [showAvatarSelector, setShowAvatarSelector] = useState(false);
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -111,9 +113,28 @@ export const ProfilePage = () => {
       
       if (error) throw error;
       alert('Cập nhật thông tin thành công!');
+      refreshProfile?.();
     } catch (error) {
       console.error('Error updating profile:', error);
       alert('Có lỗi xảy ra!');
+    }
+  };
+
+  const handleAvatarSelect = async (avatarUrl: string) => {
+    if (!user) return;
+    
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ avatar_url: avatarUrl })
+        .eq('id', user.id);
+      
+      if (error) throw error;
+      setShowAvatarSelector(false);
+      refreshProfile?.();
+    } catch (error) {
+      console.error('Error updating avatar:', error);
+      alert('Có lỗi khi cập nhật avatar!');
     }
   };
 
@@ -135,8 +156,25 @@ export const ProfilePage = () => {
           <div className="bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-md border border-gray-700 overflow-hidden sticky top-6">
             {/* Avatar Section */}
             <div className="bg-gradient-to-r from-gray-700 to-gray-800 p-6 text-center border-b border-gray-700">
-              <div className="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center mb-3 shadow-lg">
-                <User className="w-10 h-10 text-blue-600" />
+              <div className="relative inline-block">
+                <div className="w-20 h-20 mx-auto bg-white rounded-full flex items-center justify-center mb-3 shadow-lg overflow-hidden">
+                  {(profile as any)?.avatar_url ? (
+                    <img 
+                      src={(profile as any).avatar_url} 
+                      alt="Avatar" 
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <User className="w-10 h-10 text-blue-600" />
+                  )}
+                </div>
+                <button
+                  onClick={() => setShowAvatarSelector(true)}
+                  className="absolute bottom-2 right-0 w-8 h-8 bg-yellow-400 hover:bg-yellow-500 rounded-full flex items-center justify-center shadow-lg transition-colors"
+                  title="Đổi avatar"
+                >
+                  <Camera className="w-4 h-4 text-gray-900" />
+                </button>
               </div>
               <h3 className="font-bold text-white text-lg mb-1">
                 {(profile as any)?.full_name || user?.email?.split('@')[0]}
@@ -429,6 +467,15 @@ export const ProfilePage = () => {
           )}
         </div>
       </div>
+
+      {/* Avatar Selector Modal */}
+      {showAvatarSelector && (
+        <AvatarSelector
+          currentAvatar={(profile as any)?.avatar_url || null}
+          onSelect={handleAvatarSelect}
+          onClose={() => setShowAvatarSelector(false)}
+        />
+      )}
     </div>
   );
 };

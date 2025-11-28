@@ -7,6 +7,7 @@ type Friend = {
   id: string;
   username: string;
   full_name: string;
+  avatar_url: string | null;
   level: number;
   total_xp: number;
   total_coins: number;
@@ -47,6 +48,7 @@ export const Friends = () => {
           id,
           username,
           full_name,
+          avatar_url,
           level,
           total_xp,
           total_coins
@@ -65,6 +67,7 @@ export const Friends = () => {
         id: item.profiles.id,
         username: item.profiles.username,
         full_name: item.profiles.full_name,
+        avatar_url: item.profiles.avatar_url,
         level: item.profiles.level,
         total_xp: item.profiles.total_xp,
         total_coins: item.profiles.total_coins
@@ -233,8 +236,12 @@ export const Friends = () => {
               friends.map((friend) => (
                 <div key={friend.id} className="bg-gray-900/50 rounded-xl p-4 border border-gray-700 hover:border-yellow-400 transition-all">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold">
-                      {friend.username?.[0]?.toUpperCase()}
+                    <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
+                      {friend.avatar_url ? (
+                        <img src={friend.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        friend.username?.[0]?.toUpperCase()
+                      )}
                     </div>
                     <div className="flex-1">
                       <h3 className="font-bold text-white">{friend.full_name || friend.username}</h3>

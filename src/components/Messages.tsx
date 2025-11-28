@@ -7,6 +7,7 @@ type Conversation = {
   friend_id: string;
   friend_username: string;
   friend_full_name: string;
+  friend_avatar: string | null;
   last_message: string;
   last_message_time: string;
   unread_count: number;
@@ -108,7 +109,7 @@ export const Messages = () => {
     const friendIds = friendships.map(f => f.friend_id);
     const { data: profiles } = await supabase
       .from('profiles')
-      .select('id, username, full_name')
+      .select('id, username, full_name, avatar_url')
       .in('id', friendIds);
 
     if (profiles && profiles.length > 0) {
@@ -134,6 +135,7 @@ export const Messages = () => {
             friend_id: profile.id,
             friend_username: profile.username,
             friend_full_name: profile.full_name,
+            friend_avatar: profile.avatar_url || null,
             last_message: lastMsg?.message || 'Chưa có tin nhắn',
             last_message_time: lastMsg?.created_at || '',
             unread_count: unreadCount || 0
@@ -243,8 +245,12 @@ export const Messages = () => {
                 >
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-                        {conv.friend_username?.[0]?.toUpperCase()}
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 overflow-hidden">
+                        {conv.friend_avatar ? (
+                          <img src={conv.friend_avatar} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          conv.friend_username?.[0]?.toUpperCase()
+                        )}
                       </div>
                       {conv.unread_count > 0 && (
                         <span className="absolute -top-1 -right-1 min-w-[20px] h-[20px] bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1 animate-pulse border-2 border-gray-800">
@@ -283,8 +289,12 @@ export const Messages = () => {
                 >
                   <ArrowLeft className="w-5 h-5 text-white" />
                 </button>
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                  {selectedFriend.friend_username?.[0]?.toUpperCase()}
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
+                  {selectedFriend.friend_avatar ? (
+                    <img src={selectedFriend.friend_avatar} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    selectedFriend.friend_username?.[0]?.toUpperCase()
+                  )}
                 </div>
                 <div>
                   <h3 className="font-bold text-white">

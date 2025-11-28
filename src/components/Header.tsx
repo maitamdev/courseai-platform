@@ -106,8 +106,12 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               className="hidden xl:flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border-2 border-white/20 hover:bg-white/20 hover:scale-105 transition-all cursor-pointer"
               title="Xem hồ sơ"
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                <User className="w-4 h-4 text-white" />
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center overflow-hidden">
+                {(profile as any)?.avatar_url ? (
+                  <img src={(profile as any).avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-4 h-4 text-white" />
+                )}
               </div>
               <span className="font-bold text-white">{profile?.username}</span>
               <div className="flex items-center gap-1 bg-gradient-to-r from-green-400 to-emerald-500 text-white px-2.5 py-1 rounded-full">
