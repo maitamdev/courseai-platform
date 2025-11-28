@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BookOpen, Gamepad2, Coins, Route, User, Home, Menu, X, Trophy, ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'roadmap' | 'profile' | 'course-roadmap' | 'messages';
 
@@ -9,8 +11,32 @@ type SidebarProps = {
 };
 
 export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
+  const { user } = useAuth();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount();
+      const interval = setInterval(fetchUnreadCount, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const fetchUnreadCount = async () => {
+    if (!user) return;
+    
+    const { count, error } = await supabase
+      .from('friend_messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('receiver_id', user.id)
+      .eq('is_read', false);
+    
+    if (!error && count !== null) {
+      setUnreadCount(count);
+    }
+  };
 
   const menuItems = [
     { id: 'home' as Tab, label: 'Trang chủ', icon: Home },
@@ -57,6 +83,7 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
+                const showBadge = item.id === 'messages' && unreadCount > 0;
 
                 return (
                   <li key={item.id}>
@@ -72,8 +99,24 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
                       } ${isCollapsed ? 'justify-center' : ''}`}
                       title={isCollapsed ? item.label : ''}
                     >
-                      <Icon className="w-5 h-5 flex-shrink-0" />
-                      {!isCollapsed && <span>{item.label}</span>}
+                      <div className="relative">
+                        <Icon className="w-5 h-5 flex-shrink-0" />
+                        {showBadge && (
+                          <span className="absolute -top-2 -right-2 min-w-[16px] h-[16px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 animate-pulse">
+                            {unreadCount > 99 ? '99+' : unreadCount}
+                          </span>
+                        )}
+                      </div>
+                      {!isCollapsed && (
+                        <div className="flex items-center gap-2 flex-1">
+                          <span>{item.label}</span>
+                          {showBadge && (
+                            <span className="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                              {unreadCount > 99 ? '99+' : unreadCount}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </button>
                   </li>
                 );

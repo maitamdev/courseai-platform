@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle } from 'lucide-react';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages';
@@ -9,7 +11,30 @@ type HeaderProps = {
 };
 
 export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
-  const { profile, signOut } = useAuth();
+  const { profile, signOut, user } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      fetchUnreadCount();
+      const interval = setInterval(fetchUnreadCount, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [user]);
+
+  const fetchUnreadCount = async () => {
+    if (!user) return;
+    
+    const { count, error } = await supabase
+      .from('friend_messages')
+      .select('*', { count: 'exact', head: true })
+      .eq('receiver_id', user.id)
+      .eq('is_read', false);
+    
+    if (!error && count !== null) {
+      setUnreadCount(count);
+    }
+  };
 
   const menuItems = [
     { id: 'home' as Tab, label: 'Trang chủ', icon: Home },
@@ -42,18 +67,26 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
+                const showBadge = item.id === 'messages' && unreadCount > 0;
                 
                 return (
                   <button
                     key={item.id}
                     onClick={() => onTabChange(item.id)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
+                    className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
                       isActive
                         ? 'bg-yellow-400 text-gray-900 shadow-lg scale-105'
                         : 'text-white/90 hover:bg-gray-700/50 hover:text-white hover:scale-105'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
+                    <div className="relative">
+                      <Icon className="w-5 h-5" />
+                      {showBadge && (
+                        <span className="absolute -top-2 -right-2 min-w-[18px] h-[18px] bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1 animate-pulse">
+                          {unreadCount > 99 ? '99+' : unreadCount}
+                        </span>
+                      )}
+                    </div>
                     <span className="hidden xl:inline">{item.label}</span>
                   </button>
                 );

@@ -51,6 +51,7 @@ export const Messages = () => {
   useEffect(() => {
     if (selectedFriend) {
       fetchMessages(selectedFriend.friend_id);
+      markMessagesAsRead(selectedFriend.friend_id);
       
       const pollInterval = setInterval(() => {
         fetchMessages(selectedFriend.friend_id);
@@ -59,6 +60,26 @@ export const Messages = () => {
       return () => clearInterval(pollInterval);
     }
   }, [selectedFriend, user]);
+
+  const markMessagesAsRead = async (friendId: string) => {
+    if (!user) return;
+    
+    try {
+      await supabase.rpc('mark_messages_as_read', {
+        p_user_id: user.id,
+        p_friend_id: friendId
+      });
+      
+      // Cập nhật lại unread_count trong conversations
+      setConversations(prev => prev.map(conv => 
+        conv.friend_id === friendId 
+          ? { ...conv, unread_count: 0 }
+          : conv
+      ));
+    } catch (error) {
+      console.error('Error marking messages as read:', error);
+    }
+  };
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -101,13 +122,21 @@ export const Messages = () => {
             .limit(1)
             .single();
 
+          // Đếm số tin nhắn chưa đọc từ bạn này
+          const { count: unreadCount } = await supabase
+            .from('friend_messages')
+            .select('*', { count: 'exact', head: true })
+            .eq('sender_id', profile.id)
+            .eq('receiver_id', user.id)
+            .eq('is_read', false);
+
           return {
             friend_id: profile.id,
             friend_username: profile.username,
             friend_full_name: profile.full_name,
             last_message: lastMsg?.message || 'Chưa có tin nhắn',
             last_message_time: lastMsg?.created_at || '',
-            unread_count: 0
+            unread_count: unreadCount || 0
           };
         })
       );
@@ -213,14 +242,28 @@ export const Messages = () => {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-                      {conv.friend_username?.[0]?.toUpperCase()}
+                    <div className="relative">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                        {conv.friend_username?.[0]?.toUpperCase()}
+                      </div>
+                      {conv.unread_count > 0 && (
+                        <span className="absolute -top-1 -right-1 min-w-[20px] h-[20px] bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1 animate-pulse border-2 border-gray-800">
+                          {conv.unread_count > 99 ? '99+' : conv.unread_count}
+                        </span>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-white truncate">
-                        {conv.friend_full_name || conv.friend_username}
-                      </h3>
-                      <p className="text-sm text-gray-400 truncate">{conv.last_message}</p>
+                      <div className="flex items-center gap-2">
+                        <h3 className={`font-semibold truncate ${conv.unread_count > 0 ? 'text-white' : 'text-gray-300'}`}>
+                          {conv.friend_full_name || conv.friend_username}
+                        </h3>
+                        {conv.unread_count > 0 && (
+                          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        )}
+                      </div>
+                      <p className={`text-sm truncate ${conv.unread_count > 0 ? 'text-white font-medium' : 'text-gray-400'}`}>
+                        {conv.last_message}
+                      </p>
                     </div>
                   </div>
                 </button>
