@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Coins, Copy, Check, Gift, QrCode, X, RefreshCw } from 'lucide-react';
+import { Copy, Check, X, RefreshCw } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -20,13 +20,26 @@ type PaymentSession = {
   coins: number;
 };
 
-export const QRTopup = ({ packages }: { packages: CoinPackage[] }) => {
+type Props = {
+  packages: CoinPackage[];
+  selectedPackage: CoinPackage;
+  onClose: () => void;
+};
+
+export const QRTopup = ({ selectedPackage, onClose }: Props) => {
   const { user, refreshProfile } = useAuth();
-  const [selectedPackage, setSelectedPackage] = useState<CoinPackage | null>(null);
   const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [countdown, setCountdown] = useState(600); // 10 phút
+  const [copied, setCopied] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState(600);
   const [checking, setChecking] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Generate QR on mount
+  useEffect(() => {
+    if (selectedPackage && user) {
+      generateQRCode();
+    }
+  }, [selectedPackage, user]);
 
   // Countdown timer
   useEffect(() => {
@@ -35,8 +48,7 @@ export const QRTopup = ({ packages }: { packages: CoinPackage[] }) => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          setPaymentSession(null);
-          setSelectedPackage(null);
+          onClose();
           return 600;
         }
         return prev - 1;
@@ -52,54 +64,73 @@ export const QRTopup = ({ packages }: { packages: CoinPackage[] }) => {
 
     const checkInterval = setInterval(() => {
       checkPaymentStatus();
-    }, 5000); // Check mỗi 5 giây
+    }, 5000);
 
     return () => clearInterval(checkInterval);
   }, [paymentSession]);
 
-  const generateQRCode = async (pkg: CoinPackage) => {
-    if (!user) return;
-
-    setSelectedPackage(pkg);
-    
-    // Tạo mã giao dịch unique
-    const transactionCode = `NAPXU${Date.now().toString().slice(-8)}`;
-    const transferContent = `${transactionCode} ${user.id.slice(0, 8)}`;
-    
-    // Tạo QR Code URL với VietQR API
-    const qrUrl = `https://img.vietqr.io/image/MB-0877724374-compact2.png?amount=${pkg.price_vnd}&addInfo=${encodeURIComponent(transferContent)}&accountName=MAI%20TRAN%20THIEN%20TAM`;
-
-    // Lưu payment session vào database
-    const { data: session, error } = await supabase
-      .from('payment_sessions')
-      .insert({
-        user_id: user.id,
-        package_id: pkg.id,
-        amount_vnd: pkg.price_vnd,
-        coins_amount: pkg.coins + pkg.bonus_coins,
-        transfer_content: transferContent,
-        transaction_code: transactionCode,
-        qr_code_url: qrUrl,
-        status: 'pending',
-        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error creating payment session:', error);
-      alert('Có lỗi xảy ra. Vui lòng thử lại!');
+  const generateQRCode = async () => {
+    if (!user || !selectedPackage) {
+      console.log('Missing user or package:', { user, selectedPackage });
       return;
     }
 
-    setPaymentSession({
-      id: session.id,
-      qr_code_url: qrUrl,
-      transfer_content: transferContent,
-      amount: pkg.price_vnd,
-      coins: pkg.coins + pkg.bonus_coins,
-    });
-    setCountdown(600);
+    setLoading(true);
+    const transactionCode = `NAPXU${Date.now().toString().slice(-8)}`;
+    const transferContent = `${transactionCode} ${user.id.slice(0, 8)}`;
+    
+    const qrUrl = `https://img.vietqr.io/image/MB-0877724374-compact2.png?amount=${selectedPackage.price_vnd}&addInfo=${encodeURIComponent(transferContent)}&accountName=MAI%20TRAN%20THIEN%20TAM`;
+
+    try {
+      const { data: session, error } = await supabase
+        .from('payment_sessions')
+        .insert({
+          user_id: user.id,
+          package_id: selectedPackage.id,
+          amount_vnd: selectedPackage.price_vnd,
+          coins_amount: selectedPackage.coins + selectedPackage.bonus_coins,
+          transfer_content: transferContent,
+          transaction_code: transactionCode,
+          qr_code_url: qrUrl,
+          status: 'pending',
+          expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase error:', error);
+        // Nếu lỗi database, vẫn hiển thị QR để user có thể chuyển khoản
+        setPaymentSession({
+          id: 'temp-' + Date.now(),
+          qr_code_url: qrUrl,
+          transfer_content: transferContent,
+          amount: selectedPackage.price_vnd,
+          coins: selectedPackage.coins + selectedPackage.bonus_coins,
+        });
+        setLoading(false);
+        return;
+      }
+
+      setPaymentSession({
+        id: session.id,
+        qr_code_url: qrUrl,
+        transfer_content: transferContent,
+        amount: selectedPackage.price_vnd,
+        coins: selectedPackage.coins + selectedPackage.bonus_coins,
+      });
+    } catch (err) {
+      console.error('Error:', err);
+      // Fallback - vẫn hiển thị QR
+      setPaymentSession({
+        id: 'temp-' + Date.now(),
+        qr_code_url: qrUrl,
+        transfer_content: transferContent,
+        amount: selectedPackage.price_vnd,
+        coins: selectedPackage.coins + selectedPackage.bonus_coins,
+      });
+    }
+    setLoading(false);
   };
 
   const checkPaymentStatus = async () => {
@@ -118,8 +149,7 @@ export const QRTopup = ({ packages }: { packages: CoinPackage[] }) => {
       if (data.status === 'completed') {
         await refreshProfile();
         alert(`🎉 Nạp xu thành công! Bạn đã nhận ${data.coins_amount} xu!`);
-        setPaymentSession(null);
-        setSelectedPackage(null);
+        onClose();
       }
     } catch (error) {
       console.error('Error checking payment:', error);
@@ -128,10 +158,10 @@ export const QRTopup = ({ packages }: { packages: CoinPackage[] }) => {
     }
   };
 
-  const handleCopy = (text: string) => {
+  const handleCopy = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopied(field);
+    setTimeout(() => setCopied(null), 2000);
   };
 
   const formatPrice = (price: number) => {
@@ -145,215 +175,151 @@ export const QRTopup = ({ packages }: { packages: CoinPackage[] }) => {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Coin Packages */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8 max-w-[1800px] mx-auto">
-        {packages.map((pkg, index) => {
-          // Different styles for each package
-          const styles = [
-            { bg: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-400', icon: 'from-blue-400 to-cyan-500', badge: 'bg-blue-500/30 text-blue-300 border-blue-400/50' },
-            { bg: 'from-purple-500/20 to-pink-500/20', border: 'border-purple-400', icon: 'from-purple-400 to-pink-500', badge: 'bg-purple-500/30 text-purple-300 border-purple-400/50' },
-            { bg: 'from-green-500/20 to-emerald-500/20', border: 'border-green-400', icon: 'from-green-400 to-emerald-500', badge: 'bg-green-500/30 text-green-300 border-green-400/50' },
-            { bg: 'from-orange-500/20 to-red-500/20', border: 'border-orange-400', icon: 'from-orange-400 to-red-500', badge: 'bg-orange-500/30 text-orange-300 border-orange-400/50' },
-            { bg: 'from-yellow-500/30 to-orange-500/30', border: 'border-yellow-400', icon: 'from-yellow-400 to-orange-500', badge: 'bg-yellow-500/30 text-yellow-300 border-yellow-400/50' },
-          ];
-          const style = pkg.is_popular ? styles[4] : styles[index % 4];
-          
-          return (
-            <div
-              key={pkg.id}
-              onClick={() => generateQRCode(pkg)}
-              className={`relative p-6 rounded-lg border-3 transition-all cursor-pointer hover:scale-105 bg-gradient-to-br ${style.bg} backdrop-blur-md ${style.border} ${
-                pkg.is_popular ? 'shadow-2xl shadow-yellow-500/50 ring-4 ring-yellow-400/50' : 'hover:shadow-xl'
-              } ${selectedPackage?.id === pkg.id ? 'ring-4 ring-yellow-400' : ''}`}
-            >
-              {pkg.is_popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-1.5 rounded-md text-xs font-black shadow-xl animate-pulse">
-                  ⭐ Phổ Biến Nhất
-                </div>
-              )}
-
-              <div className="text-center">
-                <div className={`w-20 h-20 mx-auto mb-4 bg-gradient-to-br ${style.icon} rounded-lg flex items-center justify-center shadow-xl`}>
-                  <Coins className="w-10 h-10 text-white" />
-                </div>
-
-                <h3 className="text-base font-black text-white mb-3">{pkg.name}</h3>
-
-                <div className="mb-3">
-                  <div className="text-5xl font-black text-white mb-1 drop-shadow-lg">
-                    {pkg.coins.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-gray-300 uppercase tracking-wider font-bold">xu</div>
-                </div>
-
-                <div className="text-2xl font-black text-yellow-400 mb-3 drop-shadow-lg">
-                  {formatPrice(pkg.price_vnd)}
-                </div>
-
-                {pkg.bonus_coins > 0 && (
-                  <div className={`inline-flex items-center gap-1.5 ${style.badge} px-3 py-1.5 rounded-md text-sm font-black mb-3 border-2 shadow-lg`}>
-                    <Gift className="w-4 h-4" />
-                    +{pkg.bonus_coins}
-                  </div>
-                )}
-
-                <div className="text-sm text-gray-200 mb-4 bg-gray-900/50 py-2 px-3 rounded-md border border-gray-700">
-                  Tổng: <span className="font-black text-white">{(pkg.coins + pkg.bonus_coins).toLocaleString()} xu</span>
-                </div>
-
-                <button className={`w-full py-3 rounded-md font-black text-sm transition-all flex items-center justify-center gap-2 bg-gradient-to-r ${style.icon} text-white hover:shadow-2xl hover:scale-105`}>
-                  <QrCode className="w-5 h-5" />
-                  Tạo QR
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* QR Code Modal */}
-      {paymentSession && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-gray-800/95 backdrop-blur-xl rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-700 shadow-2xl animate-fade-in-scale">
-            {/* Header */}
-            <div className="sticky top-0 bg-gray-900/90 backdrop-blur-xl border-b border-gray-700 p-6 flex justify-between items-center">
-              <div>
-                <h2 className="text-2xl font-bold text-white">Quét Mã QR Để Thanh Toán</h2>
-                <p className="text-gray-400">Mã hết hạn sau: <span className="font-bold text-yellow-400">{formatTime(countdown)}</span></p>
-              </div>
-              <button
-                onClick={() => {
-                  setPaymentSession(null);
-                  setSelectedPackage(null);
-                }}
-                className="p-2 hover:bg-gray-700 rounded-full transition-colors"
-              >
-                <X className="w-6 h-6 text-gray-400" />
-              </button>
-            </div>
-
-            <div className="p-8">
-              {/* QR Code */}
-              <div className="bg-gradient-to-br from-yellow-400/10 to-orange-500/10 rounded-3xl p-8 mb-6 text-center border-2 border-yellow-400/30">
-                <div className="bg-white p-6 rounded-2xl inline-block mb-4 shadow-lg">
-                  <img 
-                    src={paymentSession.qr_code_url} 
-                    alt="QR Code" 
-                    className="w-64 h-64 mx-auto"
-                  />
-                </div>
-                <div className="text-sm text-gray-400 mb-2">Quét mã QR bằng app ngân hàng</div>
-                <div className="text-2xl font-bold text-yellow-400">
-                  {formatPrice(paymentSession.amount)}
-                </div>
-              </div>
-
-              {/* Bank Info */}
-              <div className="bg-gray-900/50 border-2 border-gray-700 rounded-2xl p-6 mb-6">
-                <h3 className="font-bold text-white mb-4">Thông Tin Chuyển Khoản</h3>
-                
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Ngân hàng:</span>
-                    <span className="font-bold text-white">MBBank</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Số TK:</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-white">0877724374</span>
-                      <button
-                        onClick={() => handleCopy('0877724374')}
-                        className="p-1 hover:bg-gray-700 rounded"
-                      >
-                        {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-gray-400" />}
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Chủ TK:</span>
-                    <span className="font-bold text-white">MAI TRAN THIEN TAM</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Số tiền:</span>
-                    <span className="font-bold text-yellow-400 text-xl">{formatPrice(paymentSession.amount)}</span>
-                  </div>
-                  
-                  <div className="border-t border-gray-700 pt-3">
-                    <div className="text-gray-400 mb-2">Nội dung CK:</div>
-                    <div className="flex items-center gap-2 bg-yellow-400/20 p-3 rounded-lg border-2 border-yellow-400/30">
-                      <span className="font-mono font-bold text-yellow-400 flex-1">
-                        {paymentSession.transfer_content}
-                      </span>
-                      <button
-                        onClick={() => handleCopy(paymentSession.transfer_content)}
-                        className="p-2 hover:bg-yellow-400/30 rounded-lg transition-colors"
-                      >
-                        {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-yellow-400" />}
-                      </button>
-                    </div>
-                    <div className="text-xs text-red-600 mt-2 font-semibold">
-                      ⚠️ Nội dung đã được điền tự động khi quét QR
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Status */}
-              <div className="bg-blue-50 rounded-2xl p-6 border-2 border-blue-200">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="animate-spin">
-                    <RefreshCw className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <div className="font-bold text-white">Đang chờ thanh toán...</div>
-                    <div className="text-sm text-gray-400">Hệ thống sẽ tự động cộng xu sau khi nhận được tiền</div>
-                  </div>
-                </div>
-                
-                <button
-                  onClick={checkPaymentStatus}
-                  disabled={checking}
-                  className="w-full mt-4 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
-                >
-                  {checking ? 'Đang kiểm tra...' : 'Kiểm tra ngay'}
-                </button>
-              </div>
-
-              {/* Instructions */}
-              <div className="mt-6 bg-green-500/10 rounded-2xl p-6 border-2 border-green-500/30">
-                <h3 className="font-bold text-white mb-3">📱 Hướng Dẫn Thanh Toán</h3>
-                <ol className="space-y-2 text-sm text-gray-300">
-                  <li className="flex gap-2">
-                    <span className="font-bold">1.</span>
-                    <span>Mở app MBBank (hoặc app ngân hàng khác)</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-bold">2.</span>
-                    <span>Chọn "Quét mã QR" hoặc "Chuyển khoản"</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-bold">3.</span>
-                    <span>Quét mã QR phía trên (thông tin sẽ tự động điền)</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-bold">4.</span>
-                    <span>Xác nhận và hoàn tất thanh toán</span>
-                  </li>
-                  <li className="flex gap-2">
-                    <span className="font-bold">5.</span>
-                    <span className="text-green-600 font-semibold">Xu sẽ được cộng tự động trong 5-30 giây!</span>
-                  </li>
-                </ol>
-              </div>
-            </div>
+    <div className="fixed inset-0 bg-[#0a0f1a] z-50 overflow-y-auto">
+      <div className="min-h-screen flex flex-col">
+        {/* Header */}
+        <div className="sticky top-0 bg-[#0a1420]/95 backdrop-blur-sm border-b border-gray-800 px-6 py-4 flex justify-between items-center z-10">
+          <div>
+            <h2 className="text-2xl font-bold text-white">Quét Mã QR Thanh Toán</h2>
+            <p className="text-sm text-gray-400">
+              Hết hạn sau: <span className="font-bold text-cyan-400">{formatTime(countdown)}</span>
+            </p>
           </div>
+          <button
+            onClick={onClose}
+            className="p-3 hover:bg-gray-800 rounded-xl transition-colors border border-gray-700"
+          >
+            <X className="w-6 h-6 text-gray-400" />
+          </button>
         </div>
-      )}
+
+        <div className="flex-1 flex items-center justify-center p-6">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <RefreshCw className="w-12 h-12 text-cyan-400 animate-spin" />
+            </div>
+          ) : paymentSession && (
+            <div className="w-full max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Left - QR Code */}
+                <div className="bg-[#0d1829] rounded-2xl p-8 border border-gray-800">
+                  <div className="text-center">
+                    <div className="bg-white p-6 rounded-2xl inline-block mb-6 shadow-xl">
+                      <img 
+                        src={paymentSession.qr_code_url} 
+                        alt="QR Code" 
+                        className="w-64 h-64 mx-auto"
+                      />
+                    </div>
+                    <p className="text-gray-400 mb-3">Quét mã bằng app ngân hàng</p>
+                    <p className="text-4xl font-bold text-cyan-400">
+                      {formatPrice(paymentSession.amount)}
+                    </p>
+                    <p className="text-gray-500 mt-2">
+                      Nhận <span className="text-white font-semibold">{paymentSession.coins.toLocaleString()} xu</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right - Bank Info & Status */}
+                <div className="space-y-6">
+                  {/* Bank Info */}
+                  <div className="bg-[#0d1829] border border-gray-800 rounded-2xl p-6">
+                    <h3 className="font-bold text-white text-lg mb-5">Thông Tin Chuyển Khoản</h3>
+                    
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
+                        <span className="text-gray-400">Ngân hàng</span>
+                        <span className="font-semibold text-white">MBBank</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
+                        <span className="text-gray-400">Số tài khoản</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-white">0877724374</span>
+                          <button
+                            onClick={() => handleCopy('0877724374', 'account')}
+                            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                          >
+                            {copied === 'account' ? (
+                              <Check className="w-4 h-4 text-green-400" />
+                            ) : (
+                              <Copy className="w-4 h-4 text-gray-500" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
+                        <span className="text-gray-400">Chủ tài khoản</span>
+                        <span className="font-semibold text-white">MAI TRAN THIEN TAM</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center py-2 border-b border-gray-800">
+                        <span className="text-gray-400">Số tiền</span>
+                        <span className="font-bold text-cyan-400 text-xl">{formatPrice(paymentSession.amount)}</span>
+                      </div>
+                      
+                      <div className="pt-2">
+                        <div className="text-gray-400 mb-3">Nội dung chuyển khoản</div>
+                        <div className="flex items-center gap-2 bg-cyan-500/10 p-4 rounded-xl border border-cyan-500/30">
+                          <span className="font-mono font-bold text-cyan-400 flex-1">
+                            {paymentSession.transfer_content}
+                          </span>
+                          <button
+                            onClick={() => handleCopy(paymentSession.transfer_content, 'content')}
+                            className="p-2 hover:bg-cyan-500/20 rounded-lg transition-colors"
+                          >
+                            {copied === 'content' ? (
+                              <Check className="w-5 h-5 text-green-400" />
+                            ) : (
+                              <Copy className="w-5 h-5 text-cyan-400" />
+                            )}
+                          </button>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2">
+                          ⚠️ Nội dung đã tự động điền khi quét QR
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status */}
+                  <div className="bg-cyan-500/10 rounded-2xl p-5 border border-cyan-500/30">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center">
+                        <RefreshCw className="w-6 h-6 text-cyan-400 animate-spin" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-white">Đang chờ thanh toán...</p>
+                        <p className="text-sm text-gray-400">Xu sẽ được cộng tự động sau khi nhận tiền</p>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={checkPaymentStatus}
+                      disabled={checking}
+                      className="w-full py-3 bg-cyan-500 text-white rounded-xl font-semibold hover:bg-cyan-600 transition-colors disabled:opacity-50"
+                    >
+                      {checking ? 'Đang kiểm tra...' : 'Kiểm tra ngay'}
+                    </button>
+                  </div>
+
+                  {/* Instructions */}
+                  <div className="bg-[#0d1829] rounded-2xl p-5 border border-gray-800">
+                    <h4 className="font-semibold text-white mb-3">📱 Hướng dẫn</h4>
+                    <div className="text-sm text-gray-400 space-y-2">
+                      <p>1. Mở app ngân hàng → Quét mã QR</p>
+                      <p>2. Kiểm tra thông tin và xác nhận thanh toán</p>
+                      <p>3. Xu sẽ được cộng trong 5-30 giây</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
-
