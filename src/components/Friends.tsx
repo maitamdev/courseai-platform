@@ -159,6 +159,58 @@ export const Friends = () => {
     }
   };
 
+  const rejectRequest = async (requestId: string) => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('friend_requests')
+        .update({ status: 'rejected' })
+        .eq('id', requestId);
+
+      if (error) {
+        alert('Có lỗi xảy ra: ' + error.message);
+        return;
+      }
+
+      alert('Đã từ chối lời mời kết bạn');
+      fetchRequests();
+    } catch {
+      alert('Có lỗi xảy ra!');
+    }
+  };
+
+  const unfriend = async (friendId: string, friendName: string) => {
+    if (!user) return;
+    
+    if (!confirm(`Bạn có chắc muốn hủy kết bạn với ${friendName}?`)) return;
+
+    try {
+      // Xóa cả 2 chiều friendship
+      const { error: error1 } = await supabase
+        .from('friendships')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('friend_id', friendId);
+
+      const { error: error2 } = await supabase
+        .from('friendships')
+        .delete()
+        .eq('user_id', friendId)
+        .eq('friend_id', user.id);
+
+      if (error1 || error2) {
+        alert('Có lỗi xảy ra!');
+        return;
+      }
+
+      alert('Đã hủy kết bạn');
+      fetchFriends();
+    } catch {
+      alert('Có lỗi xảy ra!');
+    }
+  };
+
   const openChat = (friendId: string) => {
     // Store friend ID to open chat with
     try {
@@ -262,12 +314,21 @@ export const Friends = () => {
                       <div className="text-gray-500 text-xs">Xu</div>
                     </div>
                   </div>
-                  <button 
-                    onClick={() => openChat(friend.id)}
-                    className="w-full px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg font-semibold transition-all text-sm"
-                  >
-                    💬 Nhắn tin
-                  </button>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => openChat(friend.id)}
+                      className="flex-1 px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg font-semibold transition-all text-sm"
+                    >
+                      💬 Nhắn tin
+                    </button>
+                    <button 
+                      onClick={() => unfriend(friend.id, friend.full_name || friend.username)}
+                      className="px-3 py-2 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-lg font-semibold transition-all text-sm"
+                      title="Hủy kết bạn"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </div>
               ))
             )}
@@ -293,12 +354,20 @@ export const Friends = () => {
                       <p className="text-sm text-gray-400">Level {req.sender_level}</p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => acceptRequest(req.id, req.sender_id)}
-                    className="px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-all"
-                  >
-                    Chấp nhận
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => acceptRequest(req.id, req.sender_id)}
+                      className="px-5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold transition-all"
+                    >
+                      ✓ Chấp nhận
+                    </button>
+                    <button
+                      onClick={() => rejectRequest(req.id)}
+                      className="px-5 py-2 bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white rounded-lg font-semibold transition-all"
+                    >
+                      ✕ Từ chối
+                    </button>
+                  </div>
                 </div>
               ))
             )}

@@ -115,6 +115,7 @@ export const Messages = () => {
   const [viewMode, setViewMode] = useState<'direct' | 'groups'>('direct');
   
   // Refs
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
@@ -181,8 +182,11 @@ export const Messages = () => {
   }, [conversations]);
 
   // Fetch messages when friend selected
+  const initialScrollDoneRef = useRef(false);
+  
   useEffect(() => {
     if (selectedFriend) {
+      initialScrollDoneRef.current = false; // Reset khi chọn người mới
       fetchMessages(selectedFriend.friend_id);
       markMessagesAsRead(selectedFriend.friend_id);
       fetchChatTheme(selectedFriend.friend_id);
@@ -190,6 +194,19 @@ export const Messages = () => {
       return () => clearInterval(interval);
     }
   }, [selectedFriend, user]);
+
+  // Scroll xuống tin nhắn mới nhất khi mở chat (chỉ scroll trong container)
+  useEffect(() => {
+    if (messages.length > 0 && !initialScrollDoneRef.current && messagesContainerRef.current) {
+      setTimeout(() => {
+        const container = messagesContainerRef.current;
+        if (container) {
+          container.scrollTop = container.scrollHeight;
+        }
+        initialScrollDoneRef.current = true;
+      }, 100);
+    }
+  }, [messages]);
 
   // Check typing status
   useEffect(() => {
@@ -387,6 +404,15 @@ export const Messages = () => {
   };
 
 
+  // Scroll xuống cuối trong container
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      if (messagesContainerRef.current) {
+        messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      }
+    }, 50);
+  };
+
   const sendMessage = async (type: string = 'text', mediaUrl?: string, duration?: number) => {
     if (!user || !selectedFriend) return;
     if (type === 'text' && !newMessage.trim()) return;
@@ -402,6 +428,7 @@ export const Messages = () => {
     setNewMessage('');
     setReplyingTo(null);
     updateTypingStatus(false);
+    scrollToBottom(); // Scroll xuống khi gửi tin nhắn
 
     const { error } = await supabase.from('friend_messages').insert({
       sender_id: user.id, receiver_id: selectedFriend.friend_id, message: content,
@@ -690,8 +717,8 @@ export const Messages = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto h-[calc(100vh-10rem)] min-h-[500px]">
-      <div className="h-full grid md:grid-cols-[380px_1fr] bg-gray-900/80 backdrop-blur-xl rounded-3xl border border-gray-700/50 overflow-hidden shadow-2xl relative">
+    <div className="w-full h-[calc(100vh-14rem)] max-h-[800px]">
+      <div className="h-full grid md:grid-cols-[380px_1fr] bg-gray-900/80 backdrop-blur-xl rounded-3xl border border-gray-700/50 overflow-hidden shadow-2xl">
         
         {/* Sidebar */}
         <div className={`flex flex-col border-r border-gray-700/50 ${showMobileChat ? 'hidden md:flex' : 'flex'}`}>
@@ -880,7 +907,7 @@ export const Messages = () => {
 
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-5 space-y-4 min-h-0">
+              <div ref={messagesContainerRef} className="flex-1 overflow-y-auto overflow-x-hidden p-5 space-y-4 min-h-0">
                 {groupByDate(messages).map((g, i) => (
                   <div key={i}>
                     <div className="flex justify-center mb-4">

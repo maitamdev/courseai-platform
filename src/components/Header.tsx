@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle } from 'lucide-react';
+import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy } from 'lucide-react';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events';
 
 type HeaderProps = {
   activeTab?: Tab;
@@ -40,6 +40,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
     { id: 'home' as Tab, label: 'Trang chủ', icon: Home },
     { id: 'lessons' as Tab, label: 'Khóa học', icon: BookOpen },
     { id: 'games' as Tab, label: 'Trò chơi', icon: Gamepad2 },
+    { id: 'events' as Tab, label: 'Sự kiện', icon: Trophy },
     { id: 'friends' as Tab, label: 'Bạn bè', icon: Users },
     { id: 'messages' as Tab, label: 'Tin nhắn', icon: MessageCircle },
     { id: 'coins' as Tab, label: 'Nạp xu', icon: Coins },

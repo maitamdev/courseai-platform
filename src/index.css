@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font chính cho toàn bộ app */
+* {
+  font-family: 'Times New Roman', Times, serif;
+}
+
+/* Giữ font mono cho code */
+code, pre, .font-mono {
+  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+}
+
 @layer utilities {
   /* Smooth fade transition */
   @keyframes fadeIn {

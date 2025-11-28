@@ -11,8 +11,9 @@ import { ProfilePage } from './ProfilePage';
 import { TreasureQuestGame } from './TreasureQuestGame';
 import { Friends } from './Friends';
 import { Messages } from './Messages';
+import { Events } from './Events';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events';
 
 export const Dashboard = () => {
   useAuth(); // Keep auth context active
@@ -127,6 +128,12 @@ export const Dashboard = () => {
             {activeTab === 'messages' && (
               <div key="messages" className="animate-fadeIn">
                 <Messages />
+              </div>
+            )}
+
+            {activeTab === 'events' && (
+              <div key="events" className="animate-fadeIn">
+                <Events />
               </div>
             )}
 
