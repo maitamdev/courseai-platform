@@ -18,8 +18,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(() => {
     // Load cached profile from localStorage
-    const cached = localStorage.getItem('codemind-profile');
-    return cached ? JSON.parse(cached) : null;
+    try {
+      const cached = localStorage.getItem('codemind-profile');
+      return cached ? JSON.parse(cached) : null;
+    } catch {
+      return null;
+    }
   });
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +42,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (data) {
       setProfile(data);
       // Cache profile in localStorage
-      localStorage.setItem('codemind-profile', JSON.stringify(data));
+      try {
+        localStorage.setItem('codemind-profile', JSON.stringify(data));
+      } catch {
+        // Ignore storage errors
+      }
     }
   };
 
@@ -102,7 +110,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
     // Clear cached profile
-    localStorage.removeItem('codemind-profile');
+    try {
+      localStorage.removeItem('codemind-profile');
+    } catch {
+      // Ignore storage errors
+    }
   };
 
   return (

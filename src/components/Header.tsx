@@ -1,7 +1,7 @@
 import { useAuth } from '../contexts/AuthContext';
-import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Route, Home, Users } from 'lucide-react';
+import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle } from 'lucide-react';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'roadmap' | 'profile' | 'course-roadmap' | 'treasure-quest' | 'friends';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages';
 
 type HeaderProps = {
   activeTab?: Tab;
@@ -14,11 +14,10 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
   const menuItems = [
     { id: 'home' as Tab, label: 'Trang chủ', icon: Home },
     { id: 'lessons' as Tab, label: 'Khóa học', icon: BookOpen },
-    { id: 'roadmap' as Tab, label: 'Lộ trình học', icon: Route },
     { id: 'games' as Tab, label: 'Trò chơi', icon: Gamepad2 },
     { id: 'friends' as Tab, label: 'Bạn bè', icon: Users },
+    { id: 'messages' as Tab, label: 'Tin nhắn', icon: MessageCircle },
     { id: 'coins' as Tab, label: 'Nạp xu', icon: Coins },
-    { id: 'profile' as Tab, label: 'Hồ sơ', icon: User },
   ];
 
   return (
@@ -69,7 +68,11 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               <span className="font-black">{profile?.total_coins || 0}</span>
             </div>
 
-            <div className="hidden xl:flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border-2 border-white/20">
+            <button
+              onClick={() => onTabChange?.('profile')}
+              className="hidden xl:flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border-2 border-white/20 hover:bg-white/20 hover:scale-105 transition-all cursor-pointer"
+              title="Xem hồ sơ"
+            >
               <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-white" />
               </div>
@@ -78,7 +81,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                 <Zap className="w-4 h-4" />
                 <span className="text-sm font-black">Lv {profile?.level || 1}</span>
               </div>
-            </div>
+            </button>
 
             <button
               onClick={signOut}

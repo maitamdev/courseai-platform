@@ -47,7 +47,6 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedLevel, setSelectedLevel] = useState<GameLevel | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchCategories();
@@ -76,8 +75,6 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -136,14 +133,6 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
   const filteredLevels = levels.filter((level) =>
     level.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400"></div>
-      </div>
-    );
-  }
 
   const selectedCat = categories.find((c) => c.id === selectedCategory);
 

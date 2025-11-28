@@ -15,7 +15,6 @@ type CoinPackage = {
 
 export const CoinPurchase = () => {
   const [packages, setPackages] = useState<CoinPackage[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPackages();
@@ -28,22 +27,13 @@ export const CoinPurchase = () => {
       .order('price_vnd');
     
     if (data) setPackages(data);
-    setLoading(false);
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full">
       <div className="max-w-[1800px] mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12 animate-fade-in-up">
+        <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-yellow-400/20 backdrop-blur-sm px-6 py-2 rounded-full mb-6 border border-yellow-400/30">
             <Sparkles className="w-5 h-5 text-yellow-400" />
             <span className="font-bold text-yellow-400">Quét QR - Nhận Xu Tự Động Trong 5 Giây!</span>
@@ -64,7 +54,7 @@ export const CoinPurchase = () => {
         </div>
 
         {/* QR Topup */}
-        <div className="animate-fade-in-scale animation-delay-300">
+        <div>
           <QRTopup packages={packages} />
         </div>
       </div>

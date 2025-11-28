@@ -15,7 +15,6 @@ type PaymentSession = {
 export const PaymentHistory = () => {
   const { user } = useAuth();
   const [sessions, setSessions] = useState<PaymentSession[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
@@ -38,7 +37,6 @@ export const PaymentHistory = () => {
     } else if (data) {
       setSessions(data);
     }
-    setLoading(false);
   };
 
   const formatPrice = (price: number) => {
@@ -92,14 +90,6 @@ export const PaymentHistory = () => {
         return 'bg-gray-100 text-white';
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   if (sessions.length === 0) {
     return (

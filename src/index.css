@@ -3,77 +3,35 @@
 @tailwind utilities;
 
 @layer utilities {
-  @keyframes blob {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(20px, -50px) scale(1.1); }
-    50% { transform: translate(-20px, 20px) scale(0.9); }
-    75% { transform: translate(50px, 50px) scale(1.05); }
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
-
-  @keyframes slide-down {
-    0% {
+  /* Smooth fade transition */
+  @keyframes fadeIn {
+    from {
       opacity: 0;
-      transform: translateY(-30px);
+      transform: translateY(10px);
     }
-    100% {
+    to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  @keyframes slide-up {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
   }
 
-  @keyframes fade-in {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
+  /* Scroll Reveal Animation */
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   }
 
-  @keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
+  .scroll-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
-  @keyframes bounce-in {
-    0% {
-      opacity: 0;
-      transform: scale(0.3);
-    }
-    50% {
-      transform: scale(1.05);
-    }
-    70% {
-      transform: scale(0.9);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes wiggle {
-    0%, 100% { transform: rotate(-3deg); }
-    50% { transform: rotate(3deg); }
-  }
-
-  @keyframes glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-    50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8); }
-  }
-
+  /* Background Animations */
   @keyframes float-slow {
     0%, 100% { 
       transform: translateY(0px) translateX(0px) rotate(0deg);
@@ -130,42 +88,6 @@
     }
   }
 
-  .animate-blob {
-    animation: blob 7s infinite;
-  }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .animate-slide-down {
-    animation: slide-down 0.6s ease-out;
-  }
-
-  .animate-slide-up {
-    animation: slide-up 0.6s ease-out;
-  }
-
-  .animate-fade-in {
-    animation: fade-in 0.8s ease-out;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
-  }
-
-  .animate-bounce-in {
-    animation: bounce-in 0.5s ease-out;
-  }
-
-  .animate-wiggle {
-    animation: wiggle 1s ease-in-out infinite;
-  }
-
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite;
-  }
-
   .animate-float-slow {
     animation: float-slow 20s ease-in-out infinite;
   }
@@ -182,14 +104,6 @@
     animation: pulse-slow 8s ease-in-out infinite;
   }
 
-  .animation-delay-500 {
-    animation-delay: 0.5s;
-  }
-
-  .animation-delay-1000 {
-    animation-delay: 1s;
-  }
-
   .animation-delay-2000 {
     animation-delay: 2s;
   }
@@ -197,58 +111,54 @@
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+}
 
-  .animation-delay-300 {
-    animation-delay: 0.3s;
-  }
-
-  @keyframes fade-in-up {
-    0% {
+@layer utilities {
+  /* Smooth fade transition - giống 28tech */
+  @keyframes fadeIn {
+    from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(10px);
     }
-    100% {
+    to {
       opacity: 1;
       transform: translateY(0);
     }
   }
 
-  @keyframes fade-in-scale {
-    0% {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
+  .animate-fadeIn {
+    animation: fadeIn 0.3s ease-out forwards;
   }
 
-  .animate-fade-in-up {
-    animation: fade-in-up 0.5s ease-out;
-  }
-
-  .animate-fade-in-scale {
-    animation: fade-in-scale 0.4s ease-out;
-  }
-
-  .page-transition-enter {
+  /* Scroll Reveal Animation - fade in khi scroll */
+  .scroll-reveal {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
   }
 
-  .page-transition-enter-active {
+  .scroll-reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
   }
 
-  .page-transition-exit {
-    opacity: 1;
-  }
+  /* Stagger animation delays */
+  .scroll-reveal:nth-child(1) { transition-delay: 0s; }
+  .scroll-reveal:nth-child(2) { transition-delay: 0.1s; }
+  .scroll-reveal:nth-child(3) { transition-delay: 0.2s; }
+  .scroll-reveal:nth-child(4) { transition-delay: 0.3s; }
+  .scroll-reveal:nth-child(5) { transition-delay: 0.4s; }
+  .scroll-reveal:nth-child(6) { transition-delay: 0.5s; }
 
-  .page-transition-exit-active {
+  /* Smooth page transition */
+  .page-enter {
     opacity: 0;
-    transition: opacity 0.3s ease-in;
+    transform: translateY(10px);
+  }
+
+  .page-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
   }
 }

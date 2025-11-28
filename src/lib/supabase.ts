@@ -3,12 +3,38 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// Custom storage with fallback
+const customStorage = {
+  getItem: (key: string) => {
+    try {
+      return window.localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  },
+  setItem: (key: string, value: string) => {
+    try {
+      window.localStorage.setItem(key, value);
+    } catch {
+      // Fallback to memory storage if localStorage is blocked
+      console.warn('localStorage not available, using memory storage');
+    }
+  },
+  removeItem: (key: string) => {
+    try {
+      window.localStorage.removeItem(key);
+    } catch {
+      // Silent fail
+    }
+  },
+};
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
-    storage: window.localStorage,
+    storage: customStorage,
     storageKey: 'codemind-auth',
   },
   global: {

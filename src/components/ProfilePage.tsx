@@ -7,11 +7,10 @@ type PurchasedCourse = {
   id: string;
   course_id: string;
   purchased_at: string;
-  courses: {
-    title: string;
-    instructor_name: string;
-    price_coins: number;
-  };
+  course_title: string;
+  course_instructor: string;
+  course_price: number;
+  course_language: string;
 };
 
 type CoinTransaction = {
@@ -22,16 +21,11 @@ type CoinTransaction = {
   created_at: string;
 };
 
-type ProfilePageProps = {
-  onCourseSelect?: (courseId: string) => void;
-};
-
-export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
+export const ProfilePage = () => {
   const { user, profile } = useAuth();
   const [activeTab, setActiveTab] = useState<'info' | 'courses' | 'transactions'>('info');
   const [purchasedCourses, setPurchasedCourses] = useState<PurchasedCourse[]>([]);
   const [transactions, setTransactions] = useState<CoinTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     full_name: '',
@@ -58,26 +52,48 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
     if (!user) return;
 
     try {
-      const [coursesRes, transactionsRes] = await Promise.all([
-        supabase
-          .from('purchased_courses')
-          .select('id, course_id, purchased_at, courses(title, instructor_name, price_coins)')
-          .eq('user_id', user.id)
-          .order('purchased_at', { ascending: false }),
-        supabase
-          .from('coin_transactions')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false })
-          .limit(20)
-      ]);
+      // Fetch purchased courses
+      const { data: purchasedData } = await supabase
+        .from('purchased_courses')
+        .select('id, course_id, purchased_at')
+        .eq('user_id', user.id)
+        .order('purchased_at', { ascending: false });
 
-      if (coursesRes.data) setPurchasedCourses(coursesRes.data as any);
-      if (transactionsRes.data) setTransactions(transactionsRes.data);
+      if (purchasedData && purchasedData.length > 0) {
+        // Fetch course details for each purchased course
+        const courseIds = purchasedData.map(p => p.course_id);
+        const { data: coursesData } = await supabase
+          .from('courses')
+          .select('id, title, instructor_name, price_coins, language')
+          .in('id', courseIds);
+
+        // Combine data
+        const combined = purchasedData.map(p => {
+          const course = coursesData?.find(c => c.id === p.course_id);
+          return {
+            id: p.id,
+            course_id: p.course_id,
+            purchased_at: p.purchased_at,
+            course_title: course?.title || 'Khóa học',
+            course_instructor: course?.instructor_name || 'CodeMind AI',
+            course_price: course?.price_coins || 0,
+            course_language: course?.language || 'Python'
+          };
+        });
+        setPurchasedCourses(combined);
+      }
+
+      // Fetch transactions
+      const { data: transactionsData } = await supabase
+        .from('coin_transactions')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (transactionsData) setTransactions(transactionsData);
     } catch (error) {
       console.error('Error fetching user data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -110,20 +126,6 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
       minute: '2-digit'
     });
   };
-
-  const getTransactionColor = (type: string) => {
-    if (type === 'purchase') return 'text-green-600 bg-green-50';
-    if (type === 'spend') return 'text-red-600 bg-red-50';
-    return 'text-blue-600 bg-blue-50';
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -331,31 +333,39 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                   <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold text-white mb-2">Chưa có khóa học nào</h3>
                   <p className="text-gray-400 mb-6">Hãy khám phá và mua khóa học để bắt đầu học!</p>
-                  <button className="px-6 py-2 bg-yellow-400 text-white rounded-lg font-semibold hover:bg-yellow-500">
+                  <button 
+                    onClick={() => {
+                      // Chuyển sang tab lessons
+                      window.dispatchEvent(new CustomEvent('changeTab', { detail: 'lessons' }));
+                    }}
+                    className="px-6 py-2 bg-yellow-400 text-white rounded-lg font-semibold hover:bg-yellow-500"
+                  >
                     Xem khóa học
                   </button>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {purchasedCourses.map((pc) => (
-                    <button
+                    <div
                       key={pc.id}
-                      onClick={() => onCourseSelect?.(pc.course_id)}
-                      className="w-full border-2 border-gray-200 rounded-xl p-5 hover:border-blue-400 hover:shadow-lg transition-all text-left group"
+                      className="bg-gray-700/50 border border-gray-600 rounded-xl p-5 hover:border-yellow-400/50 transition-all group"
                     >
                       <div className="flex items-start gap-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-yellow-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                           <BookOpen className="w-8 h-8 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
-                            {pc.courses.title}
+                            {pc.course_title}
                           </h3>
                           <div className="flex items-center gap-4 text-sm text-gray-300 mb-2">
-                            <span>👨‍🏫 {pc.courses.instructor_name}</span>
+                            <span>👨‍🏫 {pc.course_instructor}</span>
                             <span className="flex items-center gap-1">
                               <Coins className="w-4 h-4 text-yellow-500" />
-                              {pc.courses.price_coins} xu
+                              {pc.course_price} xu
+                            </span>
+                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs">
+                              {pc.course_language}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs text-gray-400">
@@ -363,13 +373,18 @@ export const ProfilePage = ({ onCourseSelect }: ProfilePageProps) => {
                             <span>Đã mua: {formatDate(pc.purchased_at)}</span>
                           </div>
                         </div>
-                        <div className="flex-shrink-0 self-center">
-                          <div className="px-4 py-2 bg-yellow-400 text-white rounded-lg text-sm font-semibold group-hover:bg-yellow-500 transition-colors">
-                            Học ngay →
-                          </div>
-                        </div>
+                        <button
+                          onClick={() => {
+                            // Lưu course_id và chuyển sang tab lessons
+                            sessionStorage.setItem('openCourseId', pc.course_id);
+                            window.dispatchEvent(new CustomEvent('changeTab', { detail: 'lessons' }));
+                          }}
+                          className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg text-sm font-bold transition-colors"
+                        >
+                          Bắt đầu học →
+                        </button>
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
               )}

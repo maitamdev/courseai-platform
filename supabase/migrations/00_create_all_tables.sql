@@ -28,25 +28,30 @@ CREATE TABLE IF NOT EXISTS programming_languages (
 
 -- 3. Tạo table courses
 CREATE TABLE IF NOT EXISTS courses (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  id text PRIMARY KEY DEFAULT gen_random_uuid()::text,
   title text NOT NULL,
   description text NOT NULL,
   language_id uuid REFERENCES programming_languages(id),
+  language text,
   level text DEFAULT 'beginner',
+  difficulty text DEFAULT 'beginner',
   price_coins integer DEFAULT 0,
+  price integer DEFAULT 0,
   duration_hours integer DEFAULT 10,
   instructor_name text DEFAULT 'Code Quest Team',
   thumbnail_url text,
+  image_url text,
   student_count integer DEFAULT 0,
   rating numeric(3,2) DEFAULT 4.5,
   is_published boolean DEFAULT true,
+  is_featured boolean DEFAULT false,
   created_at timestamptz DEFAULT now()
 );
 
 -- 4. Tạo table course_sections
 CREATE TABLE IF NOT EXISTS course_sections (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  course_id uuid NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+  id text PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  course_id text NOT NULL,
   title text NOT NULL,
   description text,
   order_index integer NOT NULL,
@@ -65,6 +70,21 @@ CREATE TABLE IF NOT EXISTS course_lessons (
   content jsonb DEFAULT '{}',
   order_index integer NOT NULL,
   is_free boolean DEFAULT false,
+  created_at timestamptz DEFAULT now()
+);
+
+-- 5b. Tạo table lessons (schema đơn giản cho Python course)
+CREATE TABLE IF NOT EXISTS lessons (
+  id text PRIMARY KEY,
+  section_id text NOT NULL,
+  title text NOT NULL,
+  description text,
+  content text,
+  video_url text,
+  duration integer DEFAULT 10,
+  order_index integer NOT NULL,
+  is_free boolean DEFAULT false,
+  xp_reward integer DEFAULT 10,
   created_at timestamptz DEFAULT now()
 );
 
@@ -94,6 +114,7 @@ ALTER TABLE programming_languages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE course_sections ENABLE ROW LEVEL SECURITY;
 ALTER TABLE course_lessons ENABLE ROW LEVEL SECURITY;
+ALTER TABLE lessons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE purchased_courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE coin_transactions ENABLE ROW LEVEL SECURITY;
 
@@ -115,6 +136,9 @@ CREATE POLICY "Anyone can view sections" ON course_sections FOR SELECT USING (tr
 
 DROP POLICY IF EXISTS "Anyone can view lessons" ON course_lessons;
 CREATE POLICY "Anyone can view lessons" ON course_lessons FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Anyone can view lessons" ON lessons;
+CREATE POLICY "Anyone can view lessons" ON lessons FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "Users can view own purchases" ON purchased_courses;
 CREATE POLICY "Users can view own purchases" ON purchased_courses FOR SELECT USING (auth.uid() = user_id);

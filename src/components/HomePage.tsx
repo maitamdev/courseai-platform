@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Code2, Users, Library, GraduationCap, ChevronLeft, ChevronRight, Zap, Trophy, Target, Sparkles, BookOpen, Rocket, Star, CheckCircle2 } from 'lucide-react';
+import { Code2, Users, ChevronLeft, ChevronRight, Zap, Trophy, Target, Sparkles, BookOpen, Rocket, Star, CheckCircle2 } from 'lucide-react';
+import { ScrollReveal } from './ScrollReveal';
 
 type HomePageProps = {
   onGetStarted: () => void;
@@ -24,23 +25,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
     },
   ];
 
-  const features = [
-    {
-      icon: GraduationCap,
-      title: 'Học Tập Linh Hoạt',
-      description: 'Học mọi lúc mọi nơi với nội dung được tối ưu cho mọi thiết bị.',
-    },
-    {
-      icon: Users,
-      title: 'Giảng Viên Chuyên Nghiệp',
-      description: 'Đội ngũ giảng viên giàu kinh nghiệm và tâm huyết với nghề.',
-    },
-    {
-      icon: Library,
-      title: 'Thư Viện Phong Phú',
-      description: 'Hàng trăm tài liệu, bài tập và dự án thực tế để thực hành.',
-    },
-  ];
+
 
   const changeSlide = (newIndex: number) => {
     setIsTransitioning(true);
@@ -82,7 +67,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/85 to-gray-900/90"></div>
         
-        <div className="max-w-7xl mx-auto px-4 py-32 relative">
+        <div className="max-w-7xl mx-auto px-4 py-40 min-h-[85vh] flex flex-col justify-center relative">
           {/* Slider Navigation */}
           <button
             onClick={prevSlide}
@@ -182,8 +167,8 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
             ].map((feature, index) => {
               const Icon = feature.icon;
               return (
+                <ScrollReveal key={index}>
                 <div
-                  key={index}
                   className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-yellow-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -199,6 +184,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                     {feature.description}
                   </p>
                 </div>
+                </ScrollReveal>
               );
             })}
           </div>
@@ -219,18 +205,20 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
             ].map((stat, index) => {
               const Icon = stat.icon;
               return (
-                <div key={index} className="text-center group">
-                  <div className="relative inline-block mb-4">
-                    <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} blur-xl opacity-50 group-hover:opacity-75 transition-opacity`}></div>
-                    <div className={`relative w-20 h-20 bg-gradient-to-br ${stat.color} rounded-2xl flex items-center justify-center mx-auto transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-2xl`}>
-                      <Icon className="w-10 h-10 text-white" />
+                <ScrollReveal key={index}>
+                  <div className="text-center group">
+                    <div className="relative inline-block mb-4">
+                      <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} blur-xl opacity-50 group-hover:opacity-75 transition-opacity`}></div>
+                      <div className={`relative w-20 h-20 bg-gradient-to-br ${stat.color} rounded-2xl flex items-center justify-center mx-auto transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-2xl`}>
+                        <Icon className="w-10 h-10 text-white" />
+                      </div>
                     </div>
+                    <div className="text-5xl md:text-6xl font-black mb-2 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent group-hover:scale-110 transition-transform inline-block">
+                      {stat.number}
+                    </div>
+                    <div className="text-lg text-white/80 font-medium">{stat.label}</div>
                   </div>
-                  <div className="text-5xl md:text-6xl font-black mb-2 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent group-hover:scale-110 transition-transform inline-block">
-                    {stat.number}
-                  </div>
-                  <div className="text-lg text-white/80 font-medium">{stat.label}</div>
-                </div>
+                </ScrollReveal>
               );
             })}
           </div>
