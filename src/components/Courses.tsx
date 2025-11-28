@@ -92,15 +92,17 @@ export const Courses = () => {
   // Mở khóa học từ sessionStorage (khi click từ ProfilePage)
   useEffect(() => {
     if (courses.length > 0) {
-      const openCourseId = sessionStorage.getItem('openCourseId');
-      if (openCourseId) {
-        sessionStorage.removeItem('openCourseId');
-        const course = courses.find(c => c.id === openCourseId);
-        if (course) {
-          setSelectedCourse(course);
-          setExpandedSections(new Set([course.sections[0]?.id]));
+      try {
+        const openCourseId = sessionStorage.getItem('openCourseId');
+        if (openCourseId) {
+          sessionStorage.removeItem('openCourseId');
+          const course = courses.find(c => c.id === openCourseId);
+          if (course) {
+            setSelectedCourse(course);
+            setExpandedSections(new Set([course.sections[0]?.id]));
+          }
         }
-      }
+      } catch (e) {}
     }
   }, [courses]);
 

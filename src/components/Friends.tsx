@@ -161,7 +161,11 @@ export const Friends = () => {
 
   const openChat = (friendId: string) => {
     // Store friend ID to open chat with
-    sessionStorage.setItem('openChatWith', friendId);
+    try {
+      sessionStorage.setItem('openChatWith', friendId);
+    } catch (e) {
+      console.warn('sessionStorage not available');
+    }
     // Trigger tab change event
     const event = new CustomEvent('changeTab', { detail: 'messages' });
     window.dispatchEvent(event);

@@ -414,7 +414,9 @@ export const ProfilePage = () => {
                         <button
                           onClick={() => {
                             // Lưu course_id và chuyển sang tab lessons
-                            sessionStorage.setItem('openCourseId', pc.course_id);
+                            try {
+                              sessionStorage.setItem('openCourseId', pc.course_id);
+                            } catch (e) {}
                             window.dispatchEvent(new CustomEvent('changeTab', { detail: 'lessons' }));
                           }}
                           className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg text-sm font-bold transition-colors"

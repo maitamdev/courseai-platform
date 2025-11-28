@@ -41,14 +41,18 @@ export const Messages = () => {
   }, [user]);
 
   useEffect(() => {
-    const openChatWithId = sessionStorage.getItem('openChatWith');
-    if (openChatWithId && conversations.length > 0) {
-      sessionStorage.removeItem('openChatWith');
-      const conv = conversations.find(c => c.friend_id === openChatWithId);
-      if (conv) {
-        setSelectedFriend(conv);
-        setShowMobileChat(true);
+    try {
+      const openChatWithId = sessionStorage.getItem('openChatWith');
+      if (openChatWithId && conversations.length > 0) {
+        sessionStorage.removeItem('openChatWith');
+        const conv = conversations.find(c => c.friend_id === openChatWithId);
+        if (conv) {
+          setSelectedFriend(conv);
+          setShowMobileChat(true);
+        }
       }
+    } catch (e) {
+      console.warn('sessionStorage not available');
     }
   }, [conversations]);
 

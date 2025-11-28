@@ -23,8 +23,15 @@ function App() {
   useEffect(() => {
     const SCROLL_KEY = 'app-scroll-position';
     
+    const getStorage = (key: string) => {
+      try { return sessionStorage.getItem(key); } catch { return null; }
+    };
+    const setStorage = (key: string, value: string) => {
+      try { sessionStorage.setItem(key, value); } catch {}
+    };
+    
     // Restore scroll on mount
-    const savedScroll = sessionStorage.getItem(SCROLL_KEY);
+    const savedScroll = getStorage(SCROLL_KEY);
     if (savedScroll) {
       const scrollY = parseInt(savedScroll);
       // Multiple attempts to restore scroll
@@ -36,7 +43,7 @@ function App() {
 
     // Save scroll position continuously
     const saveScroll = () => {
-      sessionStorage.setItem(SCROLL_KEY, window.scrollY.toString());
+      setStorage(SCROLL_KEY, window.scrollY.toString());
     };
 
     let scrollTimer: NodeJS.Timeout;
@@ -55,7 +62,7 @@ function App() {
 
     const handleFocus = () => {
       // Restore scroll when window regains focus
-      const saved = sessionStorage.getItem(SCROLL_KEY);
+      const saved = getStorage(SCROLL_KEY);
       if (saved) {
         setTimeout(() => window.scrollTo(0, parseInt(saved)), 0);
       }
