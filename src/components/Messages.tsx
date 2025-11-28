@@ -190,28 +190,38 @@ export const Messages = () => {
     };
   };
 
-  const sendMessage = async (e?: React.KeyboardEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    
+  const sendMessage = async () => {
     if (!user || !selectedFriend || !newMessage.trim()) return;
 
-    const { error } = await supabase.from('friend_messages').insert({
-      sender_id: user.id,
-      receiver_id: selectedFriend.friend_id,
-      message: newMessage.trim()
-    });
+    const messageContent = newMessage.trim();
+    setNewMessage(''); // Clear input ngay lập tức
+
+    const { data, error } = await supabase
+      .from('friend_messages')
+      .insert({
+        sender_id: user.id,
+        receiver_id: selectedFriend.friend_id,
+        message: messageContent
+      })
+      .select()
+      .single();
 
     if (error) {
       console.error('Error sending message:', error);
       alert('Không thể gửi tin nhắn: ' + error.message);
+      setNewMessage(messageContent); // Restore message nếu lỗi
       return;
     }
 
-    setNewMessage('');
-    fetchMessages(selectedFriend.friend_id);
+    // Thêm tin nhắn vào state ngay lập tức
+    if (data) {
+      setMessages((prev) => [...prev, {
+        id: data.id,
+        sender_id: data.sender_id,
+        content: data.message,
+        created_at: data.created_at
+      }]);
+    }
   };
 
   return (
@@ -319,14 +329,14 @@ export const Messages = () => {
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
-                        sendMessage(e);
+                        sendMessage();
                       }
                     }}
                     placeholder="Nhập tin nhắn..."
                     className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
                   />
                   <button
-                    onClick={sendMessage}
+                    onClick={() => sendMessage()}
                     className="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-semibold transition-all"
                   >
                     <Send className="w-5 h-5" />
