@@ -1,7 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, Send, ArrowLeft, Search, MoreVertical, Phone, Video, Smile, Image, Paperclip, Check, CheckCheck } from 'lucide-react';
+import { MessageCircle, Send, ArrowLeft, Search, MoreVertical, Phone, Video, Smile, Image, Paperclip, Check, CheckCheck, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+
+// Emoji data organized by categories like Messenger
+const EMOJI_CATEGORIES = [
+  { name: 'Mặt cười', icon: '😀', emojis: ['😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '☺️', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '🥸', '😎', '🤓', '🧐'] },
+  { name: 'Cử chỉ', icon: '👋', emojis: ['👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦿', '🦵', '🦶', '👂', '🦻', '👃', '🧠', '🫀', '🫁', '🦷', '🦴', '👀', '👁️', '👅', '👄'] },
+  { name: 'Trái tim', icon: '❤️', emojis: ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '♥️', '💋', '💌', '💐', '🌹', '🥀', '🌺', '🌸', '🌷', '🌻', '🌼', '💮', '🏵️', '🎀', '🎁', '🎈', '🎉', '🎊', '✨', '🌟', '⭐', '💫', '🔥', '💥', '💢', '💦', '💨', '🕊️', '🦋', '🐝', '🌈'] },
+  { name: 'Động vật', icon: '🐶', emojis: ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐻‍❄️', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🪱', '🐛', '🦋', '🐌', '🐞', '🐜', '🪰', '🪲', '🪳', '🦟', '🦗', '🕷️', '🦂', '🐢', '🐍'] },
+  { name: 'Đồ ăn', icon: '🍔', emojis: ['🍏', '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽', '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥯', '🍞', '🥖', '🥨', '🧀', '🥚', '🍳', '🧈', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🦴', '🌭', '🍔', '🍟', '🍕', '🫓', '🥪', '🥙', '🧆', '🌮', '🌯', '🫔', '🥗', '🥘', '🫕', '🍝', '🍜', '🍲', '🍛', '🍣', '🍱', '🥟', '🦪', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🥮', '🍢', '🍡', '🍧', '🍨', '🍦', '🥧', '🧁', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍿', '🍩', '🍪', '🌰', '🥜', '🍯', '🥛', '🍼', '🫖', '☕', '🍵', '🧃', '🥤', '🧋', '🍶', '🍺', '🍻', '🥂', '🍷', '🥃', '🍸', '🍹', '🧉', '🍾'] },
+  { name: 'Hoạt động', icon: '⚽', emojis: ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸', '🏒', '🏑', '🥍', '🏏', '🪃', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋', '🎽', '🛹', '🛼', '🛷', '⛸️', '🥌', '🎿', '⛷️', '🏂', '🪂', '🏋️', '🤼', '🤸', '⛹️', '🤺', '🤾', '🏌️', '🏇', '🧘', '🏄', '🏊', '🤽', '🚣', '🧗', '🚴', '🚵', '🎖️', '🏆', '🥇', '🥈', '🥉', '🏅', '🎪', '🎭', '🎨', '🎬', '🎤', '🎧', '🎼', '🎹', '🥁', '🪘', '🎷', '🎺', '🪗', '🎸', '🪕', '🎻', '🎲', '♟️', '🎯', '🎳', '🎮', '🎰', '🧩'] },
+  { name: 'Du lịch', icon: '🚗', emojis: ['🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚐', '🛻', '🚚', '🚛', '🚜', '🏍️', '🛵', '🚲', '🛴', '🛺', '🚨', '🚔', '🚍', '🚘', '🚖', '🚡', '🚠', '🚟', '🚃', '🚋', '🚞', '🚝', '🚄', '🚅', '🚈', '🚂', '🚆', '🚇', '🚊', '🚉', '✈️', '🛫', '🛬', '🛩️', '💺', '🛰️', '🚀', '🛸', '🚁', '🛶', '⛵', '🚤', '🛥️', '🛳️', '⛴️', '🚢', '⚓', '🪝', '⛽', '🚧', '🚦', '🚥', '🚏', '🗺️', '🗿', '🗽', '🗼', '🏰', '🏯', '🏟️', '🎡', '🎢', '🎠', '⛲', '⛱️', '🏖️', '🏝️', '🏜️', '🌋', '⛰️', '🏔️', '🗻', '🏕️', '⛺', '🛖', '🏠', '🏡', '🏘️', '🏚️', '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒', '🏛️', '⛪', '🕌', '🕍', '🛕', '🕋', '⛩️', '🛤️', '🛣️', '🗾', '🎑', '🏞️', '🌅', '🌄', '🌠', '🎇', '🎆', '🌇', '🌆', '🏙️', '🌃', '🌌', '🌉', '🌁'] },
+  { name: 'Biểu tượng', icon: '💯', emojis: ['💯', '💢', '💬', '👁️‍🗨️', '🗨️', '🗯️', '💭', '💤', '💮', '♨️', '💈', '🛑', '🕛', '🕧', '🕐', '🕜', '🕑', '🕝', '🕒', '🕞', '🕓', '🕟', '🕔', '🕠', '🕕', '🕡', '🕖', '🕢', '🕗', '🕣', '🕘', '🕤', '🕙', '🕥', '🕚', '🕦', '🌀', '♠️', '♥️', '♦️', '♣️', '🃏', '🀄', '🎴', '🔇', '🔈', '🔉', '🔊', '📢', '📣', '📯', '🔔', '🔕', '🎵', '🎶', '🏧', '🚮', '🚰', '♿', '🚹', '🚺', '🚻', '🚼', '🚾', '🛂', '🛃', '🛄', '🛅', '⚠️', '🚸', '⛔', '🚫', '🚳', '🚭', '🚯', '🚱', '🚷', '📵', '🔞', '☢️', '☣️', '⬆️', '↗️', '➡️', '↘️', '⬇️', '↙️', '⬅️', '↖️', '↕️', '↔️', '↩️', '↪️', '⤴️', '⤵️', '🔃', '🔄', '🔙', '🔚', '🔛', '🔜', '🔝', '🛐', '⚛️', '🕉️', '✡️', '☸️', '☯️', '✝️', '☦️', '☪️', '☮️', '🕎', '🔯', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '⛎', '🔀', '🔁', '🔂', '▶️', '⏩', '⏭️', '⏯️', '◀️', '⏪', '⏮️', '🔼', '⏫', '🔽', '⏬', '⏸️', '⏹️', '⏺️', '⏏️', '🎦', '🔅', '🔆', '📶', '📳', '📴', '✖️', '➕', '➖', '➗', '♾️', '‼️', '⁉️', '❓', '❔', '❕', '❗', '〰️', '💱', '💲', '⚕️', '♻️', '⚜️', '🔱', '📛', '🔰', '⭕', '✅', '☑️', '✔️', '❌', '❎', '➰', '➿', '〽️', '✳️', '✴️', '❇️', '©️', '®️', '™️'] }
+];
 
 type Conversation = {
   friend_id: string;
@@ -29,8 +41,27 @@ export const Messages = () => {
   const [newMessage, setNewMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showMobileChat, setShowMobileChat] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [activeEmojiCategory, setActiveEmojiCategory] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
+
+  // Close emoji picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    if (showEmojiPicker) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showEmojiPicker]);
+
+  const insertEmoji = (emoji: string) => {
+    setNewMessage(prev => prev + emoji);
+    inputRef.current?.focus();
+  };
 
   useEffect(() => {
     if (user) {
@@ -285,7 +316,55 @@ export const Messages = () => {
                 <div ref={messagesEndRef} />
               </div>
 
-              <div className="p-4 border-t border-gray-700/50 bg-gray-800/30 flex-shrink-0">
+              <div className="p-4 border-t border-gray-700/50 bg-gray-800/30 flex-shrink-0 relative">
+                {/* Emoji Picker */}
+                {showEmojiPicker && (
+                  <div ref={emojiPickerRef} className="absolute bottom-full left-0 right-0 mb-2 mx-4 bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl overflow-hidden z-50">
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700">
+                      <span className="text-white font-semibold">Biểu tượng cảm xúc</span>
+                      <button onClick={() => setShowEmojiPicker(false)} className="p-1 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-white">
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    {/* Category tabs */}
+                    <div className="flex gap-1 px-2 py-2 border-b border-gray-700 overflow-x-auto scrollbar-hide">
+                      {EMOJI_CATEGORIES.map((cat, idx) => (
+                        <button key={idx} onClick={() => setActiveEmojiCategory(idx)}
+                          className={`p-2 rounded-lg text-xl hover:bg-gray-700 transition-colors flex-shrink-0 ${activeEmojiCategory === idx ? 'bg-yellow-400/20 ring-2 ring-yellow-400' : ''}`}
+                          title={cat.name}>
+                          {cat.icon}
+                        </button>
+                      ))}
+                    </div>
+                    {/* Category name */}
+                    <div className="px-4 py-2 text-sm text-gray-400 font-medium">
+                      {EMOJI_CATEGORIES[activeEmojiCategory].name}
+                    </div>
+                    {/* Emoji grid */}
+                    <div className="h-64 overflow-y-auto px-2 pb-3">
+                      <div className="grid grid-cols-8 gap-1">
+                        {EMOJI_CATEGORIES[activeEmojiCategory].emojis.map((emoji, idx) => (
+                          <button key={idx} onClick={() => insertEmoji(emoji)}
+                            className="p-2 text-2xl hover:bg-gray-700 rounded-lg transition-all hover:scale-110 active:scale-95">
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Quick reactions */}
+                    <div className="flex items-center gap-2 px-4 py-3 border-t border-gray-700 bg-gray-800/50">
+                      <span className="text-xs text-gray-500 mr-2">Nhanh:</span>
+                      {['👍', '❤️', '😂', '😮', '😢', '😡', '🔥', '💯'].map((emoji, idx) => (
+                        <button key={idx} onClick={() => insertEmoji(emoji)}
+                          className="p-1.5 text-xl hover:bg-gray-700 rounded-lg transition-all hover:scale-125">
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-end gap-3">
                   <div className="flex gap-1">
                     <button className="p-2.5 hover:bg-gray-700/50 rounded-xl text-gray-400 hover:text-yellow-400"><Image className="w-5 h-5" /></button>
@@ -295,7 +374,10 @@ export const Messages = () => {
                     <input ref={inputRef} type="text" value={newMessage} onChange={e => setNewMessage(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
                       placeholder="Nhập tin nhắn..." className="w-full px-5 py-3.5 bg-gray-800/80 border border-gray-700/50 rounded-2xl text-white placeholder-gray-500 focus:border-yellow-400/50 focus:outline-none pr-12" />
-                    <button className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-gray-700/50 rounded-lg text-gray-400 hover:text-yellow-400"><Smile className="w-5 h-5" /></button>
+                    <button onClick={() => setShowEmojiPicker(!showEmojiPicker)} 
+                      className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-gray-700/50 rounded-lg transition-colors ${showEmojiPicker ? 'text-yellow-400 bg-gray-700/50' : 'text-gray-400 hover:text-yellow-400'}`}>
+                      <Smile className="w-5 h-5" />
+                    </button>
                   </div>
                   <button onClick={sendMessage} disabled={!newMessage.trim()}
                     className="p-3.5 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 rounded-2xl disabled:opacity-50 shadow-lg shadow-yellow-400/20">
