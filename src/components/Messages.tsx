@@ -170,8 +170,8 @@ export const Messages = () => {
   const filtered = conversations.filter(c => c.friend_full_name?.toLowerCase().includes(searchQuery.toLowerCase()) || c.friend_username?.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <div className="max-w-7xl mx-auto h-[calc(100vh-10rem)]">
-      <div className="h-full grid md:grid-cols-[380px_1fr] bg-gray-900/80 backdrop-blur-xl rounded-3xl border border-gray-700/50 overflow-hidden shadow-2xl">
+    <div className="max-w-7xl mx-auto h-[calc(100vh-10rem)] min-h-[500px]">
+      <div className="h-full grid md:grid-cols-[380px_1fr] bg-gray-900/80 backdrop-blur-xl rounded-3xl border border-gray-700/50 overflow-hidden shadow-2xl relative">
         
         {/* Sidebar */}
         <div className={`flex flex-col border-r border-gray-700/50 ${showMobileChat ? 'hidden md:flex' : 'flex'}`}>
@@ -222,10 +222,10 @@ export const Messages = () => {
         </div>
 
         {/* Chat */}
-        <div className={`flex flex-col bg-gray-900/50 ${!showMobileChat && !selectedFriend ? 'hidden md:flex' : 'flex'}`}>
+        <div className={`flex flex-col bg-gray-900/50 h-full overflow-hidden ${showMobileChat || selectedFriend ? 'flex' : 'hidden md:flex'}`}>
           {selectedFriend ? (
             <>
-              <div className="px-5 py-4 border-b border-gray-700/50 bg-gray-800/30 flex items-center justify-between">
+              <div className="px-5 py-4 border-b border-gray-700/50 bg-gray-800/30 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <button onClick={() => { setShowMobileChat(false); setSelectedFriend(null); }} className="md:hidden p-2 hover:bg-gray-700 rounded-lg"><ArrowLeft className="w-5 h-5 text-white" /></button>
                   <div className="relative">
@@ -247,7 +247,7 @@ export const Messages = () => {
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-5 space-y-6">
+              <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-gray-900/95 min-h-0">
                 {groupByDate(messages).map((g, i) => (
                   <div key={i}>
                     <div className="flex justify-center mb-4"><span className="px-4 py-1.5 bg-gray-800/80 text-gray-400 text-xs font-medium rounded-full">{getDateLabel(g.date)}</span></div>
@@ -281,7 +281,7 @@ export const Messages = () => {
                 <div ref={messagesEndRef} />
               </div>
 
-              <div className="p-4 border-t border-gray-700/50 bg-gray-800/30">
+              <div className="p-4 border-t border-gray-700/50 bg-gray-800/30 flex-shrink-0">
                 <div className="flex items-end gap-3">
                   <div className="flex gap-1">
                     <button className="p-2.5 hover:bg-gray-700/50 rounded-xl text-gray-400 hover:text-yellow-400"><Image className="w-5 h-5" /></button>
