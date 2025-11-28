@@ -213,10 +213,24 @@ export const Messages = () => {
     return () => clearInterval(interval);
   }, [selectedFriend, user]);
 
-  // Scroll to bottom
+  // Scroll to bottom only when new message is added
+  const prevMessageCountRef = useRef(0);
+  const shouldScrollRef = useRef(true);
+  
   useEffect(() => {
-    if (messages.length > 0) messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    // Only scroll if new messages were added (not just fetched same messages)
+    if (messages.length > prevMessageCountRef.current && shouldScrollRef.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+    prevMessageCountRef.current = messages.length;
   }, [messages]);
+
+  // Track if user scrolled up
+  const handleMessagesScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLDivElement;
+    const isAtBottom = target.scrollHeight - target.scrollTop - target.clientHeight < 100;
+    shouldScrollRef.current = isAtBottom;
+  };
 
   // Recording timer
   useEffect(() => {
@@ -885,7 +899,7 @@ export const Messages = () => {
 
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto p-5 space-y-4 min-h-0">
+              <div className="flex-1 overflow-y-auto p-5 space-y-4 min-h-0" onScroll={handleMessagesScroll}>
                 {groupByDate(messages).map((g, i) => (
                   <div key={i}>
                     <div className="flex justify-center mb-4">
