@@ -43,9 +43,11 @@ export const Messages = () => {
   const [showMobileChat, setShowMobileChat] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [activeEmojiCategory, setActiveEmojiCategory] = useState(0);
+  const [friendIsTyping, setFriendIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Close emoji picker when clicking outside
   useEffect(() => {
@@ -62,6 +64,73 @@ export const Messages = () => {
     setNewMessage(prev => prev + emoji);
     inputRef.current?.focus();
   };
+
+  // Update typing status
+  const updateTypingStatus = async (isTyping: boolean) => {
+    if (!user || !selectedFriend) return;
+    try {
+      await supabase.rpc('update_typing_status', { 
+        p_friend_id: selectedFriend.friend_id, 
+        p_is_typing: isTyping 
+      });
+    } catch (e) {
+      // Silently fail - typing indicator is not critical
+    }
+  };
+
+  // Handle input change with typing indicator
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewMessage(e.target.value);
+    
+    // Send typing status
+    updateTypingStatus(true);
+    
+    // Clear previous timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    
+    // Set timeout to clear typing status after 2 seconds of no typing
+    typingTimeoutRef.current = setTimeout(() => {
+      updateTypingStatus(false);
+    }, 2000);
+  };
+
+  // Check if friend is typing
+  useEffect(() => {
+    if (!selectedFriend || !user) return;
+    
+    const checkTypingStatus = async () => {
+      try {
+        const { data } = await supabase
+          .from('typing_status')
+          .select('is_typing, updated_at')
+          .eq('user_id', selectedFriend.friend_id)
+          .eq('friend_id', user.id)
+          .single();
+        
+        if (data) {
+          // Check if typing status is recent (within 5 seconds)
+          const updatedAt = new Date(data.updated_at).getTime();
+          const isRecent = Date.now() - updatedAt < 5000;
+          setFriendIsTyping(data.is_typing && isRecent);
+        } else {
+          setFriendIsTyping(false);
+        }
+      } catch {
+        setFriendIsTyping(false);
+      }
+    };
+
+    checkTypingStatus();
+    const interval = setInterval(checkTypingStatus, 1500);
+    
+    return () => {
+      clearInterval(interval);
+      // Clear typing status when leaving chat
+      updateTypingStatus(false);
+    };
+  }, [selectedFriend, user]);
 
   useEffect(() => {
     if (user) {
@@ -164,6 +233,7 @@ export const Messages = () => {
     const tempId = `temp-${Date.now()}`;
     setMessages(prev => [...prev, { id: tempId, sender_id: user.id, content, created_at: new Date().toISOString(), is_read: false }]);
     setNewMessage('');
+    updateTypingStatus(false); // Clear typing status when sending
     inputRef.current?.focus();
 
     const { error } = await supabase.from('friend_messages').insert({ sender_id: user.id, receiver_id: selectedFriend.friend_id, message: content });
@@ -313,6 +383,28 @@ export const Messages = () => {
                     </div>
                   </div>
                 ))}
+                {/* Typing indicator */}
+                {friendIsTyping && (
+                  <div className="flex items-center gap-2 pl-10">
+                    <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 flex-shrink-0">
+                      {selectedFriend.friend_avatar ? (
+                        <img src={selectedFriend.friend_avatar} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-white text-xs font-bold">
+                          {(selectedFriend.friend_username || '?')[0]?.toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                    <div className="bg-gray-800 px-4 py-3 rounded-2xl rounded-bl-md">
+                      <div className="flex gap-1">
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                        <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                      </div>
+                    </div>
+                    <span className="text-xs text-gray-500">đang nhập...</span>
+                  </div>
+                )}
                 <div ref={messagesEndRef} />
               </div>
 
@@ -371,8 +463,9 @@ export const Messages = () => {
                     <button className="p-2.5 hover:bg-gray-700/50 rounded-xl text-gray-400 hover:text-yellow-400"><Paperclip className="w-5 h-5" /></button>
                   </div>
                   <div className="flex-1 relative">
-                    <input ref={inputRef} type="text" value={newMessage} onChange={e => setNewMessage(e.target.value)}
+                    <input ref={inputRef} type="text" value={newMessage} onChange={handleInputChange}
                       onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
+                      onBlur={() => updateTypingStatus(false)}
                       placeholder="Nhập tin nhắn..." className="w-full px-5 py-3.5 bg-gray-800/80 border border-gray-700/50 rounded-2xl text-white placeholder-gray-500 focus:border-yellow-400/50 focus:outline-none pr-12" />
                     <button onClick={() => setShowEmojiPicker(!showEmojiPicker)} 
                       className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 hover:bg-gray-700/50 rounded-lg transition-colors ${showEmojiPicker ? 'text-yellow-400 bg-gray-700/50' : 'text-gray-400 hover:text-yellow-400'}`}>
