@@ -30,6 +30,13 @@ export const Messages = () => {
   useEffect(() => {
     if (user) {
       fetchConversations();
+      
+      // Polling conversations mỗi 3 giây để cập nhật last_message
+      const pollInterval = setInterval(() => {
+        fetchConversations();
+      }, 3000);
+      
+      return () => clearInterval(pollInterval);
     }
   }, [user]);
 
@@ -207,6 +214,13 @@ export const Messages = () => {
       setMessages((prev) => prev.filter(m => m.id !== tempId));
       alert('Không thể gửi tin nhắn: ' + error.message);
       setNewMessage(messageContent); // Restore message
+    } else {
+      // Cập nhật last_message trong conversations list
+      setConversations(prev => prev.map(conv => 
+        conv.friend_id === selectedFriend.friend_id 
+          ? { ...conv, last_message: messageContent, last_message_time: new Date().toISOString() }
+          : conv
+      ));
     }
   };
 
