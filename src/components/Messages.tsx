@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, Send, ArrowLeft, Check, CheckCheck } from 'lucide-react';
+import { MessageCircle, Send, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -17,7 +17,6 @@ type Message = {
   sender_id: string;
   content: string;
   created_at: string;
-  status: 'sent' | 'delivered' | 'seen';
 };
 
 export const Messages = () => {
@@ -52,7 +51,6 @@ export const Messages = () => {
   useEffect(() => {
     if (selectedFriend) {
       fetchMessages(selectedFriend.friend_id);
-      markMessagesAsSeen(selectedFriend.friend_id);
       
       const pollInterval = setInterval(() => {
         fetchMessages(selectedFriend.friend_id);
@@ -70,17 +68,6 @@ export const Messages = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  };
-
-  const markMessagesAsSeen = async (friendId: string) => {
-    if (!user) return;
-    
-    await supabase
-      .from('friend_messages')
-      .update({ status: 'seen' })
-      .eq('receiver_id', user.id)
-      .eq('sender_id', friendId)
-      .neq('status', 'seen');
   };
 
   const fetchConversations = async () => {
@@ -114,21 +101,13 @@ export const Messages = () => {
             .limit(1)
             .single();
 
-          // Đếm tin nhắn chưa đọc
-          const { count } = await supabase
-            .from('friend_messages')
-            .select('*', { count: 'exact', head: true })
-            .eq('sender_id', profile.id)
-            .eq('receiver_id', user.id)
-            .neq('status', 'seen');
-
           return {
             friend_id: profile.id,
             friend_username: profile.username,
             friend_full_name: profile.full_name,
             last_message: lastMsg?.message || 'Chưa có tin nhắn',
             last_message_time: lastMsg?.created_at || '',
-            unread_count: count || 0
+            unread_count: 0
           };
         })
       );
@@ -143,7 +122,7 @@ export const Messages = () => {
 
     const { data, error } = await supabase
       .from('friend_messages')
-      .select('id, sender_id, receiver_id, message, created_at, status')
+      .select('id, sender_id, receiver_id, message, created_at')
       .or(`and(sender_id.eq.${user.id},receiver_id.eq.${friendId}),and(sender_id.eq.${friendId},receiver_id.eq.${user.id})`)
       .order('created_at', { ascending: true });
 
@@ -154,22 +133,17 @@ export const Messages = () => {
         id: msg.id,
         sender_id: msg.sender_id,
         content: msg.message,
-        created_at: msg.created_at,
-        status: (msg.status || 'sent') as 'sent' | 'delivered' | 'seen'
+        created_at: msg.created_at
       }));
       
       setMessages(prev => {
         if (prev.length !== formattedMessages.length || 
             (prev.length > 0 && formattedMessages.length > 0 && 
-             prev[prev.length - 1].id !== formattedMessages[formattedMessages.length - 1].id) ||
-            JSON.stringify(prev.map(m => m.status)) !== JSON.stringify(formattedMessages.map(m => m.status))) {
+             prev[prev.length - 1].id !== formattedMessages[formattedMessages.length - 1].id)) {
           return formattedMessages;
         }
         return prev;
       });
-      
-      // Đánh dấu đã xem khi fetch
-      markMessagesAsSeen(friendId);
     }
   };
 
@@ -183,8 +157,7 @@ export const Messages = () => {
       id: tempId,
       sender_id: user.id,
       content: messageContent,
-      created_at: new Date().toISOString(),
-      status: 'sent'
+      created_at: new Date().toISOString()
     };
     
     setMessages((prev) => [...prev, optimisticMessage]);
@@ -195,8 +168,7 @@ export const Messages = () => {
       .insert({
         sender_id: user.id,
         receiver_id: selectedFriend.friend_id,
-        message: messageContent,
-        status: 'sent'
+        message: messageContent
       });
 
     if (error) {
@@ -212,33 +184,10 @@ export const Messages = () => {
     }
   };
 
-  const getStatusIcon = (msg: Message) => {
-    if (msg.sender_id !== user?.id) return null;
-    
-    switch (msg.status) {
-      case 'seen':
-        return <CheckCheck className="w-3.5 h-3.5 text-blue-400" />;
-      case 'delivered':
-        return <CheckCheck className="w-3.5 h-3.5 text-gray-400" />;
-      default:
-        return <Check className="w-3.5 h-3.5 text-gray-400" />;
-    }
-  };
-
-  // Tính tổng tin nhắn chưa đọc
-  const totalUnread = conversations.reduce((sum, conv) => sum + conv.unread_count, 0);
-
   return (
     <div className="max-w-7xl mx-auto h-[calc(100vh-12rem)]">
       <div className="mb-6">
-        <div className="flex items-center gap-3">
-          <h1 className="text-4xl font-black text-white">Tin nhắn</h1>
-          {totalUnread > 0 && (
-            <span className="bg-red-500 text-white text-sm font-bold px-2.5 py-1 rounded-full">
-              {totalUnread}
-            </span>
-          )}
-        </div>
+        <h1 className="text-4xl font-black text-white mb-2">Tin nhắn</h1>
         <p className="text-gray-400">Trò chuyện với bạn bè</p>
       </div>
 
@@ -264,23 +213,14 @@ export const Messages = () => {
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
-                        {conv.friend_username?.[0]?.toUpperCase()}
-                      </div>
-                      {conv.unread_count > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                          {conv.unread_count > 9 ? '9+' : conv.unread_count}
-                        </span>
-                      )}
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                      {conv.friend_username?.[0]?.toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-white truncate">
                         {conv.friend_full_name || conv.friend_username}
                       </h3>
-                      <p className={`text-sm truncate ${conv.unread_count > 0 ? 'text-white font-semibold' : 'text-gray-400'}`}>
-                        {conv.last_message}
-                      </p>
+                      <p className="text-sm text-gray-400 truncate">{conv.last_message}</p>
                     </div>
                   </div>
                 </button>
@@ -325,15 +265,12 @@ export const Messages = () => {
                       }`}
                     >
                       <p className="break-words">{msg.content}</p>
-                      <div className="flex items-center justify-end gap-1 mt-1">
-                        <p className="text-xs opacity-70">
-                          {new Date(msg.created_at).toLocaleTimeString('vi-VN', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </p>
-                        {getStatusIcon(msg)}
-                      </div>
+                      <p className="text-xs opacity-70 mt-1 text-right">
+                        {new Date(msg.created_at).toLocaleTimeString('vi-VN', {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -376,30 +313,4 @@ export const Messages = () => {
       </div>
     </div>
   );
-};
-
-// Export hook để dùng ở Sidebar
-export const useUnreadMessages = () => {
-  const { user } = useAuth();
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  useEffect(() => {
-    if (!user) return;
-
-    const fetchUnread = async () => {
-      const { count } = await supabase
-        .from('friend_messages')
-        .select('*', { count: 'exact', head: true })
-        .eq('receiver_id', user.id)
-        .neq('status', 'seen');
-      
-      setUnreadCount(count || 0);
-    };
-
-    fetchUnread();
-    const interval = setInterval(fetchUnread, 3000);
-    return () => clearInterval(interval);
-  }, [user]);
-
-  return unreadCount;
 };

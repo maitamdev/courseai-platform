@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BookOpen, Gamepad2, Coins, Route, User, Home, Menu, X, Trophy, ChevronLeft, ChevronRight, MessageCircle } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'roadmap' | 'profile' | 'course-roadmap' | 'messages';
 
@@ -11,36 +9,15 @@ type SidebarProps = {
 };
 
 export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
-  const { user } = useAuth();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
-
-  // Fetch unread messages count
-  useEffect(() => {
-    if (!user) return;
-
-    const fetchUnread = async () => {
-      const { count } = await supabase
-        .from('friend_messages')
-        .select('*', { count: 'exact', head: true })
-        .eq('receiver_id', user.id)
-        .neq('status', 'seen');
-      
-      setUnreadCount(count || 0);
-    };
-
-    fetchUnread();
-    const interval = setInterval(fetchUnread, 3000);
-    return () => clearInterval(interval);
-  }, [user]);
 
   const menuItems = [
     { id: 'home' as Tab, label: 'Trang chủ', icon: Home },
     { id: 'lessons' as Tab, label: 'Khóa học', icon: BookOpen },
     { id: 'roadmap' as Tab, label: 'Lộ trình học', icon: Route },
     { id: 'games' as Tab, label: 'Trò chơi', icon: Gamepad2 },
-    { id: 'messages' as Tab, label: 'Tin nhắn', icon: MessageCircle, badge: unreadCount },
+    { id: 'messages' as Tab, label: 'Tin nhắn', icon: MessageCircle },
     { id: 'coins' as Tab, label: 'Nạp xu', icon: Coins },
     { id: 'profile' as Tab, label: 'Hồ sơ', icon: User },
   ];
@@ -95,24 +72,8 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
                       } ${isCollapsed ? 'justify-center' : ''}`}
                       title={isCollapsed ? item.label : ''}
                     >
-                      <div className="relative">
-                        <Icon className="w-5 h-5 flex-shrink-0" />
-                        {'badge' in item && (item.badge as number) > 0 && (
-                          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1">
-                            {(item.badge as number) > 99 ? '99+' : item.badge}
-                          </span>
-                        )}
-                      </div>
-                      {!isCollapsed && (
-                        <div className="flex items-center justify-between flex-1">
-                          <span>{item.label}</span>
-                          {'badge' in item && (item.badge as number) > 0 && (
-                            <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                              {(item.badge as number) > 99 ? '99+' : item.badge}
-                            </span>
-                          )}
-                        </div>
-                      )}
+                      <Icon className="w-5 h-5 flex-shrink-0" />
+                      {!isCollapsed && <span>{item.label}</span>}
                     </button>
                   </li>
                 );
@@ -145,4 +106,3 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
     </>
   );
 };
-
