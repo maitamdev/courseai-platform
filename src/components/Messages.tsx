@@ -213,34 +213,6 @@ export const Messages = () => {
     return () => clearInterval(interval);
   }, [selectedFriend, user]);
 
-  // Scroll to bottom only on initial load or when user sends a message
-  const hasInitialScrolledRef = useRef(false);
-  const lastMessageIdRef = useRef<string | null>(null);
-  
-  useEffect(() => {
-    if (messages.length === 0) {
-      hasInitialScrolledRef.current = false;
-      return;
-    }
-    
-    const lastMessage = messages[messages.length - 1];
-    const isNewMessageFromMe = lastMessage.sender_id === user?.id && lastMessage.id !== lastMessageIdRef.current;
-    
-    // Scroll only on: 1) Initial load, 2) When I send a new message
-    if (!hasInitialScrolledRef.current || isNewMessageFromMe) {
-      messagesEndRef.current?.scrollIntoView({ behavior: hasInitialScrolledRef.current ? 'smooth' : 'auto' });
-      hasInitialScrolledRef.current = true;
-    }
-    
-    lastMessageIdRef.current = lastMessage.id;
-  }, [messages, user?.id]);
-
-  // Reset scroll flag when changing chat
-  useEffect(() => {
-    hasInitialScrolledRef.current = false;
-    lastMessageIdRef.current = null;
-  }, [selectedFriend?.friend_id]);
-
   // Recording timer
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -534,7 +506,7 @@ export const Messages = () => {
 
       mediaRecorder.start();
       setIsRecording(true);
-    } catch (err) {
+    } catch {
       alert('Không thể truy cập microphone');
     }
   };
@@ -560,7 +532,7 @@ export const Messages = () => {
       const { data: { publicUrl } } = supabase.storage.from('chat-media').getPublicUrl(fileName);
       await sendMessage('voice', publicUrl, recordingTime);
       setAudioBlob(null);
-    } catch (err) {
+    } catch {
       alert('Không thể gửi tin nhắn thoại');
     }
     setUploadingMedia(false);
@@ -590,7 +562,7 @@ export const Messages = () => {
 
       const { data: { publicUrl } } = supabase.storage.from('chat-media').getPublicUrl(fileName);
       await sendMessage('image', publicUrl);
-    } catch (err) {
+    } catch {
       alert('Không thể gửi hình ảnh');
     }
     setUploadingMedia(false);
@@ -622,7 +594,7 @@ export const Messages = () => {
       setNewGroupName('');
       setSelectedGroupMembers([]);
       fetchGroupChats();
-    } catch (err) {
+    } catch {
       alert('Không thể tạo nhóm');
     }
   };
