@@ -194,33 +194,33 @@ export const Messages = () => {
     if (!user || !selectedFriend || !newMessage.trim()) return;
 
     const messageContent = newMessage.trim();
+    const tempId = `temp-${Date.now()}`;
+    
+    // Optimistic update - hiển thị tin nhắn ngay lập tức
+    const optimisticMessage: Message = {
+      id: tempId,
+      sender_id: user.id,
+      content: messageContent,
+      created_at: new Date().toISOString()
+    };
+    
+    setMessages((prev) => [...prev, optimisticMessage]);
     setNewMessage(''); // Clear input ngay lập tức
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('friend_messages')
       .insert({
         sender_id: user.id,
         receiver_id: selectedFriend.friend_id,
         message: messageContent
-      })
-      .select()
-      .single();
+      });
 
     if (error) {
       console.error('Error sending message:', error);
+      // Xóa tin nhắn optimistic nếu lỗi
+      setMessages((prev) => prev.filter(m => m.id !== tempId));
       alert('Không thể gửi tin nhắn: ' + error.message);
-      setNewMessage(messageContent); // Restore message nếu lỗi
-      return;
-    }
-
-    // Thêm tin nhắn vào state ngay lập tức
-    if (data) {
-      setMessages((prev) => [...prev, {
-        id: data.id,
-        sender_id: data.sender_id,
-        content: data.message,
-        created_at: data.created_at
-      }]);
+      setNewMessage(messageContent); // Restore message
     }
   };
 
