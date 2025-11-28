@@ -48,9 +48,10 @@ export const Messages = () => {
   useEffect(() => {
     if (selectedFriend) {
       fetchMessages(selectedFriend.friend_id);
-      subscribeToMessages(selectedFriend.friend_id);
+      const cleanup = subscribeToMessages(selectedFriend.friend_id);
+      return cleanup;
     }
-  }, [selectedFriend]);
+  }, [selectedFriend, user]);
 
   useEffect(() => {
     if (messages.length > 0) {
@@ -167,19 +168,35 @@ export const Messages = () => {
   };
 
   const subscribeToMessages = (friendId: string) => {
+    if (!user) return () => {};
+    
+    // Unique channel name để tránh conflict
+    const channelName = `messages-${user.id}-${friendId}`;
+    
     const channel = supabase
-      .channel('messages')
+      .channel(channelName)
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
-          table: 'friend_messages',
-          filter: `receiver_id=eq.${user?.id}`
+          table: 'friend_messages'
         },
-        (payload) => {
-          if (payload.new.sender_id === friendId) {
-            setMessages((prev) => [...prev, payload.new as Message]);
+        (payload: any) => {
+          const newMsg = payload.new;
+          // Chỉ nhận tin nhắn từ friend gửi cho mình
+          if (newMsg.sender_id === friendId && newMsg.receiver_id === user.id) {
+            const formattedMsg: Message = {
+              id: newMsg.id,
+              sender_id: newMsg.sender_id,
+              content: newMsg.message,
+              created_at: newMsg.created_at
+            };
+            setMessages((prev) => {
+              // Tránh duplicate
+              if (prev.some(m => m.id === formattedMsg.id)) return prev;
+              return [...prev, formattedMsg];
+            });
           }
         }
       )
