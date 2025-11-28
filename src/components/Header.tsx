@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages';
 
@@ -9,15 +11,35 @@ type HeaderProps = {
 };
 
 export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
-  const { profile, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Fetch unread messages count
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUnread = async () => {
+      const { count } = await supabase
+        .from('friend_messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('receiver_id', user.id)
+        .neq('status', 'seen');
+      
+      setUnreadCount(count || 0);
+    };
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 3000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   const menuItems = [
-    { id: 'home' as Tab, label: 'Trang chủ', icon: Home },
-    { id: 'lessons' as Tab, label: 'Khóa học', icon: BookOpen },
-    { id: 'games' as Tab, label: 'Trò chơi', icon: Gamepad2 },
-    { id: 'friends' as Tab, label: 'Bạn bè', icon: Users },
-    { id: 'messages' as Tab, label: 'Tin nhắn', icon: MessageCircle },
-    { id: 'coins' as Tab, label: 'Nạp xu', icon: Coins },
+    { id: 'home' as Tab, label: 'Trang chủ', icon: Home, badge: 0 },
+    { id: 'lessons' as Tab, label: 'Khóa học', icon: BookOpen, badge: 0 },
+    { id: 'games' as Tab, label: 'Trò chơi', icon: Gamepad2, badge: 0 },
+    { id: 'friends' as Tab, label: 'Bạn bè', icon: Users, badge: 0 },
+    { id: 'messages' as Tab, label: 'Tin nhắn', icon: MessageCircle, badge: unreadCount },
+    { id: 'coins' as Tab, label: 'Nạp xu', icon: Coins, badge: 0 },
   ];
 
   return (
@@ -53,7 +75,14 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                         : 'text-white/90 hover:bg-gray-700/50 hover:text-white hover:scale-105'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
+                    <div className="relative">
+                      <Icon className="w-5 h-5" />
+                      {item.badge > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1 animate-pulse">
+                          {item.badge > 99 ? '99+' : item.badge}
+                        </span>
+                      )}
+                    </div>
                     <span className="hidden xl:inline">{item.label}</span>
                   </button>
                 );
