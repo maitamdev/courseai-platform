@@ -48,8 +48,13 @@ export const Messages = () => {
   useEffect(() => {
     if (selectedFriend) {
       fetchMessages(selectedFriend.friend_id);
-      const cleanup = subscribeToMessages(selectedFriend.friend_id);
-      return cleanup;
+      
+      // Polling mỗi 2 giây để lấy tin nhắn mới
+      const pollInterval = setInterval(() => {
+        fetchMessages(selectedFriend.friend_id);
+      }, 2000);
+      
+      return () => clearInterval(pollInterval);
     }
   }, [selectedFriend, user]);
 
@@ -140,8 +145,6 @@ export const Messages = () => {
   const fetchMessages = async (friendId: string) => {
     if (!user) return;
 
-    console.log('Fetching messages between', user.id, 'and', friendId);
-
     const { data, error } = await supabase
       .from('friend_messages')
       .select('id, sender_id, receiver_id, message, created_at')
@@ -153,8 +156,6 @@ export const Messages = () => {
       return;
     }
 
-    console.log('Messages fetched:', data);
-
     if (data) {
       const formattedMessages = data.map(msg => ({
         id: msg.id,
@@ -162,49 +163,17 @@ export const Messages = () => {
         content: msg.message,
         created_at: msg.created_at
       }));
-      console.log('Formatted messages:', formattedMessages);
-      setMessages(formattedMessages);
-    }
-  };
-
-  const subscribeToMessages = (friendId: string) => {
-    if (!user) return () => {};
-    
-    // Unique channel name để tránh conflict
-    const channelName = `messages-${user.id}-${friendId}`;
-    
-    const channel = supabase
-      .channel(channelName)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'friend_messages'
-        },
-        (payload: any) => {
-          const newMsg = payload.new;
-          // Chỉ nhận tin nhắn từ friend gửi cho mình
-          if (newMsg.sender_id === friendId && newMsg.receiver_id === user.id) {
-            const formattedMsg: Message = {
-              id: newMsg.id,
-              sender_id: newMsg.sender_id,
-              content: newMsg.message,
-              created_at: newMsg.created_at
-            };
-            setMessages((prev) => {
-              // Tránh duplicate
-              if (prev.some(m => m.id === formattedMsg.id)) return prev;
-              return [...prev, formattedMsg];
-            });
-          }
+      
+      setMessages(prev => {
+        // Nếu số lượng khác hoặc tin nhắn cuối khác thì update
+        if (prev.length !== formattedMessages.length || 
+            (prev.length > 0 && formattedMessages.length > 0 && 
+             prev[prev.length - 1].id !== formattedMessages[formattedMessages.length - 1].id)) {
+          return formattedMessages;
         }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+        return prev;
+      });
+    }
   };
 
   const sendMessage = async () => {
