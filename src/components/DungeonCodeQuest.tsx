@@ -224,12 +224,29 @@ export const DungeonCodeQuest = () => {
   const level = DUNGEON_LEVELS[currentLevel];
 
   useEffect(() => {
-    // Load unlocked levels from localStorage
-    const saved = localStorage.getItem('dungeonUnlockedLevels');
-    if (saved) {
-      setUnlockedLevels(JSON.parse(saved));
-    }
-  }, []);
+    // Load unlocked levels from database
+    const loadProgress = async () => {
+      if (!user) return;
+      try {
+        const { data } = await supabase
+          .from('dungeon_progress')
+          .select('unlocked_levels')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (data?.unlocked_levels) {
+          setUnlockedLevels(data.unlocked_levels);
+        }
+      } catch {
+        // Fallback to localStorage
+        const saved = localStorage.getItem(`dungeonUnlockedLevels_${user.id}`);
+        if (saved) {
+          setUnlockedLevels(JSON.parse(saved));
+        }
+      }
+    };
+    loadProgress();
+  }, [user]);
 
   const initLevel = useCallback(() => {
     const levelData = DUNGEON_LEVELS[currentLevel];
@@ -385,7 +402,21 @@ export const DungeonCodeQuest = () => {
     if (!unlockedLevels.includes(nextLevel) && nextLevel <= DUNGEON_LEVELS.length) {
       const newUnlocked = [...unlockedLevels, nextLevel];
       setUnlockedLevels(newUnlocked);
-      localStorage.setItem('dungeonUnlockedLevels', JSON.stringify(newUnlocked));
+      
+      // Save to database
+      if (user) {
+        try {
+          await supabase.from('dungeon_progress').upsert({
+            user_id: user.id,
+            unlocked_levels: newUnlocked,
+            current_level: nextLevel,
+            updated_at: new Date().toISOString()
+          });
+        } catch {
+          // Fallback to localStorage
+          localStorage.setItem(`dungeonUnlockedLevels_${user.id}`, JSON.stringify(newUnlocked));
+        }
+      }
     }
 
     // Save rewards to database

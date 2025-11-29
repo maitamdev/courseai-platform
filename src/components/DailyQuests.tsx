@@ -1,5 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Target, CheckCircle, Coins, Star, Zap, BookOpen, Gamepad2, Users, MessageCircle, LucideIcon } from 'lucide-react';
+import {
+  Target,
+  CheckCircle,
+  Coins,
+  Star,
+  Zap,
+  BookOpen,
+  Gamepad2,
+  Users,
+  MessageCircle,
+  LucideIcon,
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -14,13 +25,18 @@ type Quest = {
   current: number;
   reward: { coins: number; xp: number };
   type: QuestType;
+  claimed: boolean;
 };
 
 const ICON_MAP: Record<string, LucideIcon> = {
-  Zap, BookOpen, Gamepad2, Users, MessageCircle
+  Zap,
+  BookOpen,
+  Gamepad2,
+  Users,
+  MessageCircle,
 };
 
-const DEFAULT_QUESTS: Omit<Quest, 'current'>[] = [
+const DEFAULT_QUESTS: Omit<Quest, 'current' | 'claimed'>[] = [
   { id: '1', title: 'Đăng nhập', description: 'Đăng nhập vào hệ thống', iconName: 'Zap', target: 1, reward: { coins: 5, xp: 10 }, type: 'login' },
   { id: '2', title: 'Học 2 bài', description: 'Hoàn thành 2 bài học', iconName: 'BookOpen', target: 2, reward: { coins: 20, xp: 40 }, type: 'lesson' },
   { id: '3', title: 'Chơi game', description: 'Chơi 1 game bất kỳ', iconName: 'Gamepad2', target: 1, reward: { coins: 15, xp: 30 }, type: 'game' },
@@ -31,64 +47,176 @@ const DEFAULT_QUESTS: Omit<Quest, 'current'>[] = [
 export const DailyQuests = () => {
   const { user, profile, refreshProfile } = useAuth();
   const [quests, setQuests] = useState<Quest[]>([]);
-  const [lastReset, setLastReset] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) loadQuests();
   }, [user]);
 
-  const loadQuests = () => {
+  const loadQuests = async () => {
+    if (!user) return;
+    setLoading(true);
+    const today = new Date().toISOString().split('T')[0];
+
+    try {
+      // Try to load from database
+      const { data, error } = await supabase
+        .from('user_daily_quests')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('quest_date', today);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        // Load existing quests
+        const loadedQuests: Quest[] = data.map((q) => ({
+          id: q.quest_id,
+          title: DEFAULT_QUESTS.find((dq) => dq.id === q.quest_id)?.title || '',
+          description: DEFAULT_QUESTS.find((dq) => dq.id === q.quest_id)?.description || '',
+          iconName: DEFAULT_QUESTS.find((dq) => dq.id === q.quest_id)?.iconName || 'Zap',
+          target: q.target,
+          current: q.progress,
+          reward: { coins: q.coins_reward, xp: q.xp_reward },
+          type: DEFAULT_QUESTS.find((dq) => dq.id === q.quest_id)?.type || 'login',
+          claimed: q.claimed,
+        }));
+        setQuests(loadedQuests);
+      } else {
+        // Create new daily quests
+        await createDailyQuests(today);
+      }
+    } catch {
+      // Fallback to localStorage
+      loadQuestsFromLocalStorage();
+    }
+    setLoading(false);
+  };
+
+
+  const createDailyQuests = async (today: string) => {
+    if (!user) return;
+
+    const newQuests: Quest[] = DEFAULT_QUESTS.map((q) => ({
+      ...q,
+      current: q.type === 'login' ? 1 : 0,
+      claimed: false,
+    }));
+
+    try {
+      // Insert into database
+      const inserts = newQuests.map((q) => ({
+        user_id: user.id,
+        quest_date: today,
+        quest_id: q.id,
+        progress: q.current,
+        target: q.target,
+        completed: q.current >= q.target,
+        coins_reward: q.reward.coins,
+        xp_reward: q.reward.xp,
+        claimed: false,
+      }));
+
+      await supabase.from('user_daily_quests').insert(inserts);
+    } catch {
+      // Save to localStorage as fallback
+      localStorage.setItem(
+        `quests_${user.id}`,
+        JSON.stringify({ quests: newQuests, date: today })
+      );
+    }
+
+    setQuests(newQuests);
+  };
+
+  const loadQuestsFromLocalStorage = () => {
     const today = new Date().toDateString();
     const saved = localStorage.getItem(`quests_${user?.id}`);
-    
+
     if (saved) {
       const data = JSON.parse(saved);
       if (data.date === today) {
         setQuests(data.quests);
-        setLastReset(data.date);
         return;
       }
     }
-    
-    // Generate new daily quests
-    const newQuests: Quest[] = DEFAULT_QUESTS.map(q => ({
-      ...q,
-      current: q.type === 'login' ? 1 : 0
-    }));
-    
-    setQuests(newQuests);
-    setLastReset(today);
-    saveQuests(newQuests, today);
-  };
 
-  const saveQuests = (q: Quest[], date: string) => {
-    localStorage.setItem(`quests_${user?.id}`, JSON.stringify({ quests: q, date }));
+    // Generate new daily quests
+    const newQuests: Quest[] = DEFAULT_QUESTS.map((q) => ({
+      ...q,
+      current: q.type === 'login' ? 1 : 0,
+      claimed: false,
+    }));
+
+    setQuests(newQuests);
+    localStorage.setItem(
+      `quests_${user?.id}`,
+      JSON.stringify({ quests: newQuests, date: today })
+    );
   };
 
   const claimReward = async (quest: Quest) => {
-    if (quest.current < quest.target || !user || !profile) return;
-    
-    const claimed = localStorage.getItem(`quest_claimed_${user.id}_${quest.id}_${lastReset}`);
-    if (claimed) return;
+    if (quest.current < quest.target || !user || !profile || quest.claimed) return;
 
-    localStorage.setItem(`quest_claimed_${user.id}_${quest.id}_${lastReset}`, 'true');
+    const today = new Date().toISOString().split('T')[0];
 
-    await supabase.from('profiles').update({
-      total_coins: (profile.total_coins || 0) + quest.reward.coins,
-      xp: (profile.xp || 0) + quest.reward.xp,
-    }).eq('id', user.id);
-    
-    refreshProfile();
+    try {
+      // Update database
+      await supabase
+        .from('user_daily_quests')
+        .update({ claimed: true })
+        .eq('user_id', user.id)
+        .eq('quest_date', today)
+        .eq('quest_id', quest.id);
+
+      // Update profile
+      await supabase
+        .from('profiles')
+        .update({
+          total_coins: (profile.total_coins || 0) + quest.reward.coins,
+          xp: (profile.xp || 0) + quest.reward.xp,
+        })
+        .eq('id', user.id);
+
+      refreshProfile();
+    } catch {
+      // Fallback
+      localStorage.setItem(`quest_claimed_${user.id}_${quest.id}_${today}`, 'true');
+      await supabase
+        .from('profiles')
+        .update({
+          total_coins: (profile.total_coins || 0) + quest.reward.coins,
+          xp: (profile.xp || 0) + quest.reward.xp,
+        })
+        .eq('id', user.id);
+      refreshProfile();
+    }
+
+    // Update local state
+    setQuests((prev) =>
+      prev.map((q) => (q.id === quest.id ? { ...q, claimed: true } : q))
+    );
   };
 
   const isCompleted = (quest: Quest) => quest.current >= quest.target;
-  const isClaimed = (quest: Quest) => {
-    return localStorage.getItem(`quest_claimed_${user?.id}_${quest.id}_${lastReset}`) === 'true';
-  };
-
-  const completedCount = quests.filter(q => isCompleted(q)).length;
-
+  const completedCount = quests.filter((q) => isCompleted(q)).length;
   const getIcon = (iconName: string) => ICON_MAP[iconName] || Zap;
+
+  if (loading) {
+    return (
+      <div className="bg-gradient-to-br from-indigo-900/30 to-purple-900/30 rounded-2xl p-6 border border-indigo-500/30">
+        <div className="animate-pulse">
+          <div className="h-12 bg-gray-700 rounded-xl mb-4"></div>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-20 bg-gray-700 rounded-xl"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="bg-gradient-to-br from-indigo-900/30 to-purple-900/30 rounded-2xl p-6 border border-indigo-500/30">
@@ -103,14 +231,16 @@ export const DailyQuests = () => {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-2xl font-black text-indigo-400">{completedCount}/{quests.length}</div>
+          <div className="text-2xl font-black text-indigo-400">
+            {completedCount}/{quests.length}
+          </div>
           <div className="text-xs text-gray-400">Hoàn thành</div>
         </div>
       </div>
 
       <div className="mb-6">
         <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-          <div 
+          <div
             className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all"
             style={{ width: `${(completedCount / quests.length) * 100}%` }}
           />
@@ -118,10 +248,9 @@ export const DailyQuests = () => {
       </div>
 
       <div className="space-y-3">
-        {quests.map(quest => {
+        {quests.map((quest) => {
           const Icon = getIcon(quest.iconName);
           const completed = isCompleted(quest);
-          const claimed = isClaimed(quest);
           const progress = Math.min((quest.current / quest.target) * 100, 100);
 
           return (
@@ -129,16 +258,18 @@ export const DailyQuests = () => {
               key={quest.id}
               className={`p-4 rounded-xl border transition-all ${
                 completed
-                  ? claimed
+                  ? quest.claimed
                     ? 'bg-gray-800/30 border-gray-700/50 opacity-60'
                     : 'bg-green-500/10 border-green-500/50'
                   : 'bg-gray-800/50 border-gray-700/50'
               }`}
             >
               <div className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  completed ? 'bg-green-500/20' : 'bg-gray-700/50'
-                }`}>
+                <div
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                    completed ? 'bg-green-500/20' : 'bg-gray-700/50'
+                  }`}
+                >
                   {completed ? (
                     <CheckCircle className="w-5 h-5 text-green-400" />
                   ) : (
@@ -155,24 +286,30 @@ export const DailyQuests = () => {
                       <div className="h-1.5 bg-gray-700 rounded-full overflow-hidden">
                         <div className="h-full bg-indigo-500" style={{ width: `${progress}%` }} />
                       </div>
-                      <p className="text-[10px] text-gray-500 mt-1">{quest.current}/{quest.target}</p>
+                      <p className="text-[10px] text-gray-500 mt-1">
+                        {quest.current}/{quest.target}
+                      </p>
                     </div>
                   )}
                 </div>
                 <div className="text-right">
-                  {completed && !claimed ? (
+                  {completed && !quest.claimed ? (
                     <button
                       onClick={() => claimReward(quest)}
                       className="px-3 py-1.5 bg-green-500 hover:bg-green-600 text-white text-sm font-bold rounded-lg transition-colors"
                     >
                       Nhận
                     </button>
-                  ) : claimed ? (
+                  ) : quest.claimed ? (
                     <span className="text-xs text-gray-500">Đã nhận</span>
                   ) : (
                     <div className="text-xs text-gray-400">
-                      <div className="flex items-center gap-1"><Coins className="w-3 h-3 text-emerald-400" />+{quest.reward.coins}</div>
-                      <div className="flex items-center gap-1"><Star className="w-3 h-3 text-purple-400" />+{quest.reward.xp}</div>
+                      <div className="flex items-center gap-1">
+                        <Coins className="w-3 h-3 text-emerald-400" />+{quest.reward.coins}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3 h-3 text-purple-400" />+{quest.reward.xp}
+                      </div>
                     </div>
                   )}
                 </div>

@@ -131,7 +131,7 @@ export const Achievements = () => {
       // Update profile with rewards
       await supabase.from('profiles').update({
         total_coins: (profile.total_coins || 0) + achievement.reward.coins,
-        xp: (profile.xp || 0) + achievement.reward.xp
+        xp: (profile.xp || 0) + achievement.reward.xp,
       }).eq('id', user.id);
 
       refreshProfile();

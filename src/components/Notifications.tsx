@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Bell, X, UserPlus, MessageCircle, Trophy, Gift, Check, Trash2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 type Notification = {
   id: string;
@@ -9,7 +10,6 @@ type Notification = {
   message: string;
   read: boolean;
   createdAt: Date;
-  data?: any;
 };
 
 export const Notifications = () => {
@@ -23,61 +23,149 @@ export const Notifications = () => {
   }, [user]);
 
   useEffect(() => {
-    setUnreadCount(notifications.filter(n => !n.read).length);
+    setUnreadCount(notifications.filter((n) => !n.read).length);
   }, [notifications]);
 
-  const loadNotifications = () => {
-    const saved = localStorage.getItem(`notifications_${user?.id}`);
-    if (saved) {
-      setNotifications(JSON.parse(saved).map((n: any) => ({
-        ...n,
-        createdAt: new Date(n.createdAt)
-      })));
-    } else {
-      // Demo notifications
-      const demo: Notification[] = [
-        { id: '1', type: 'system', title: 'Chào mừng!', message: 'Chào mừng bạn đến với CodeMind AI!', read: false, createdAt: new Date() },
-        { id: '2', type: 'reward', title: 'Phần thưởng', message: 'Nhận 50 xu khi đăng ký thành công!', read: false, createdAt: new Date(Date.now() - 3600000) },
-      ];
-      setNotifications(demo);
-      saveNotifications(demo);
+  const loadNotifications = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('user_notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setNotifications(
+          data.map((n) => ({
+            id: n.id,
+            type: n.type,
+            title: n.title,
+            message: n.message || '',
+            read: n.read,
+            createdAt: new Date(n.created_at),
+          }))
+        );
+      } else {
+        // Create welcome notification
+        await createWelcomeNotifications();
+      }
+    } catch {
+      // Fallback to localStorage
+      loadFromLocalStorage();
     }
   };
 
-  const saveNotifications = (notifs: Notification[]) => {
+  const createWelcomeNotifications = async () => {
+    if (!user) return;
+
+    const welcomeNotifs = [
+      { type: 'system', title: 'Chào mừng!', message: 'Chào mừng bạn đến với CodeMind AI!' },
+      { type: 'reward', title: 'Phần thưởng', message: 'Nhận 50 xu khi đăng ký thành công!' },
+    ];
+
+    try {
+      const inserts = welcomeNotifs.map((n) => ({
+        user_id: user.id,
+        type: n.type,
+        title: n.title,
+        message: n.message,
+      }));
+
+      await supabase.from('user_notifications').insert(inserts);
+      loadNotifications();
+    } catch {
+      // Fallback
+      const demo: Notification[] = welcomeNotifs.map((n, i) => ({
+        id: String(i + 1),
+        ...n,
+        type: n.type as Notification['type'],
+        read: false,
+        createdAt: new Date(),
+      }));
+      setNotifications(demo);
+      saveToLocalStorage(demo);
+    }
+  };
+
+
+  const loadFromLocalStorage = () => {
+    const saved = localStorage.getItem(`notifications_${user?.id}`);
+    if (saved) {
+      setNotifications(
+        JSON.parse(saved).map((n: Notification) => ({
+          ...n,
+          createdAt: new Date(n.createdAt),
+        }))
+      );
+    }
+  };
+
+  const saveToLocalStorage = (notifs: Notification[]) => {
     localStorage.setItem(`notifications_${user?.id}`, JSON.stringify(notifs));
   };
 
-  const markAsRead = (id: string) => {
-    const updated = notifications.map(n => n.id === id ? { ...n, read: true } : n);
+  const markAsRead = async (id: string) => {
+    try {
+      await supabase.from('user_notifications').update({ read: true }).eq('id', id);
+    } catch {
+      // Ignore
+    }
+    const updated = notifications.map((n) => (n.id === id ? { ...n, read: true } : n));
     setNotifications(updated);
-    saveNotifications(updated);
+    saveToLocalStorage(updated);
   };
 
-  const markAllAsRead = () => {
-    const updated = notifications.map(n => ({ ...n, read: true }));
+  const markAllAsRead = async () => {
+    if (!user) return;
+    try {
+      await supabase.from('user_notifications').update({ read: true }).eq('user_id', user.id);
+    } catch {
+      // Ignore
+    }
+    const updated = notifications.map((n) => ({ ...n, read: true }));
     setNotifications(updated);
-    saveNotifications(updated);
+    saveToLocalStorage(updated);
   };
 
-  const deleteNotification = (id: string) => {
-    const updated = notifications.filter(n => n.id !== id);
+  const deleteNotification = async (id: string) => {
+    try {
+      await supabase.from('user_notifications').delete().eq('id', id);
+    } catch {
+      // Ignore
+    }
+    const updated = notifications.filter((n) => n.id !== id);
     setNotifications(updated);
-    saveNotifications(updated);
+    saveToLocalStorage(updated);
   };
 
-  const clearAll = () => {
+  const clearAll = async () => {
+    if (!user) return;
+    try {
+      await supabase.from('user_notifications').delete().eq('user_id', user.id);
+    } catch {
+      // Ignore
+    }
     setNotifications([]);
-    saveNotifications([]);
+    saveToLocalStorage([]);
   };
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'friend_request': return <UserPlus className="w-5 h-5 text-blue-400" />;
-      case 'message': return <MessageCircle className="w-5 h-5 text-green-400" />;
-      case 'achievement': return <Trophy className="w-5 h-5 text-emerald-400" />;
-      case 'reward': return <Gift className="w-5 h-5 text-pink-400" />;
-      default: return <Bell className="w-5 h-5 text-gray-400" />;
+      case 'friend_request':
+        return <UserPlus className="w-5 h-5 text-blue-400" />;
+      case 'message':
+        return <MessageCircle className="w-5 h-5 text-green-400" />;
+      case 'achievement':
+        return <Trophy className="w-5 h-5 text-emerald-400" />;
+      case 'reward':
+        return <Gift className="w-5 h-5 text-pink-400" />;
+      default:
+        return <Bell className="w-5 h-5 text-gray-400" />;
     }
   };
 
@@ -135,7 +223,7 @@ export const Notifications = () => {
                   <p className="text-gray-400">Không có thông báo</p>
                 </div>
               ) : (
-                notifications.map(notif => (
+                notifications.map((notif) => (
                   <div
                     key={notif.id}
                     className={`flex items-start gap-3 p-4 border-b border-gray-800 hover:bg-gray-800/50 transition-colors ${

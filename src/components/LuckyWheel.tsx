@@ -110,19 +110,32 @@ export const LuckyWheel = () => {
       const newFreeSpins = freeSpins - 1;
       setFreeSpins(newFreeSpins);
 
-      const today = new Date().toISOString().split('T')[0];
+      // Save to localStorage first (always works)
+      localStorage.setItem(`spin_${user.id}`, JSON.stringify({
+        lastSpin: new Date().toISOString(),
+        freeSpins: newFreeSpins,
+      }));
 
+      // Update profile coins or XP
+      const updateData = selectedPrize.type === 'coins'
+        ? { total_coins: (profile.total_coins || 0) + selectedPrize.value }
+        : { xp: (profile.xp || 0) + selectedPrize.value };
+      
+      await supabase.from('profiles').update(updateData).eq('id', user.id);
+      await refreshProfile();
+
+      // Try to save to database tables (optional)
       try {
-        // Update database
+        const today = new Date().toISOString().split('T')[0];
+        
         await supabase.from('lucky_wheel_spins').upsert({
           user_id: user.id,
           free_spins_remaining: newFreeSpins,
           last_spin_date: today,
-          total_spins: 1, // Will be incremented
+          total_spins: 1,
           updated_at: new Date().toISOString()
         });
 
-        // Insert spin history
         await supabase.from('lucky_wheel_history').insert({
           user_id: user.id,
           prize_type: selectedPrize.type,
@@ -130,20 +143,8 @@ export const LuckyWheel = () => {
           prize_label: selectedPrize.label
         });
       } catch {
-        // Fallback to localStorage
-        localStorage.setItem(`spin_${user.id}`, JSON.stringify({
-          lastSpin: new Date().toISOString(),
-          freeSpins: newFreeSpins,
-        }));
+        // Tables don't exist yet, that's okay
       }
-
-      // Update profile
-      const updateData = selectedPrize.type === 'coins'
-        ? { total_coins: (profile.total_coins || 0) + selectedPrize.value }
-        : { xp: (profile.xp || 0) + selectedPrize.value };
-      
-      await supabase.from('profiles').update(updateData).eq('id', user.id);
-      refreshProfile();
     }, 4000);
   };
 
