@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Gamepad2, Trophy, Star, Lock, Bug, Sword, Flame, Sparkles } from 'lucide-react';
+import { Gamepad2, Trophy, Star, Lock, Bug, Sword, Flame, Sparkles, Swords } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { GameLevelPlayer } from './GameLevelPlayer';
 import { CodeHeroGame } from './CodeHeroGame';
 import { DungeonCodeQuest } from './DungeonCodeQuest';
 import { JavaNinjaGame } from './JavaNinjaGame';
+import { CodeBattleArena } from './CodeBattleArena';
 
 type GameLevel = {
   id: string;
@@ -36,6 +37,7 @@ export const GameCategories = () => {
   const [showCodeHero, setShowCodeHero] = useState(false);
   const [showDungeonQuest, setShowDungeonQuest] = useState(false);
   const [showJavaNinja, setShowJavaNinja] = useState(false);
+  const [showBattleArena, setShowBattleArena] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -234,7 +236,66 @@ export const GameCategories = () => {
             </div>
           </div>
 
-          {/* Dungeon Code Quest Card */}
+          {/* Code Battle Arena Card */}
+          <div 
+            onClick={() => setShowBattleArena(true)}
+            className="group relative bg-gradient-to-br from-red-900/50 to-pink-900/50 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-red-500/30 hover:border-red-400 transition-all cursor-pointer hover:scale-[1.01] sm:hover:scale-[1.02] hover:shadow-xl hover:shadow-red-500/20"
+          >
+            <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&q=80" 
+                alt="Code Battle Arena"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-red-900/60 to-transparent"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative flex items-center gap-4 sm:gap-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center transform group-hover:scale-110 transition-transform bg-blue-600/80 backdrop-blur rounded-xl shadow-lg shadow-blue-500/30">
+                    <span className="text-3xl sm:text-5xl">👨‍💻</span>
+                  </div>
+                  <Swords className="w-8 h-8 sm:w-10 sm:h-10 text-yellow-400 animate-pulse drop-shadow-lg" />
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center transform group-hover:scale-110 transition-transform bg-red-600/80 backdrop-blur rounded-xl shadow-lg shadow-red-500/30">
+                    <span className="text-3xl sm:text-5xl">👩‍💻</span>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-3 py-0.5 sm:py-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-[10px] sm:text-xs font-black rounded-full flex items-center gap-1">
+                <Swords className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                PVP
+              </div>
+              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-yellow-500/90 backdrop-blur text-gray-900 text-[10px] sm:text-xs font-bold rounded">
+                ⚡ Real-time
+              </div>
+            </div>
+            <div className="p-3 sm:p-4">
+              <h3 className="text-base sm:text-lg md:text-xl font-black text-white mb-1 group-hover:text-red-400 transition-colors">
+                Code Battle Arena
+              </h3>
+              <p className="text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
+                Đấu code PvP real-time, cược xu, leo rank mùa giải!
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-1 sm:gap-2">
+                  <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-red-500/20 text-red-400 text-[10px] sm:text-xs rounded font-medium">PvP</span>
+                  <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-pink-500/20 text-pink-400 text-[10px] sm:text-xs rounded font-medium">Ranked</span>
+                </div>
+                <div className="flex items-center gap-1 text-yellow-400 text-xs sm:text-sm">
+                  <Trophy className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400" />
+                  <span className="font-bold">Season 1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* More Featured Games */}
+      <section className="mb-6 sm:mb-8">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-3 sm:mb-4 flex items-center gap-2">
+          <Gamepad2 className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" /> Thêm Game
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {/* Python Wizard Card */}
           <div 
             onClick={() => setShowDungeonQuest(true)}
             className="group relative bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-purple-500/30 hover:border-purple-400 transition-all cursor-pointer hover:scale-[1.01] sm:hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/20"
@@ -242,7 +303,7 @@ export const GameCategories = () => {
             <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
               <img 
                 src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80" 
-                alt="Dungeon Code Quest"
+                alt="Python Wizard"
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-purple-900/60 to-transparent"></div>
@@ -266,10 +327,10 @@ export const GameCategories = () => {
             </div>
             <div className="p-3 sm:p-4">
               <h3 className="text-base sm:text-lg md:text-xl font-black text-white mb-1 group-hover:text-purple-400 transition-colors">
-                Dungeon Code Quest
+                Python Wizard
               </h3>
               <p className="text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
-                Khám phá hầm ngục, chiến đấu quái vật bằng kiến thức Python!
+                Trở thành phù thủy Python, dùng phép thuật code đánh bại quái vật!
               </p>
               <div className="flex items-center justify-between">
                 <div className="flex gap-1 sm:gap-2">
@@ -422,7 +483,7 @@ export const GameCategories = () => {
         </div>
       )}
 
-      {/* Dungeon Code Quest Modal */}
+      {/* Python Wizard Modal */}
       {showDungeonQuest && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div className="relative bg-gray-900 rounded-3xl p-6 max-w-5xl w-full border border-purple-700/50">
@@ -449,6 +510,25 @@ export const GameCategories = () => {
                 ✕
               </button>
               <JavaNinjaGame />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Code Battle Arena Modal */}
+      {showBattleArena && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 overflow-y-auto">
+          <div className="min-h-full flex items-start justify-center p-2 sm:p-4">
+            <div className="relative bg-gray-900 rounded-2xl sm:rounded-3xl w-full max-w-6xl border border-red-700/50 overflow-hidden my-2 sm:my-4">
+              <button
+                onClick={() => setShowBattleArena(false)}
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 bg-black/50 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-white z-30"
+              >
+                ✕
+              </button>
+              <div className="p-4 sm:p-6">
+                <CodeBattleArena />
+              </div>
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { QRTopup } from './QRTopup';
 import { Notifications } from './Notifications';
 import { SearchModal } from './SearchModal';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards' | 'forum';
 
 type CoinPackage = {
   id: string;
@@ -76,10 +76,10 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
     { id: 'home' as Tab, label: 'Trang chủ', icon: Home },
     { id: 'lessons' as Tab, label: 'Khóa học', icon: BookOpen },
     { id: 'games' as Tab, label: 'Trò chơi', icon: Gamepad2 },
+    { id: 'forum' as Tab, label: 'Hỏi đáp', icon: MessageCircle },
     { id: 'rewards' as Tab, label: 'Phần thưởng', icon: Calendar },
     { id: 'events' as Tab, label: 'Sự kiện', icon: Trophy },
     { id: 'friends' as Tab, label: 'Bạn bè', icon: Users },
-    { id: 'messages' as Tab, label: 'Tin nhắn', icon: MessageCircle },
   ];
 
   return (

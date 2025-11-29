@@ -17,8 +17,9 @@ import { SocialFeed } from './SocialFeed';
 import { DailyRewards } from './DailyRewards';
 import { LuckyWheel } from './LuckyWheel';
 import { DailyQuests } from './DailyQuests';
+import { Forum } from './Forum';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'friends' | 'messages' | 'events' | 'social' | 'rewards' | 'forum';
 
 export const Dashboard = () => {
   useAuth(); // Keep auth context active
@@ -163,6 +164,12 @@ export const Dashboard = () => {
                   <LuckyWheel />
                 </div>
                 <DailyQuests />
+              </div>
+            )}
+
+            {activeTab === 'forum' && (
+              <div key="forum" className="animate-fadeIn">
+                <Forum />
               </div>
             )}
 
