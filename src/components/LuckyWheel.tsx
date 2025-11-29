@@ -52,9 +52,20 @@ export const LuckyWheel = () => {
     if (user) loadSpinData();
   }, [user]);
 
+  // Helper: Get Vietnam date string (UTC+7) - reset at 00:00 Vietnam time
+  const getVietnamDateString = (date: Date): string => {
+    const vnTime = new Date(date.getTime() + (7 * 60 * 60 * 1000)); // Add 7 hours for Vietnam timezone
+    return vnTime.toISOString().split('T')[0];
+  };
+
+  const getTodayVietnam = (): string => {
+    return getVietnamDateString(new Date());
+  };
+
   const loadSpinData = async () => {
     if (!user) return;
     setLoading(true);
+    const todayVN = getTodayVietnam();
 
     try {
       // Thử dùng server function trước
@@ -78,21 +89,21 @@ export const LuckyWheel = () => {
       if (error && error.code === 'PGRST116') {
         setFreeSpins(1);
       } else if (data) {
-        const today = new Date().toISOString().split('T')[0];
-        if (data.last_spin_date !== today) {
+        // Compare using Vietnam timezone
+        const lastSpinVN = data.last_spin_date ? getVietnamDateString(new Date(data.last_spin_date)) : null;
+        if (lastSpinVN !== todayVN) {
           setFreeSpins(1);
         } else {
           setFreeSpins(data.free_spins_remaining || 0);
         }
       }
     } catch {
-      // Fallback to localStorage
+      // Fallback to localStorage with Vietnam timezone
       const saved = localStorage.getItem(`spin_${user.id}`);
       if (saved) {
         const localData = JSON.parse(saved);
-        const lastDate = new Date(localData.lastSpin);
-        const now = new Date();
-        if (lastDate.toDateString() !== now.toDateString()) {
+        const lastSpinVN = localData.lastSpin ? getVietnamDateString(new Date(localData.lastSpin)) : null;
+        if (lastSpinVN !== todayVN) {
           setFreeSpins(1);
         } else {
           setFreeSpins(localData.freeSpins || 0);

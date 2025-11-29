@@ -53,10 +53,20 @@ export const DailyQuests = () => {
     if (user) loadQuests();
   }, [user]);
 
+  // Helper: Get Vietnam date string (UTC+7) - reset at 00:00 Vietnam time
+  const getVietnamDateString = (date: Date): string => {
+    const vnTime = new Date(date.getTime() + (7 * 60 * 60 * 1000)); // Add 7 hours for Vietnam timezone
+    return vnTime.toISOString().split('T')[0];
+  };
+
+  const getTodayVietnam = (): string => {
+    return getVietnamDateString(new Date());
+  };
+
   const loadQuests = async () => {
     if (!user) return;
     setLoading(true);
-    const today = new Date().toISOString().split('T')[0];
+    const today = getTodayVietnam(); // Use Vietnam timezone
 
     try {
       // Try to load from database
@@ -130,11 +140,12 @@ export const DailyQuests = () => {
   };
 
   const loadQuestsFromLocalStorage = () => {
-    const today = new Date().toDateString();
+    const today = getTodayVietnam(); // Use Vietnam timezone
     const saved = localStorage.getItem(`quests_${user?.id}`);
 
     if (saved) {
       const data = JSON.parse(saved);
+      // Compare with Vietnam date
       if (data.date === today) {
         setQuests(data.quests);
         return;

@@ -80,22 +80,32 @@ export const DailyRewards = () => {
   };
 
 
+  // Helper: Get Vietnam date string (UTC+7)
+  const getVietnamDateString = (date: Date): string => {
+    const vnTime = new Date(date.getTime() + (7 * 60 * 60 * 1000)); // Add 7 hours for Vietnam timezone
+    return vnTime.toISOString().split('T')[0];
+  };
+
+  // Helper: Get today's date in Vietnam timezone
+  const getTodayVietnam = (): string => {
+    return getVietnamDateString(new Date());
+  };
+
   const checkCanClaim = (lastClaimDate: string | null) => {
     if (!lastClaimDate) { setCanClaim(true); return; }
-    const last = new Date(lastClaimDate);
-    const now = new Date();
-    // Check if it's a different day
-    const lastDay = last.toISOString().split('T')[0];
-    const today = now.toISOString().split('T')[0];
-    setCanClaim(lastDay !== today);
+    // Convert last claim to Vietnam date
+    const lastVN = getVietnamDateString(new Date(lastClaimDate));
+    const todayVN = getTodayVietnam();
+    // Can claim if it's a new day in Vietnam timezone
+    setCanClaim(lastVN !== todayVN);
   };
 
   const checkCanClaimLocal = (lastClaim: string | null) => {
     if (!lastClaim) { setCanClaim(true); return; }
-    const last = new Date(lastClaim);
-    const now = new Date();
-    const diffHours = (now.getTime() - last.getTime()) / (1000 * 60 * 60);
-    setCanClaim(diffHours >= 24);
+    // Use Vietnam timezone for comparison
+    const lastVN = getVietnamDateString(new Date(lastClaim));
+    const todayVN = getTodayVietnam();
+    setCanClaim(lastVN !== todayVN);
   };
 
   const claimReward = async () => {
@@ -149,14 +159,25 @@ export const DailyRewards = () => {
     if (!user || !profile) return;
     
     const now = new Date();
+    const todayVN = getTodayVietnam();
     let newStreak = currentStreak;
     const saved = localStorage.getItem(`streak_${user.id}`);
+    
     if (saved) {
       const data = JSON.parse(saved);
       const lastDate = data.lastClaim ? new Date(data.lastClaim) : null;
       if (lastDate) {
-        const diffHours = (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60);
-        if (diffHours > 48) newStreak = 0;
+        const lastVN = getVietnamDateString(lastDate);
+        // Check if already claimed today
+        if (lastVN === todayVN) {
+          setCanClaim(false);
+          return;
+        }
+        // Check if streak should reset (missed more than 1 day)
+        const lastDateObj = new Date(lastVN);
+        const todayDateObj = new Date(todayVN);
+        const diffDays = Math.floor((todayDateObj.getTime() - lastDateObj.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays > 1) newStreak = 0;
       }
     }
     newStreak = (newStreak % 7) + 1;

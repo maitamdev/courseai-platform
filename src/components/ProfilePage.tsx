@@ -151,11 +151,11 @@ export const ProfilePage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="grid md:grid-cols-4 gap-6">
+    <div className="max-w-7xl mx-auto px-0 sm:px-0">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6">
         {/* Sidebar */}
         <div className="md:col-span-1">
-          <div className="bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-md border border-gray-700 overflow-hidden sticky top-6">
+          <div className="bg-gray-800/80 backdrop-blur-lg rounded-xl shadow-md border border-gray-700 overflow-hidden md:sticky md:top-6">
             {/* Avatar Section */}
             <div className="bg-gradient-to-r from-gray-700 to-gray-800 p-6 text-center border-b border-gray-700">
               <div className="relative inline-block">
@@ -403,46 +403,54 @@ export const ProfilePage = () => {
               <h2 className="text-2xl font-bold text-white mb-6">Khóa học của tôi</h2>
 
               {purchasedCourses.length === 0 ? (
-                <div className="text-center py-16">
-                  <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-white mb-2">Chưa có khóa học nào</h3>
-                  <p className="text-gray-400 mb-6">Hãy khám phá và mua khóa học để bắt đầu học!</p>
+                <div className="text-center py-8 sm:py-16">
+                  <BookOpen className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Chưa có khóa học nào</h3>
+                  <p className="text-gray-400 mb-6 text-sm sm:text-base">Hãy khám phá và mua khóa học để bắt đầu học!</p>
                   <button 
                     onClick={() => {
                       // Chuyển sang tab lessons
                       window.dispatchEvent(new CustomEvent('changeTab', { detail: 'lessons' }));
                     }}
-                    className="px-6 py-2 bg-emerald-400 text-white rounded-lg font-semibold hover:bg-emerald-500"
+                    className="px-4 sm:px-6 py-2 bg-emerald-400 text-white rounded-lg font-semibold hover:bg-emerald-500 text-sm sm:text-base"
                   >
                     Xem khóa học
                   </button>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {purchasedCourses.map((pc) => (
                     <div
                       key={pc.id}
-                      className="bg-gray-700/50 border border-gray-600 rounded-xl p-5 hover:border-emerald-400/50 transition-all group"
+                      className="bg-gray-700/50 border border-gray-600 rounded-xl p-3 sm:p-5 hover:border-emerald-400/50 transition-all group"
                     >
-                      <div className="flex items-start gap-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                          <BookOpen className="w-8 h-8 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">
+                      {/* Mobile: Stack layout, Desktop: Flex layout */}
+                      <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+                        <div className="flex items-center gap-3 sm:block">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+                          </div>
+                          {/* Mobile: Title next to icon */}
+                          <h3 className="sm:hidden font-bold text-white group-hover:text-emerald-400 transition-colors text-sm">
                             {pc.course_title}
                           </h3>
-                          <div className="flex items-center gap-4 text-sm text-gray-300 mb-2">
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          {/* Desktop: Title */}
+                          <h3 className="hidden sm:block font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">
+                            {pc.course_title}
+                          </h3>
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-300 mb-2">
                             <span>👨‍🏫 {pc.course_instructor}</span>
                             <span className="flex items-center gap-1">
-                              <Coins className="w-4 h-4 text-emerald-500" />
+                              <Coins className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" />
                               {pc.course_price} xu
                             </span>
-                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs">
+                            <span className="px-1.5 sm:px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-[10px] sm:text-xs">
                               {pc.course_language}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-gray-400">
+                          <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-400">
                             <Calendar className="w-3 h-3" />
                             <span>Đã mua: {formatDate(pc.purchased_at)}</span>
                           </div>
@@ -455,7 +463,7 @@ export const ProfilePage = () => {
                             } catch {}
                             window.dispatchEvent(new CustomEvent('changeTab', { detail: 'lessons' }));
                           }}
-                          className="px-4 py-2 bg-emerald-400 hover:bg-emerald-500 text-gray-900 rounded-lg text-sm font-bold transition-colors"
+                          className="w-full sm:w-auto px-4 py-2 bg-emerald-400 hover:bg-emerald-500 text-gray-900 rounded-lg text-xs sm:text-sm font-bold transition-colors mt-2 sm:mt-0"
                         >
                           Bắt đầu học →
                         </button>
