@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, Newspaper, X, QrCode, Gift, Award, Calendar } from 'lucide-react';
+import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, X, QrCode, Gift, Calendar } from 'lucide-react';
 import { QRTopup } from './QRTopup';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards' | 'achievements';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
 
 type CoinPackage = {
   id: string;
@@ -73,7 +73,6 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
     { id: 'lessons' as Tab, label: 'Khóa học', icon: BookOpen },
     { id: 'games' as Tab, label: 'Trò chơi', icon: Gamepad2 },
     { id: 'rewards' as Tab, label: 'Phần thưởng', icon: Calendar },
-    { id: 'achievements' as Tab, label: 'Thành tựu', icon: Award },
     { id: 'events' as Tab, label: 'Sự kiện', icon: Trophy },
     { id: 'friends' as Tab, label: 'Bạn bè', icon: Users },
     { id: 'messages' as Tab, label: 'Tin nhắn', icon: MessageCircle },

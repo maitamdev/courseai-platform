@@ -3,6 +3,7 @@ import { User, BookOpen, Coins, Calendar, LogOut, Settings, Award, ShoppingBag, 
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { AvatarSelector } from './AvatarSelector';
+import { Achievements } from './Achievements';
 
 type PurchasedCourse = {
   id: string;
@@ -24,7 +25,7 @@ type CoinTransaction = {
 
 export const ProfilePage = () => {
   const { user, profile, refreshProfile } = useAuth();
-  const [activeTab, setActiveTab] = useState<'info' | 'courses' | 'transactions'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'courses' | 'transactions' | 'achievements'>('info');
   const [purchasedCourses, setPurchasedCourses] = useState<PurchasedCourse[]>([]);
   const [transactions, setTransactions] = useState<CoinTransaction[]>([]);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
@@ -222,9 +223,16 @@ export const ProfilePage = () => {
 
               <div className="border-t border-gray-700 my-4"></div>
 
-              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
+              <button
+                onClick={() => setActiveTab('achievements')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
+                  activeTab === 'achievements'
+                    ? 'bg-yellow-400 text-white font-semibold'
+                    : 'text-gray-300 hover:bg-gray-700'
+                }`}
+              >
                 <Award className="w-5 h-5" />
-                <span>Phiếu giảm giá</span>
+                <span>Thành tựu</span>
               </button>
 
               <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
@@ -466,6 +474,11 @@ export const ProfilePage = () => {
                 </div>
               )}
             </div>
+          )}
+
+          {/* Tab: Thành tựu */}
+          {activeTab === 'achievements' && (
+            <Achievements />
           )}
         </div>
       </div>

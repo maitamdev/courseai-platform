@@ -15,9 +15,8 @@ import { Events } from './Events';
 import { SocialFeed } from './SocialFeed';
 import { DailyRewards } from './DailyRewards';
 import { LuckyWheel } from './LuckyWheel';
-import { Achievements } from './Achievements';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards' | 'achievements';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
 
 export const Dashboard = () => {
   useAuth(); // Keep auth context active
@@ -154,12 +153,6 @@ export const Dashboard = () => {
                   <DailyRewards />
                   <LuckyWheel />
                 </div>
-              </div>
-            )}
-
-            {activeTab === 'achievements' && (
-              <div key="achievements" className="animate-fadeIn">
-                <Achievements />
               </div>
             )}
 
