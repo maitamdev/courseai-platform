@@ -15,6 +15,7 @@ import { Events } from './Events';
 import { SocialFeed } from './SocialFeed';
 import { DailyRewards } from './DailyRewards';
 import { LuckyWheel } from './LuckyWheel';
+import { DailyQuests } from './DailyQuests';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
 
@@ -148,11 +149,12 @@ export const Dashboard = () => {
 
             {activeTab === 'rewards' && (
               <div key="rewards" className="animate-fadeIn space-y-6">
-                <h1 className="text-3xl font-black text-white mb-6">🎁 Phần Thưởng Hàng Ngày</h1>
+                <h1 className="text-3xl font-black text-white mb-6">🎁 Phần Thưởng & Nhiệm Vụ</h1>
                 <div className="grid lg:grid-cols-2 gap-6">
                   <DailyRewards />
                   <LuckyWheel />
                 </div>
+                <DailyQuests />
               </div>
             )}
 

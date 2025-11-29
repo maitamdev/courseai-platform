@@ -172,3 +172,99 @@ code, pre, .font-mono {
     transition: opacity 0.3s ease-out, transform 0.3s ease-out;
   }
 }
+
+/* Light Mode Styles */
+.light-mode {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --border-color: #e2e8f0;
+}
+
+.light-mode body {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.light-mode .bg-gray-900 {
+  background-color: #ffffff !important;
+}
+
+.light-mode .bg-gray-800 {
+  background-color: #f8fafc !important;
+}
+
+.light-mode .bg-gray-800\/80,
+.light-mode .bg-gray-800\/50 {
+  background-color: rgba(248, 250, 252, 0.9) !important;
+}
+
+.light-mode .bg-gray-700 {
+  background-color: #f1f5f9 !important;
+}
+
+.light-mode .text-white {
+  color: #1e293b !important;
+}
+
+.light-mode .text-gray-300,
+.light-mode .text-gray-400 {
+  color: #64748b !important;
+}
+
+.light-mode .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+.light-mode .border-gray-700,
+.light-mode .border-gray-600 {
+  border-color: #e2e8f0 !important;
+}
+
+.light-mode header {
+  background: linear-gradient(to right, #ffffff, #f8fafc, #ffffff) !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+.light-mode nav {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Slide up animation for mobile menu */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.2s ease-out forwards;
+}
+
+/* Bounce in animation */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounceIn 0.5s ease-out forwards;
+}

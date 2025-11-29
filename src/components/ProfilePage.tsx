@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { User, BookOpen, Coins, Calendar, LogOut, Settings, Award, ShoppingBag, Camera } from 'lucide-react';
+import { User, BookOpen, Coins, Calendar, LogOut, Award, ShoppingBag, Camera, Code2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { AvatarSelector } from './AvatarSelector';
 import { Achievements } from './Achievements';
+import { CodePlayground } from './CodePlayground';
 
 type PurchasedCourse = {
   id: string;
@@ -25,7 +26,7 @@ type CoinTransaction = {
 
 export const ProfilePage = () => {
   const { user, profile, refreshProfile } = useAuth();
-  const [activeTab, setActiveTab] = useState<'info' | 'courses' | 'transactions' | 'achievements'>('info');
+  const [activeTab, setActiveTab] = useState<'info' | 'courses' | 'transactions' | 'achievements' | 'playground'>('info');
   const [purchasedCourses, setPurchasedCourses] = useState<PurchasedCourse[]>([]);
   const [transactions, setTransactions] = useState<CoinTransaction[]>([]);
   const [showAvatarSelector, setShowAvatarSelector] = useState(false);
@@ -235,9 +236,16 @@ export const ProfilePage = () => {
                 <span>Thành tựu</span>
               </button>
 
-              <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
-                <Settings className="w-5 h-5" />
-                <span>Cài đặt</span>
+              <button
+                onClick={() => setActiveTab('playground')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
+                  activeTab === 'playground'
+                    ? 'bg-yellow-400 text-white font-semibold'
+                    : 'text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                <Code2 className="w-5 h-5" />
+                <span>Code Playground</span>
               </button>
 
               <div className="border-t border-gray-700 my-4"></div>
@@ -479,6 +487,11 @@ export const ProfilePage = () => {
           {/* Tab: Thành tựu */}
           {activeTab === 'achievements' && (
             <Achievements />
+          )}
+
+          {/* Tab: Code Playground */}
+          {activeTab === 'playground' && (
+            <CodePlayground />
           )}
         </div>
       </div>

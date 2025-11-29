@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, X, QrCode, Gift, Calendar, MoreHorizontal } from 'lucide-react';
+import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, X, QrCode, Gift, Calendar, MoreHorizontal, Search } from 'lucide-react';
 import { QRTopup } from './QRTopup';
+import { Notifications } from './Notifications';
+import { SearchModal } from './SearchModal';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
 
@@ -28,6 +30,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
   const [selectedPackage, setSelectedPackage] = useState<CoinPackage | null>(null);
   const [showQR, setShowQR] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -132,6 +135,20 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
 
           {/* User Info - Right */}
           <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            {/* Search button */}
+            <button
+              onClick={() => setShowSearch(true)}
+              className="hidden sm:flex p-2 bg-gray-800/80 hover:bg-gray-700 rounded-lg transition-all"
+              title="Tìm kiếm (Ctrl+K)"
+            >
+              <Search className="w-5 h-5 text-gray-300" />
+            </button>
+
+            {/* Notifications */}
+            <div className="hidden sm:block">
+              <Notifications />
+            </div>
+
             {/* Coin button - Compact on mobile */}
             <button
               onClick={() => setShowCoinModal(true)}
@@ -399,6 +416,16 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
           }}
         />
       )}
+
+      {/* Search Modal */}
+      <SearchModal
+        isOpen={showSearch}
+        onClose={() => setShowSearch(false)}
+        onNavigate={(tab) => {
+          onTabChange?.(tab as Tab);
+          setShowSearch(false);
+        }}
+      />
     </>
   );
 };
