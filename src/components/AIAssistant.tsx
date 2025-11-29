@@ -246,13 +246,13 @@ export const AIAssistant = () => {
       {/* Floating Button - Positioned above mobile navbar */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-32 sm:bottom-24 lg:bottom-6 right-4 lg:right-6 z-40 group transition-all duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        className={`fixed bottom-32 sm:bottom-24 lg:bottom-6 right-4 lg:right-6 z-40 group transition-all duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-50 hover:opacity-100'}`}
       >
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity animate-pulse"></div>
-          <div className="relative w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
-            <MessageCircle className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white animate-bounce">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full blur-lg opacity-30 group-hover:opacity-60 transition-opacity"></div>
+          <div className="relative w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-r from-emerald-500/70 to-green-500/70 group-hover:from-emerald-500 group-hover:to-green-500 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-all">
+            <MessageCircle className="w-6 h-6 lg:w-7 lg:h-7 text-white/80 group-hover:text-white" />
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500/70 group-hover:bg-red-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white">
               AI
             </span>
           </div>

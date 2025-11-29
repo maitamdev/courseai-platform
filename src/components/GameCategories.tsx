@@ -134,15 +134,23 @@ export const GameCategories = () => {
             className="group relative bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-blue-500/30 hover:border-blue-400 transition-all cursor-pointer hover:scale-[1.01] sm:hover:scale-[1.02]"
           >
             {/* Game Preview Image */}
-            <div className="relative h-28 sm:h-36 md:h-40 bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center overflow-hidden">
-              {/* Animated characters */}
-              <div className="relative flex items-center gap-4 sm:gap-6 md:gap-8">
-                <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-blue-500 rounded-lg flex items-center justify-center shadow-lg">
-                  <span className="text-xl sm:text-2xl md:text-3xl">🦸</span>
-                </div>
-                <div className="text-2xl sm:text-3xl md:text-4xl animate-pulse">⚔️</div>
-                <div className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
-                  <Bug className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
+            <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=600&q=80" 
+                alt="Code Hero Adventure"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"></div>
+              {/* Animated characters overlay */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative flex items-center gap-4 sm:gap-6 md:gap-8">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-blue-500/90 backdrop-blur rounded-lg flex items-center justify-center shadow-lg">
+                    <span className="text-xl sm:text-2xl md:text-3xl">🦸</span>
+                  </div>
+                  <div className="text-2xl sm:text-3xl md:text-4xl animate-pulse">⚔️</div>
+                  <div className="w-9 h-9 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-red-500/90 backdrop-blur rounded-full flex items-center justify-center shadow-lg">
+                    <Bug className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-white" />
+                  </div>
                 </div>
               </div>
               {/* Badge */}
@@ -150,7 +158,7 @@ export const GameCategories = () => {
                 <Flame className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 HOT
               </div>
-              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-purple-500/80 text-white text-[10px] sm:text-xs font-bold rounded">
+              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-purple-500/80 backdrop-blur text-white text-[10px] sm:text-xs font-bold rounded">
                 30 Màn
               </div>
             </div>
@@ -178,41 +186,48 @@ export const GameCategories = () => {
           {/* Java Ninja Adventure Card */}
           <div 
             onClick={() => setShowJavaNinja(true)}
-            className="group relative bg-gradient-to-br from-indigo-900/50 to-purple-900/50 rounded-2xl overflow-hidden border-2 border-indigo-500/30 hover:border-indigo-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-indigo-500/20"
+            className="group relative bg-gradient-to-br from-indigo-900/50 to-purple-900/50 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-indigo-500/30 hover:border-indigo-400 transition-all cursor-pointer hover:scale-[1.01] sm:hover:scale-[1.02] hover:shadow-xl hover:shadow-indigo-500/20"
           >
-            <div className="relative h-40 bg-gradient-to-br from-indigo-700 to-purple-700 flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
-              <div className="relative flex items-center gap-6">
-                <div className="w-16 h-16 flex items-center justify-center transform group-hover:scale-110 transition-transform">
-                  <span className="text-5xl">🥷</span>
-                </div>
-                <div className="text-3xl animate-pulse">⚔️</div>
-                <div className="w-14 h-14 flex items-center justify-center transform group-hover:scale-110 transition-transform">
-                  <span className="text-4xl">👹</span>
+            <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&q=80" 
+                alt="Java Ninja Adventure"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-indigo-900/60 to-transparent"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative flex items-center gap-4 sm:gap-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center transform group-hover:scale-110 transition-transform bg-indigo-600/80 backdrop-blur rounded-xl">
+                    <span className="text-3xl sm:text-5xl">🥷</span>
+                  </div>
+                  <div className="text-2xl sm:text-3xl animate-pulse">⚔️</div>
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center transform group-hover:scale-110 transition-transform bg-red-600/80 backdrop-blur rounded-full">
+                    <span className="text-2xl sm:text-4xl">👹</span>
+                  </div>
                 </div>
               </div>
-              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 text-xs font-black rounded-full flex items-center gap-1">
-                <Sparkles className="w-3 h-3" />
+              <div className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-3 py-0.5 sm:py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 text-[10px] sm:text-xs font-black rounded-full flex items-center gap-1">
+                <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                 NEW
               </div>
-              <div className="absolute top-3 right-3 px-2 py-1 bg-indigo-500/80 text-white text-xs font-bold rounded">
+              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-indigo-500/80 backdrop-blur text-white text-[10px] sm:text-xs font-bold rounded">
                 5 Màn
               </div>
             </div>
-            <div className="p-4">
-              <h3 className="text-xl font-black text-white mb-1 group-hover:text-indigo-400 transition-colors">
+            <div className="p-3 sm:p-4">
+              <h3 className="text-base sm:text-lg md:text-xl font-black text-white mb-1 group-hover:text-indigo-400 transition-colors">
                 Java Ninja Adventure
               </h3>
-              <p className="text-gray-400 text-sm mb-3">
+              <p className="text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
                 Chiến đấu với quái vật, học Java qua từng trận chiến sử thi!
               </p>
               <div className="flex items-center justify-between">
-                <div className="flex gap-2">
-                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded font-medium">Java</span>
-                  <span className="px-2 py-1 bg-indigo-500/20 text-indigo-400 text-xs rounded font-medium">RPG</span>
+                <div className="flex gap-1 sm:gap-2">
+                  <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-orange-500/20 text-orange-400 text-[10px] sm:text-xs rounded font-medium">Java</span>
+                  <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-indigo-500/20 text-indigo-400 text-[10px] sm:text-xs rounded font-medium">RPG</span>
                 </div>
-                <div className="flex items-center gap-1 text-yellow-400 text-sm">
-                  <Star className="w-4 h-4 fill-yellow-400" />
+                <div className="flex items-center gap-1 text-yellow-400 text-xs sm:text-sm">
+                  <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-yellow-400" />
                   <span className="font-bold">5.0</span>
                 </div>
               </div>
@@ -222,40 +237,47 @@ export const GameCategories = () => {
           {/* Dungeon Code Quest Card */}
           <div 
             onClick={() => setShowDungeonQuest(true)}
-            className="group relative bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-2xl overflow-hidden border-2 border-purple-500/30 hover:border-purple-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/20"
+            className="group relative bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-xl sm:rounded-2xl overflow-hidden border-2 border-purple-500/30 hover:border-purple-400 transition-all cursor-pointer hover:scale-[1.01] sm:hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/20"
           >
-            <div className="relative h-40 bg-gradient-to-br from-purple-700 to-pink-700 flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJyZ2JhKDAsMCwwLDAuMykiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9InJnYmEoMCwwLDAsMC4yKSIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJyZ2JhKDAsMCwwLDAuMikiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
-              <div className="relative flex items-center gap-6">
-                <div className="w-14 h-14 bg-purple-500 rounded-lg flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
-                  <span className="text-3xl">🧙</span>
-                </div>
-                <Sword className="w-10 h-10 text-emerald-400 animate-pulse" />
-                <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
-                  <span className="text-2xl">👹</span>
+            <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80" 
+                alt="Dungeon Code Quest"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-purple-900/60 to-transparent"></div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative flex items-center gap-4 sm:gap-6">
+                  <div className="w-10 h-10 sm:w-14 sm:h-14 bg-purple-500/90 backdrop-blur rounded-lg flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                    <span className="text-2xl sm:text-3xl">🧙</span>
+                  </div>
+                  <Sword className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-400 animate-pulse" />
+                  <div className="w-9 h-9 sm:w-12 sm:h-12 bg-red-600/90 backdrop-blur rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                    <span className="text-xl sm:text-2xl">👹</span>
+                  </div>
                 </div>
               </div>
-              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-purple-400 to-pink-500 text-white text-xs font-black rounded-full">
+              <div className="absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-3 py-0.5 sm:py-1 bg-gradient-to-r from-purple-400 to-pink-500 text-white text-[10px] sm:text-xs font-black rounded-full">
                 ⚔️ NEW
               </div>
-              <div className="absolute top-3 right-3 px-2 py-1 bg-purple-500/80 text-white text-xs font-bold rounded">
+              <div className="absolute top-2 right-2 sm:top-3 sm:right-3 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-purple-500/80 backdrop-blur text-white text-[10px] sm:text-xs font-bold rounded">
                 5 Màn
               </div>
             </div>
-            <div className="p-4">
-              <h3 className="text-xl font-black text-white mb-1 group-hover:text-purple-400 transition-colors">
+            <div className="p-3 sm:p-4">
+              <h3 className="text-base sm:text-lg md:text-xl font-black text-white mb-1 group-hover:text-purple-400 transition-colors">
                 Dungeon Code Quest
               </h3>
-              <p className="text-gray-400 text-sm mb-3">
+              <p className="text-gray-400 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">
                 Khám phá hầm ngục, chiến đấu quái vật bằng kiến thức Python!
               </p>
               <div className="flex items-center justify-between">
-                <div className="flex gap-2">
-                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded font-medium">Python</span>
-                  <span className="px-2 py-1 bg-pink-500/20 text-pink-400 text-xs rounded font-medium">RPG</span>
+                <div className="flex gap-1 sm:gap-2">
+                  <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-purple-500/20 text-purple-400 text-[10px] sm:text-xs rounded font-medium">Python</span>
+                  <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-pink-500/20 text-pink-400 text-[10px] sm:text-xs rounded font-medium">RPG</span>
                 </div>
-                <div className="flex items-center gap-1 text-emerald-400 text-sm">
-                  <Star className="w-4 h-4 fill-emerald-400" />
+                <div className="flex items-center gap-1 text-emerald-400 text-xs sm:text-sm">
+                  <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-emerald-400" />
                   <span className="font-bold">4.9</span>
                 </div>
               </div>

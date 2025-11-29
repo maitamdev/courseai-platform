@@ -90,7 +90,15 @@ export const Dashboard = () => {
       <div className="transition-opacity duration-300">
         {activeTab === 'home' ? (
           <div className="animate-fadeIn">
-            <HomePage onGetStarted={() => setActiveTab('lessons')} />
+            <HomePage 
+              onGetStarted={() => setActiveTab('lessons')} 
+              onViewCourse={(courseId) => {
+                try {
+                  sessionStorage.setItem('openCourseId', courseId);
+                } catch {}
+                setActiveTab('lessons');
+              }}
+            />
           </div>
         ) : (
           <main className="max-w-7xl mx-auto px-4 py-8 min-h-screen">

@@ -93,13 +93,13 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             <img 
               src="/logo.png" 
               alt="CodeMind AI" 
-              className="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-lg"
+              className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-contain drop-shadow-lg"
             />
-            <div className="hidden sm:block">
-              <h1 className="text-lg md:text-2xl font-black text-white drop-shadow-lg">
+            <div>
+              <h1 className="text-sm sm:text-lg md:text-2xl font-black text-white drop-shadow-lg">
                 <span className="text-[#c4e538]">CODE</span><span className="text-white">MIND</span>
               </h1>
-              <p className="text-[10px] md:text-xs text-white/80 font-medium hidden md:block">Học lập trình với AI</p>
+              <p className="text-[8px] sm:text-[10px] md:text-xs text-white/80 font-medium">Học lập trình với AI</p>
             </div>
           </div>
 

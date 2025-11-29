@@ -1,14 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Code2, Users, ChevronLeft, ChevronRight, Zap, Trophy, Target, Sparkles, BookOpen, Rocket, Star, CheckCircle2 } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
+import { supabase } from '../lib/supabase';
+
+type Course = {
+  id: string;
+  title: string;
+  description: string;
+  language: string;
+  difficulty: string;
+  price_coins: number;
+  lessons_count?: number;
+};
 
 type HomePageProps = {
   onGetStarted: () => void;
+  onViewCourse?: (courseId: string) => void;
 };
 
-export const HomePage = ({ onGetStarted }: HomePageProps) => {
+export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [popularCourses, setPopularCourses] = useState<Course[]>([]);
 
   const slides = [
     {
@@ -51,6 +64,22 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
 
     return () => clearInterval(interval);
   }, [currentSlide, slides.length]);
+
+  // Fetch popular courses from database
+  useEffect(() => {
+    const fetchPopularCourses = async () => {
+      const { data } = await supabase
+        .from('courses')
+        .select('id, title, description, language, difficulty, price_coins')
+        .order('created_at', { ascending: false })
+        .limit(3);
+      
+      if (data) {
+        setPopularCourses(data);
+      }
+    };
+    fetchPopularCourses();
+  }, []);
 
   return (
     <div className="w-full">
@@ -239,82 +268,91 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {[
-              { 
-                title: 'JavaScript Cơ Bản', 
-                lessons: '20 bài học', 
-                students: '2.5K học viên',
-                level: 'Beginner', 
-                color: 'from-blue-500 to-blue-600',
-                features: ['Syntax cơ bản', 'DOM Manipulation', 'ES6+ Features']
-              },
-              { 
-                title: 'Python cho AI', 
-                lessons: '25 bài học',
-                students: '1.8K học viên', 
-                level: 'Intermediate', 
-                color: 'from-green-500 to-green-600',
-                features: ['Machine Learning', 'Data Analysis', 'Neural Networks']
-              },
-              { 
-                title: 'React.js Advanced', 
-                lessons: '30 bài học',
-                students: '3.2K học viên', 
-                level: 'Advanced', 
-                color: 'from-purple-500 to-purple-600',
-                features: ['Hooks & Context', 'Performance', 'Best Practices']
-              },
-            ].map((course, index) => (
-              <div
-                key={index}
-                className="group relative bg-gray-800/50 backdrop-blur-sm rounded-xl sm:rounded-2xl overflow-hidden border border-gray-700 hover:border-emerald-400 transition-all duration-300 hover:scale-[1.02] sm:hover:scale-105 cursor-pointer"
-              >
-                {/* Course Image/Icon */}
-                <div className={`relative h-32 sm:h-40 md:h-48 bg-gradient-to-br ${course.color} flex items-center justify-center overflow-hidden`}>
-                  <div className="absolute inset-0 bg-black/20"></div>
-                  <Code2 className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 text-white relative z-10 group-hover:scale-110 transition-transform" />
-                  <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10">
-                    <div className="px-2 sm:px-3 py-0.5 sm:py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold border border-white/30">
-                      {course.level}
-                    </div>
-                  </div>
-                </div>
+            {popularCourses.map((course, index) => {
+              // Ảnh thumbnail đa dạng cho mỗi khóa học
+              const allImages = [
+                'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&q=80', // Python/Code
+                'https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&q=80', // JavaScript
+                'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=400&q=80', // React
+                'https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=400&q=80', // Database
+                'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&q=80', // Laptop code
+                'https://images.unsplash.com/photo-1621839673705-6617adf9e890?w=400&q=80', // HTML
+                'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=400&q=80', // Git
+                'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=80', // AI
+                'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=400&q=80', // Dark code
+                'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80', // Code screen
+                'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&q=80', // Monitor code
+                'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&q=80', // Debug
+              ];
+              
+              // Mỗi khóa học lấy ảnh khác nhau dựa trên index
+              const getImage = () => allImages[index % allImages.length];
 
-                {/* Course Content */}
-                <div className="p-4 sm:p-5 md:p-6">
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 group-hover:text-emerald-400 transition-colors">
-                    {course.title}
-                  </h3>
-                  
-                  <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/60 mb-3 sm:mb-4">
-                    <div className="flex items-center gap-1">
-                      <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>{course.lessons}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Users className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>{course.students}</span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
-                    {course.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-white/70 text-xs sm:text-sm">
-                        <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-green-400 flex-shrink-0" />
-                        <span>{feature}</span>
+              const levelMap: Record<string, string> = {
+                'beginner': 'Cơ bản',
+                'intermediate': 'Trung cấp',
+                'advanced': 'Nâng cao'
+              };
+              
+              return (
+                <div
+                  key={course.id}
+                  className="group relative bg-gray-800/50 backdrop-blur-sm rounded-xl sm:rounded-2xl overflow-hidden border border-gray-700 hover:border-emerald-400 transition-all duration-300 hover:scale-[1.02] sm:hover:scale-105 cursor-pointer"
+                  onClick={() => onViewCourse?.(course.id)}
+                >
+                  {/* Course Image */}
+                  <div className="relative h-32 sm:h-40 md:h-48 overflow-hidden">
+                    <img 
+                      src={getImage()} 
+                      alt={course.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
+                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10">
+                      <div className="px-2 sm:px-3 py-0.5 sm:py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold border border-white/30">
+                        {levelMap[course.difficulty] || course.difficulty}
                       </div>
-                    ))}
+                    </div>
+                    <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 z-10">
+                      <div className="px-2 sm:px-3 py-0.5 sm:py-1 bg-emerald-500/90 backdrop-blur-sm rounded-full text-white text-[10px] sm:text-xs font-bold">
+                        {course.language}
+                      </div>
+                    </div>
                   </div>
 
-                  <button
-                    onClick={onGetStarted}
-                    className="w-full py-2.5 sm:py-3 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold text-sm sm:text-base rounded-lg sm:rounded-xl transition-all hover:shadow-lg"
-                  >
-                    Xem Chi Tiết
-                  </button>
+                  {/* Course Content */}
+                  <div className="p-4 sm:p-5 md:p-6">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 group-hover:text-emerald-400 transition-colors line-clamp-1">
+                      {course.title}
+                    </h3>
+                    
+                    <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/60 mb-3 sm:mb-4">
+                      <div className="flex items-center gap-1">
+                        <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <span>Khóa học</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-emerald-400 font-bold">{course.price_coins} xu</span>
+                      </div>
+                    </div>
+
+                    <p className="text-white/70 text-xs sm:text-sm mb-4 sm:mb-6 line-clamp-2">
+                      {course.description}
+                    </p>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onViewCourse?.(course.id);
+                      }}
+                      className="w-full py-2.5 sm:py-3 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold text-sm sm:text-base rounded-lg sm:rounded-xl transition-all hover:shadow-lg"
+                    >
+                      Xem Chi Tiết
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -377,7 +415,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
       </section>
 
       {/* CTA Section - Enhanced */}
-      <section className="relative bg-gradient-to-br from-emerald-400 via-emerald-500 to-green-500 w-full py-12 sm:py-16 md:py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-emerald-400/80 via-emerald-500/80 to-green-500/80 backdrop-blur-sm w-full py-12 sm:py-16 md:py-24 overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full mb-4 sm:mb-6">
             <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { BookOpen, Users, Clock, Star, Play, CheckCircle, Lock, ChevronDown, ChevronUp, X, Gift, Rocket } from 'lucide-react';
+import { BookOpen, Users, Clock, Star, Play, CheckCircle, Lock, ChevronDown, ChevronUp, X, Gift, Rocket, Award } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
+import { Certificate } from './Certificate';
 
 // Types
 type LessonContent = {
@@ -70,6 +71,7 @@ export const Courses = () => {
   const [loading, setLoading] = useState(true);
   const [userCode, setUserCode] = useState('');
   const [submitResult, setSubmitResult] = useState<'correct' | 'wrong' | null>(null);
+  const [showCertificate, setShowCertificate] = useState(false);
   const hasFetched = useRef(false);
   const lastUserId = useRef<string | null>(null);
 
@@ -552,9 +554,19 @@ export const Courses = () => {
               <span>Tiến độ học tập</span>
               <span className="font-bold">{progress}%</span>
             </div>
-            <div className="w-full bg-white/30 rounded-full h-2">
+            <div className="w-full bg-white/30 rounded-full h-2 mb-3">
               <div className="bg-green-400 h-2 rounded-full transition-all" style={{ width: `${progress}%` }}></div>
             </div>
+            {/* Certificate button when 100% complete */}
+            {progress === 100 && (
+              <button
+                onClick={() => setShowCertificate(true)}
+                className="w-full py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:scale-[1.02]"
+              >
+                <Award className="w-5 h-5" />
+                🎉 Nhận Chứng Chỉ Hoàn Thành
+              </button>
+            )}
           </div>
         )}
 
@@ -708,6 +720,22 @@ export const Courses = () => {
           </div>
         ))}
       </div>
+
+      {/* Certificate Modal */}
+      {showCertificate && selectedCourse && (
+        <Certificate
+          studentName={profile?.username || (profile as any)?.full_name || 'Học viên'}
+          courseName={selectedCourse.title}
+          completionDate={new Date().toLocaleDateString('vi-VN', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })}
+          instructorName={selectedCourse.instructor_name}
+          courseId={selectedCourse.id}
+          onClose={() => setShowCertificate(false)}
+        />
+      )}
 
       {/* Lesson Modal */}
       {selectedLesson && (

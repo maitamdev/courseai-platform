@@ -207,6 +207,15 @@ export const JavaNinjaGame = () => {
 
   const isLevelUnlocked = (level: Level) => {
     if (!profile) return false;
+    // Màn 1 luôn mở
+    if (level.level_number === 1) return true;
+    // Các màn sau phải hoàn thành màn trước đó
+    const previousLevel = levels.find(l => l.level_number === level.level_number - 1);
+    if (previousLevel) {
+      const prevProgress = progress.find(p => p.level_id === previousLevel.id);
+      if (!prevProgress?.completed) return false;
+    }
+    // Vẫn cần đủ level user
     return (profile.level || 1) >= level.required_level;
   };
 
@@ -471,6 +480,12 @@ export const JavaNinjaGame = () => {
               const levelProgress = getLevelProgress(level.id);
               const completed = levelProgress?.completed;
               
+              // Kiểm tra lý do bị khóa
+              const previousLevel = levels.find(l => l.level_number === level.level_number - 1);
+              const prevCompleted = previousLevel ? progress.find(p => p.level_id === previousLevel.id)?.completed : true;
+              const needPrevLevel = !prevCompleted && level.level_number > 1;
+              const needUserLevel = (profile?.level || 1) < level.required_level;
+              
               return (
                 <div key={level.id} className={`relative flex items-center gap-6 ${index % 2 === 0 ? '' : 'flex-row-reverse'}`}>
                   {/* Level Node */}
@@ -490,11 +505,17 @@ export const JavaNinjaGame = () => {
                   
                   {/* Level Info Card */}
                   <div className={`flex-1 p-5 rounded-2xl border transition-all
-                    ${unlocked ? 'bg-gray-800/80 border-purple-500/30 hover:border-purple-400' : 'bg-gray-900/50 border-gray-700'}`}
+                    ${unlocked ? 'bg-gray-800/80 border-purple-500/30 hover:border-purple-400 cursor-pointer' : 'bg-gray-900/50 border-gray-700'}`}
                     onClick={() => unlocked && startLevel(level)}>
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                       <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs font-bold rounded">Màn {level.level_number}</span>
                       {completed && <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded">✓ Hoàn thành</span>}
+                      {!unlocked && needPrevLevel && (
+                        <span className="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs font-bold rounded">🔒 Hoàn thành màn {level.level_number - 1} trước</span>
+                      )}
+                      {!unlocked && needUserLevel && (
+                        <span className="px-2 py-1 bg-red-500/20 text-red-400 text-xs font-bold rounded">🔒 Cần Level {level.required_level}</span>
+                      )}
                     </div>
                     <h3 className={`text-xl font-bold mb-1 ${unlocked ? 'text-white' : 'text-gray-500'}`}>{level.title}</h3>
                     <p className={`text-sm mb-3 ${unlocked ? 'text-gray-400' : 'text-gray-600'}`}>{level.description}</p>
