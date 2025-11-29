@@ -24,11 +24,11 @@ const DAILY_REWARDS: DayReward[] = [
 export const DailyRewards = () => {
   const { user, profile, refreshProfile } = useAuth();
   const [currentStreak, setCurrentStreak] = useState(0);
-  const [lastClaimDate, setLastClaimDate] = useState<string | null>(null);
   const [canClaim, setCanClaim] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const [showReward, setShowReward] = useState(false);
   const [claimedReward, setClaimedReward] = useState<DayReward | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) loadStreakData();
@@ -36,18 +36,51 @@ export const DailyRewards = () => {
 
   const loadStreakData = async () => {
     if (!user) return;
-    const saved = localStorage.getItem(`streak_${user.id}`);
-    if (saved) {
-      const data = JSON.parse(saved);
-      setCurrentStreak(data.streak || 0);
-      setLastClaimDate(data.lastClaim || null);
-      checkCanClaim(data.lastClaim);
-    } else {
-      setCanClaim(true);
+    setLoading(true);
+    
+    try {
+      // Get or create daily rewards record
+      const { data, error } = await supabase
+        .from('daily_rewards')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error && error.code === 'PGRST116') {
+        // No record exists, create one
+        await supabase.from('daily_rewards').insert({ user_id: user.id });
+        setCurrentStreak(0);
+        setCanClaim(true);
+      } else if (data) {
+        setCurrentStreak(data.current_streak || 0);
+        checkCanClaim(data.last_claim_date);
+      }
+    } catch {
+      // Fallback to localStorage if table doesn't exist yet
+      const saved = localStorage.getItem(`streak_${user.id}`);
+      if (saved) {
+        const localData = JSON.parse(saved);
+        setCurrentStreak(localData.streak || 0);
+        checkCanClaimLocal(localData.lastClaim);
+      } else {
+        setCanClaim(true);
+      }
     }
+    setLoading(false);
   };
 
-  const checkCanClaim = (lastClaim: string | null) => {
+
+  const checkCanClaim = (lastClaimDate: string | null) => {
+    if (!lastClaimDate) { setCanClaim(true); return; }
+    const last = new Date(lastClaimDate);
+    const now = new Date();
+    // Check if it's a different day
+    const lastDay = last.toISOString().split('T')[0];
+    const today = now.toISOString().split('T')[0];
+    setCanClaim(lastDay !== today);
+  };
+
+  const checkCanClaimLocal = (lastClaim: string | null) => {
     if (!lastClaim) { setCanClaim(true); return; }
     const last = new Date(lastClaim);
     const now = new Date();
@@ -60,43 +93,118 @@ export const DailyRewards = () => {
     setClaiming(true);
 
     const now = new Date();
-    const lastDate = lastClaimDate ? new Date(lastClaimDate) : null;
-    let newStreak = currentStreak;
+    const today = now.toISOString().split('T')[0];
+    
+    try {
+      // Get current data
+      const { data: currentData } = await supabase
+        .from('daily_rewards')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
 
-    // Check if streak continues or resets
-    if (lastDate) {
-      const diffHours = (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60);
-      if (diffHours > 48) newStreak = 0; // Reset if more than 48h
+      let newStreak = currentStreak;
+      
+      if (currentData?.last_claim_date) {
+        const lastDate = new Date(currentData.last_claim_date);
+        const diffDays = Math.floor((now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays > 1) newStreak = 0; // Reset if more than 1 day gap
+      }
+      
+      newStreak = (newStreak % 7) + 1;
+
+      const reward = DAILY_REWARDS[newStreak - 1];
+      const bonusMultiplier = newStreak === 7 ? 2 : 1;
+      const totalCoins = reward.coins * bonusMultiplier;
+      const totalXP = reward.xp * bonusMultiplier;
+
+      // Update daily_rewards table
+      await supabase.from('daily_rewards').upsert({
+        user_id: user.id,
+        current_streak: newStreak,
+        max_streak: Math.max(newStreak, currentData?.max_streak || 0),
+        last_claim_date: today,
+        total_claims: (currentData?.total_claims || 0) + 1,
+        updated_at: now.toISOString()
+      });
+
+      // Insert claim history
+      await supabase.from('daily_reward_claims').insert({
+        user_id: user.id,
+        day_number: newStreak,
+        coins_earned: totalCoins,
+        xp_earned: totalXP,
+        bonus_multiplier: bonusMultiplier
+      });
+
+      // Update profile coins and xp
+      if (profile) {
+        await supabase.from('profiles').update({
+          total_coins: (profile.total_coins || 0) + totalCoins,
+          xp: (profile.xp || 0) + totalXP,
+        }).eq('id', user.id);
+        refreshProfile();
+      }
+
+      setCurrentStreak(newStreak);
+      setCanClaim(false);
+      setClaimedReward({ ...reward, coins: totalCoins, xp: totalXP });
+      setShowReward(true);
+    } catch {
+      // Fallback to localStorage
+      let newStreak = currentStreak;
+      const saved = localStorage.getItem(`streak_${user.id}`);
+      if (saved) {
+        const data = JSON.parse(saved);
+        const lastDate = data.lastClaim ? new Date(data.lastClaim) : null;
+        if (lastDate) {
+          const diffHours = (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60);
+          if (diffHours > 48) newStreak = 0;
+        }
+      }
+      newStreak = (newStreak % 7) + 1;
+
+      const reward = DAILY_REWARDS[newStreak - 1];
+      const bonusMultiplier = newStreak === 7 ? 2 : 1;
+      const totalCoins = reward.coins * bonusMultiplier;
+      const totalXP = reward.xp * bonusMultiplier;
+
+      localStorage.setItem(`streak_${user.id}`, JSON.stringify({
+        streak: newStreak,
+        lastClaim: now.toISOString(),
+      }));
+
+      if (profile) {
+        await supabase.from('profiles').update({
+          total_coins: (profile.total_coins || 0) + totalCoins,
+          xp: (profile.xp || 0) + totalXP,
+        }).eq('id', user.id);
+        refreshProfile();
+      }
+
+      setCurrentStreak(newStreak);
+      setCanClaim(false);
+      setClaimedReward({ ...reward, coins: totalCoins, xp: totalXP });
+      setShowReward(true);
     }
-    newStreak = (newStreak % 7) + 1;
-
-    const reward = DAILY_REWARDS[newStreak - 1];
-    const bonusMultiplier = newStreak === 7 ? 2 : 1;
-    const totalCoins = reward.coins * bonusMultiplier;
-    const totalXP = reward.xp * bonusMultiplier;
-
-    // Save to localStorage
-    localStorage.setItem(`streak_${user.id}`, JSON.stringify({
-      streak: newStreak,
-      lastClaim: now.toISOString(),
-    }));
-
-    // Update database
-    if (profile) {
-      await supabase.from('profiles').update({
-        total_coins: (profile.total_coins || 0) + totalCoins,
-        xp: (profile.xp || 0) + totalXP,
-      }).eq('id', user.id);
-      refreshProfile();
-    }
-
-    setCurrentStreak(newStreak);
-    setLastClaimDate(now.toISOString());
-    setCanClaim(false);
-    setClaimedReward({ ...reward, coins: totalCoins, xp: totalXP });
-    setShowReward(true);
+    
     setClaiming(false);
   };
+
+
+  if (loading) {
+    return (
+      <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-2xl p-6 border border-green-500/30">
+        <div className="animate-pulse flex items-center gap-3">
+          <div className="w-12 h-12 bg-gray-700 rounded-xl"></div>
+          <div className="flex-1">
+            <div className="h-4 bg-gray-700 rounded w-1/2 mb-2"></div>
+            <div className="h-3 bg-gray-700 rounded w-1/3"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-2xl p-6 border border-green-500/30">
@@ -122,7 +230,6 @@ export const DailyRewards = () => {
         {DAILY_REWARDS.map((reward, index) => {
           const isPast = index < currentStreak;
           const isCurrent = index === currentStreak;
-          const _isLocked = index > currentStreak;
           
           return (
             <div

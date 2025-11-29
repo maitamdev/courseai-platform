@@ -14,11 +14,11 @@ type Prize = {
 };
 
 const PRIZES: Prize[] = [
-  { id: 1, label: '5 Xu', value: 5, type: 'coins', color: '#f59e0b', icon: '🪙', probability: 25 },
+  { id: 1, label: '5 Xu', value: 5, type: 'coins', color: '#10b981', icon: '🪙', probability: 25 },
   { id: 2, label: '10 XP', value: 10, type: 'xp', color: '#8b5cf6', icon: '⭐', probability: 25 },
-  { id: 3, label: '15 Xu', value: 15, type: 'coins', color: '#f59e0b', icon: '💰', probability: 20 },
+  { id: 3, label: '15 Xu', value: 15, type: 'coins', color: '#10b981', icon: '💰', probability: 20 },
   { id: 4, label: '25 XP', value: 25, type: 'xp', color: '#8b5cf6', icon: '✨', probability: 15 },
-  { id: 5, label: '30 Xu', value: 30, type: 'coins', color: '#f59e0b', icon: '💎', probability: 8 },
+  { id: 5, label: '30 Xu', value: 30, type: 'coins', color: '#10b981', icon: '💎', probability: 8 },
   { id: 6, label: '50 XP', value: 50, type: 'xp', color: '#8b5cf6', icon: '🌟', probability: 5 },
   { id: 7, label: '100 Xu', value: 100, type: 'coins', color: '#ef4444', icon: '👑', probability: 1.5 },
   { id: 8, label: '200 XP', value: 200, type: 'xp', color: '#ef4444', icon: '🏆', probability: 0.5 },
@@ -31,26 +31,53 @@ export const LuckyWheel = () => {
   const [prize, setPrize] = useState<Prize | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [freeSpins, setFreeSpins] = useState(1);
-
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) loadSpinData();
   }, [user]);
 
-  const loadSpinData = () => {
+  const loadSpinData = async () => {
     if (!user) return;
-    const saved = localStorage.getItem(`spin_${user.id}`);
-    if (saved) {
-      const data = JSON.parse(saved);
-      const lastDate = new Date(data.lastSpin);
-      const now = new Date();
-      if (lastDate.toDateString() !== now.toDateString()) {
+    setLoading(true);
+
+    try {
+      const { data, error } = await supabase
+        .from('lucky_wheel_spins')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error && error.code === 'PGRST116') {
+        // No record, create one
+        await supabase.from('lucky_wheel_spins').insert({ user_id: user.id });
         setFreeSpins(1);
-      } else {
-        setFreeSpins(data.freeSpins || 0);
+      } else if (data) {
+        const today = new Date().toISOString().split('T')[0];
+        if (data.last_spin_date !== today) {
+          // New day, reset spins
+          setFreeSpins(1);
+        } else {
+          setFreeSpins(data.free_spins_remaining || 0);
+        }
+      }
+    } catch {
+      // Fallback to localStorage
+      const saved = localStorage.getItem(`spin_${user.id}`);
+      if (saved) {
+        const localData = JSON.parse(saved);
+        const lastDate = new Date(localData.lastSpin);
+        const now = new Date();
+        if (lastDate.toDateString() !== now.toDateString()) {
+          setFreeSpins(1);
+        } else {
+          setFreeSpins(localData.freeSpins || 0);
+        }
       }
     }
+    setLoading(false);
   };
+
 
   const selectPrize = (): Prize => {
     const rand = Math.random() * 100;
@@ -80,15 +107,37 @@ export const LuckyWheel = () => {
       setPrize(selectedPrize);
       setShowResult(true);
       setSpinning(false);
-      setFreeSpins(prev => prev - 1);
+      const newFreeSpins = freeSpins - 1;
+      setFreeSpins(newFreeSpins);
 
-      // Save spin data
-      localStorage.setItem(`spin_${user.id}`, JSON.stringify({
-        lastSpin: new Date().toISOString(),
-        freeSpins: freeSpins - 1,
-      }));
+      const today = new Date().toISOString().split('T')[0];
 
-      // Update database
+      try {
+        // Update database
+        await supabase.from('lucky_wheel_spins').upsert({
+          user_id: user.id,
+          free_spins_remaining: newFreeSpins,
+          last_spin_date: today,
+          total_spins: 1, // Will be incremented
+          updated_at: new Date().toISOString()
+        });
+
+        // Insert spin history
+        await supabase.from('lucky_wheel_history').insert({
+          user_id: user.id,
+          prize_type: selectedPrize.type,
+          prize_value: selectedPrize.value,
+          prize_label: selectedPrize.label
+        });
+      } catch {
+        // Fallback to localStorage
+        localStorage.setItem(`spin_${user.id}`, JSON.stringify({
+          lastSpin: new Date().toISOString(),
+          freeSpins: newFreeSpins,
+        }));
+      }
+
+      // Update profile
       const updateData = selectedPrize.type === 'coins'
         ? { total_coins: (profile.total_coins || 0) + selectedPrize.value }
         : { xp: (profile.xp || 0) + selectedPrize.value };
@@ -97,6 +146,16 @@ export const LuckyWheel = () => {
       refreshProfile();
     }, 4000);
   };
+
+  if (loading) {
+    return (
+      <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-2xl p-6 border border-purple-500/30">
+        <div className="animate-pulse">
+          <div className="h-64 w-64 mx-auto bg-gray-700 rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-2xl p-6 border border-purple-500/30">

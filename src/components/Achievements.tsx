@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Trophy, Star, BookOpen, Users, Coins, Crown, Target, Lock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
 
 type Achievement = {
   id: string;
@@ -43,34 +44,104 @@ const RARITY_COLORS = {
 };
 
 export const Achievements = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
   const [unlockedIds, setUnlockedIds] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [loading, setLoading] = useState(true);
+  const [progressData, setProgressData] = useState<Record<string, number>>({});
 
 
   useEffect(() => {
-    if (user) {
+    if (user) loadAchievements();
+  }, [user]);
+
+  const loadAchievements = async () => {
+    if (!user) return;
+    setLoading(true);
+
+    try {
+      // Load unlocked achievements from database
+      const { data: achievements } = await supabase
+        .from('user_achievements')
+        .select('achievement_id')
+        .eq('user_id', user.id);
+
+      if (achievements) {
+        setUnlockedIds(achievements.map(a => a.achievement_id));
+      }
+
+      // Load progress data
+      const { data: progress } = await supabase
+        .from('achievement_progress')
+        .select('achievement_type, current_value')
+        .eq('user_id', user.id);
+
+      if (progress) {
+        const progressMap: Record<string, number> = {};
+        progress.forEach(p => {
+          progressMap[p.achievement_type] = p.current_value;
+        });
+        setProgressData(progressMap);
+      }
+    } catch {
+      // Fallback to localStorage
       const saved = localStorage.getItem(`achievements_${user.id}`);
       if (saved) setUnlockedIds(JSON.parse(saved));
     }
-  }, [user]);
+    
+    setLoading(false);
+  };
 
   const getProgress = (achievement: Achievement): number => {
     if (!profile) return 0;
     const { type, value } = achievement.requirement;
     let current = 0;
     
-    switch (type) {
-      case 'level': current = profile.level || 1; break;
-      case 'coins': current = profile.total_coins || 0; break;
-      case 'streak': 
-        const streakData = localStorage.getItem(`streak_${user?.id}`);
-        current = streakData ? JSON.parse(streakData).streak || 0 : 0;
-        break;
-      default: current = 0;
+    // First check database progress
+    if (progressData[type] !== undefined) {
+      current = progressData[type];
+    } else {
+      // Fallback to profile data
+      switch (type) {
+        case 'level': current = profile.level || 1; break;
+        case 'coins': current = profile.total_coins || 0; break;
+        case 'streak': 
+          const streakData = localStorage.getItem(`streak_${user?.id}`);
+          current = streakData ? JSON.parse(streakData).streak || 0 : 0;
+          break;
+        default: current = 0;
+      }
     }
     
     return Math.min((current / value) * 100, 100);
+  };
+
+  const unlockAchievement = async (achievement: Achievement) => {
+    if (!user || !profile) return;
+
+    try {
+      // Insert into database
+      await supabase.from('user_achievements').insert({
+        user_id: user.id,
+        achievement_id: achievement.id,
+        coins_rewarded: achievement.reward.coins,
+        xp_rewarded: achievement.reward.xp
+      });
+
+      // Update profile with rewards
+      await supabase.from('profiles').update({
+        total_coins: (profile.total_coins || 0) + achievement.reward.coins,
+        xp: (profile.xp || 0) + achievement.reward.xp
+      }).eq('id', user.id);
+
+      refreshProfile();
+      setUnlockedIds(prev => [...prev, achievement.id]);
+    } catch {
+      // Fallback to localStorage
+      const newUnlocked = [...unlockedIds, achievement.id];
+      localStorage.setItem(`achievements_${user.id}`, JSON.stringify(newUnlocked));
+      setUnlockedIds(newUnlocked);
+    }
   };
 
   const isUnlocked = (id: string) => unlockedIds.includes(id);
@@ -88,6 +159,36 @@ export const Achievements = () => {
     : ACHIEVEMENTS.filter(a => a.category === selectedCategory);
 
   const unlockedCount = ACHIEVEMENTS.filter(a => isUnlocked(a.id)).length;
+
+  // Check and auto-unlock achievements based on progress
+  useEffect(() => {
+    if (!profile || loading) return;
+    
+    ACHIEVEMENTS.forEach(achievement => {
+      if (isUnlocked(achievement.id)) return;
+      
+      const progress = getProgress(achievement);
+      if (progress >= 100) {
+        unlockAchievement(achievement);
+      }
+    });
+  }, [profile, progressData, loading]);
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <div className="animate-pulse">
+          <div className="h-32 bg-gray-800 rounded-2xl mb-6"></div>
+          <div className="grid md:grid-cols-2 gap-4">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="h-32 bg-gray-800 rounded-xl"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="max-w-4xl mx-auto">
