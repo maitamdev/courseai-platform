@@ -158,8 +158,8 @@ Dự án này được bảo vệ bởi giấy phép độc quyền. Xem file [L
 
 **MAI TRAN THIEN TAM**
 
-- GitHub: [@your-github](https://github.com/your-github)
-- Email: your-email@example.com
+- GitHub:[ [@your-github](https://github.com/your-github)](https://github.com/maitamdev)
+- Email: maitamit062005@gmail.com
 
 ---
 
