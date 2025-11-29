@@ -49,7 +49,6 @@ export const LuckyWheel = () => {
       } else {
         setFreeSpins(data.freeSpins || 0);
       }
-      setLastSpinDate(data.lastSpin);
     }
   };
 
