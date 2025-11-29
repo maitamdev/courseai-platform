@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, X, QrCode, Gift, Calendar } from 'lucide-react';
+import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, X, QrCode, Gift, Calendar, MoreHorizontal } from 'lucide-react';
 import { QRTopup } from './QRTopup';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
@@ -27,6 +27,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
   const [packages, setPackages] = useState<CoinPackage[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<CoinPackage | null>(null);
   const [showQR, setShowQR] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -196,10 +197,11 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
     </header>
 
     {/* Mobile Bottom Navigation */}
+    {/* Mobile Bottom Navigation */}
     {onTabChange && (
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-lg border-t border-gray-700 z-50 safe-area-pb">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-lg border-t border-gray-700 z-50">
         <div className="flex items-center justify-around px-1 py-2">
-          {menuItems.slice(0, 5).map((item) => {
+          {menuItems.slice(0, 4).map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             const showBadge = item.id === 'messages' && unreadCount > 0;
@@ -207,7 +209,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             return (
               <button
                 key={item.id}
-                onClick={() => onTabChange(item.id)}
+                onClick={() => { onTabChange(item.id); setShowMoreMenu(false); }}
                 className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all ${
                   isActive ? 'text-yellow-400' : 'text-gray-400'
                 }`}
@@ -224,8 +226,70 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               </button>
             );
           })}
+          
+          {/* More button */}
+          <button
+            onClick={() => setShowMoreMenu(!showMoreMenu)}
+            className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all ${
+              showMoreMenu ? 'text-yellow-400' : 'text-gray-400'
+            }`}
+          >
+            <MoreHorizontal className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Thêm</span>
+          </button>
         </div>
+
+        {/* More Menu Popup */}
+        {showMoreMenu && (
+          <div className="absolute bottom-full left-0 right-0 bg-gray-900/98 backdrop-blur-lg border-t border-gray-700 p-4 animate-slideUp">
+            <div className="grid grid-cols-4 gap-3">
+              {menuItems.slice(4).map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                const showBadge = item.id === 'messages' && unreadCount > 0;
+                
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => { onTabChange(item.id); setShowMoreMenu(false); }}
+                    className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all ${
+                      isActive ? 'bg-yellow-400/20 text-yellow-400' : 'text-gray-400 hover:bg-gray-800'
+                    }`}
+                  >
+                    <div className="relative">
+                      <Icon className="w-6 h-6" />
+                      {showBadge && (
+                        <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-xs font-medium">{item.label}</span>
+                  </button>
+                );
+              })}
+              {/* Profile in More menu */}
+              <button
+                onClick={() => { onTabChange('profile'); setShowMoreMenu(false); }}
+                className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all ${
+                  activeTab === 'profile' ? 'bg-yellow-400/20 text-yellow-400' : 'text-gray-400 hover:bg-gray-800'
+                }`}
+              >
+                <User className="w-6 h-6" />
+                <span className="text-xs font-medium">Hồ sơ</span>
+              </button>
+            </div>
+          </div>
+        )}
       </nav>
+    )}
+
+    {/* Overlay for More Menu */}
+    {showMoreMenu && (
+      <div 
+        className="lg:hidden fixed inset-0 bg-black/50 z-40"
+        onClick={() => setShowMoreMenu(false)}
+      />
     )}
 
       {/* Coin Purchase Modal */}
