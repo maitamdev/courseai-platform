@@ -1,5 +1,33 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Domain protection - chỉ cho phép chạy trên domain của bạn
+const ALLOWED_DOMAINS = [
+  'localhost',
+  '127.0.0.1',
+  // Vercel domains
+  'course-ai.vercel.app',
+  'codemind-ai.vercel.app',
+  'vercel.app', // Cho phép tất cả subdomain của vercel.app (preview deployments)
+];
+
+const currentDomain = typeof window !== 'undefined' ? window.location.hostname : '';
+const isAllowedDomain = ALLOWED_DOMAINS.some(domain => 
+  currentDomain === domain || currentDomain.endsWith(`.${domain}`)
+);
+
+if (!isAllowedDomain && typeof window !== 'undefined') {
+  document.body.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#1a1a2e;color:#fff;font-family:sans-serif;text-align:center;padding:20px;">
+      <div>
+        <h1 style="color:#ef4444;">⚠️ Unauthorized Access</h1>
+        <p>This application is not authorized to run on this domain.</p>
+        <p style="color:#888;font-size:14px;">Domain: ${currentDomain}</p>
+      </div>
+    </div>
+  `;
+  throw new Error('Unauthorized domain');
+}
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
