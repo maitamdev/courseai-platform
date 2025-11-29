@@ -1,18 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Gamepad2, Trophy, Star, Lock, Zap, Search } from 'lucide-react';
+import { Gamepad2, Trophy, Star, Lock, Bug } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { GameLevelPlayer } from './GameLevelPlayer';
-
-type GameCategory = {
-  id: string;
-  name: string;
-  slug: string;
-  icon: string;
-  description: string;
-  difficulty: string;
-  color: string;
-};
+import { CodeHeroGame } from './CodeHeroGame';
 
 type GameLevel = {
   id: string;
@@ -35,18 +26,16 @@ type UserProgress = {
 };
 
 type GameCategoriesProps = {
-  onLevelSelect?: (level: GameLevel) => void;
   onTreasureQuestClick?: () => void;
 };
 
-export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCategoriesProps) => {
+export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) => {
   const { user, profile } = useAuth();
-  const [categories, setCategories] = useState<GameCategory[]>([]);
   const [levels, setLevels] = useState<GameLevel[]>([]);
   const [progress, setProgress] = useState<UserProgress[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedLevel, setSelectedLevel] = useState<GameLevel | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [showCodeHero, setShowCodeHero] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -70,7 +59,6 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
 
       if (error) throw error;
       if (data && data.length > 0) {
-        setCategories(data);
         setSelectedCategory(data[0].id);
       }
     } catch (error) {
@@ -118,207 +106,239 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
     return (profile.level || 1) >= level.required_level;
   };
 
-  const difficultyColors = {
-    easy: 'bg-green-500',
-    medium: 'bg-yellow-400',
-    hard: 'bg-red-500',
-  };
-
-  const difficultyLabels = {
-    easy: 'Beginner',
-    medium: 'Intermediate',
-    hard: 'Advanced',
-  };
-
-  const filteredLevels = levels.filter((level) =>
-    level.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const selectedCat = categories.find((c) => c.id === selectedCategory);
+  const filteredLevels = levels;
 
   return (
     <div className="w-full">
-      {/* Hero Section */}
-      <section className="relative bg-gray-800/60 backdrop-blur-md rounded-3xl p-12 mb-8 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-transparent"></div>
-        <div className="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+      {/* Hero Section - Compact */}
+      <section className="relative bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-md rounded-2xl p-6 mb-6 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-yellow-500/10"></div>
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <h1 className="text-5xl font-black text-white mb-4">
-              Nâng Cao Kỹ Năng<br />Với Thử Thách Thú Vị
-            </h1>
-            <p className="text-xl text-gray-300 mb-6">
-              Khám phá bộ sưu tập trò chơi tương tác được thiết kế để học lập trình trở nên vui vẻ và hiệu quả. Bắt đầu chơi và xem kỹ năng của bạn phát triển!
-            </p>
-            <div className="flex gap-4 justify-center">
-              <button
-                onClick={onTreasureQuestClick}
-                className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg font-bold transition-all hover:scale-105"
-              >
-                🏆 Kho Báu Bị Mất
-              </button>
-              <button
-                onClick={() => selectedCat && setSelectedLevel(levels[0])}
-                className="px-8 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all hover:scale-105"
-              >
-                Xem Tất Cả Game
-              </button>
+            <h1 className="text-3xl font-black text-white mb-2">🎮 Trung Tâm Trò Chơi</h1>
+            <p className="text-gray-400">Học lập trình qua các trò chơi thú vị!</p>
+          </div>
+          <div className="flex gap-3">
+            <button onClick={onTreasureQuestClick} className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-xl font-bold transition-all hover:scale-105 flex items-center gap-2">
+              🏆 Kho Báu
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Games - Code Hero Adventure */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-black text-white mb-4 flex items-center gap-2">
+          <Star className="w-6 h-6 text-yellow-400" /> Game Nổi Bật
+        </h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Code Hero Adventure Card */}
+          <div 
+            onClick={() => setShowCodeHero(true)}
+            className="group relative bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-2xl overflow-hidden border-2 border-blue-500/30 hover:border-blue-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/20"
+          >
+            {/* Game Preview Image */}
+            <div className="relative h-40 bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center overflow-hidden">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+              {/* Animated characters */}
+              <div className="relative flex items-center gap-8">
+                <div className="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">🦸</span>
+                </div>
+                <div className="text-4xl animate-pulse">⚔️</div>
+                <div className="w-14 h-14 bg-red-500 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                  <Bug className="w-8 h-8 text-white" />
+                </div>
+              </div>
+              {/* Badge */}
+              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 text-xs font-black rounded-full">
+                🔥 HOT
+              </div>
+              <div className="absolute top-3 right-3 px-2 py-1 bg-purple-500/80 text-white text-xs font-bold rounded">
+                30 Màn
+              </div>
+            </div>
+            {/* Game Info */}
+            <div className="p-4">
+              <h3 className="text-xl font-black text-white mb-1 group-hover:text-blue-400 transition-colors">
+                Code Hero Adventure
+              </h3>
+              <p className="text-gray-400 text-sm mb-3">
+                Điều khiển chiến binh tiêu diệt bug bằng kiến thức Python! 150+ câu hỏi, 30 màn chơi.
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-2">
+                  <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded font-medium">Python</span>
+                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded font-medium">Action</span>
+                </div>
+                <div className="flex items-center gap-1 text-yellow-400 text-sm">
+                  <Star className="w-4 h-4 fill-yellow-400" />
+                  <span className="font-bold">4.9</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="hidden md:block">
-            <div className="relative">
-              <div className="absolute inset-0 bg-yellow-400/20 rounded-3xl blur-3xl"></div>
-              <div className="relative bg-gray-900/50 backdrop-blur-lg rounded-3xl p-8 border-2 border-gray-700">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4 bg-gray-800/50 rounded-xl p-4">
-                    <Gamepad2 className="w-12 h-12 text-yellow-400" />
-                    <div>
-                      <div className="font-bold text-white">Python Maze Runner</div>
-                      <div className="text-sm text-gray-400">Master loops by guiding your character</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 bg-gray-800/50 rounded-xl p-4">
-                    <Trophy className="w-12 h-12 text-yellow-400" />
-                    <div>
-                      <div className="font-bold text-white">JavaScript Tower Defense</div>
-                      <div className="text-sm text-gray-400">Learn functions and logic</div>
-                    </div>
-                  </div>
+
+          {/* Treasure Quest Card */}
+          <div 
+            onClick={onTreasureQuestClick}
+            className="group relative bg-gradient-to-br from-yellow-900/50 to-orange-900/50 rounded-2xl overflow-hidden border-2 border-yellow-500/30 hover:border-yellow-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-yellow-500/20"
+          >
+            <div className="relative h-40 bg-gradient-to-br from-yellow-600 to-orange-600 flex items-center justify-center">
+              <div className="text-6xl group-hover:scale-110 transition-transform">🗺️</div>
+              <div className="absolute top-3 left-3 px-3 py-1 bg-white/20 text-white text-xs font-bold rounded-full">
+                ⭐ Popular
+              </div>
+            </div>
+            <div className="p-4">
+              <h3 className="text-xl font-black text-white mb-1 group-hover:text-yellow-400 transition-colors">
+                Kho Báu Bị Mất
+              </h3>
+              <p className="text-gray-400 text-sm mb-3">
+                Khám phá bản đồ, giải câu đố và tìm kho báu ẩn giấu!
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-2">
+                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded font-medium">Puzzle</span>
+                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded font-medium">Adventure</span>
                 </div>
+                <div className="flex items-center gap-1 text-yellow-400 text-sm">
+                  <Star className="w-4 h-4 fill-yellow-400" />
+                  <span className="font-bold">4.8</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Coming Soon Card */}
+          <div className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl overflow-hidden border-2 border-gray-600/30 opacity-70">
+            <div className="relative h-40 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+              <div className="text-5xl opacity-50">🚀</div>
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                <span className="px-4 py-2 bg-gray-700 text-white font-bold rounded-lg">Sắp ra mắt</span>
+              </div>
+            </div>
+            <div className="p-4">
+              <h3 className="text-xl font-black text-gray-400 mb-1">JavaScript Quest</h3>
+              <p className="text-gray-500 text-sm mb-3">Học JavaScript qua các nhiệm vụ thú vị!</p>
+              <div className="flex gap-2">
+                <span className="px-2 py-1 bg-gray-700/50 text-gray-500 text-xs rounded font-medium">JavaScript</span>
+                <span className="px-2 py-1 bg-gray-700/50 text-gray-500 text-xs rounded font-medium">RPG</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Explore Games Section */}
+      {/* Coming Soon Games */}
       <section>
-        <h2 className="text-3xl font-black text-white mb-6">Khám Phá Trò Chơi</h2>
-
-        {/* Search and Filters */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="flex-1 relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Tìm kiếm trò chơi..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none"
-            />
-          </div>
-          <div className="flex gap-2">
-            <select className="px-4 py-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none">
-              <option>Language</option>
-              <option>Python</option>
-              <option>JavaScript</option>
-              <option>SQL</option>
-            </select>
-            <select className="px-4 py-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none">
-              <option>Difficulty</option>
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
-            </select>
-            <select className="px-4 py-3 bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-lg text-white focus:border-yellow-400 focus:outline-none">
-              <option>Concept</option>
-              <option>Loops</option>
-              <option>Functions</option>
-              <option>Arrays</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Game Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredLevels.map((level) => {
-            const levelProgress = getLevelProgress(level.id);
-            const isUnlocked = isLevelUnlocked(level);
-            const isCompleted = levelProgress?.completed || false;
-
-            return (
-              <div
-                key={level.id}
-                className="bg-gray-800/70 backdrop-blur-lg rounded-xl overflow-hidden border border-gray-700 hover:border-yellow-400 transition-all hover:scale-105 cursor-pointer group"
-                onClick={() => isUnlocked && setSelectedLevel(level)}
-              >
-                {/* Game Image/Preview */}
-                <div className="relative h-48 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-                  {!isUnlocked && (
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
-                      <Lock className="w-12 h-12 text-gray-400" />
-                    </div>
-                  )}
-                  <Gamepad2 className="w-20 h-20 text-yellow-400 opacity-50 group-hover:opacity-100 transition-opacity" />
-                  
-                  {/* Tags */}
-                  <div className="absolute top-3 left-3 flex gap-2">
-                    <span className={`px-2 py-1 ${difficultyColors[level.difficulty as keyof typeof difficultyColors]} text-white text-xs font-bold rounded`}>
-                      {level.difficulty}
-                    </span>
-                    <span className="px-2 py-1 bg-gray-900/80 text-white text-xs font-bold rounded">
-                      {difficultyLabels[level.difficulty as keyof typeof difficultyLabels]}
-                    </span>
-                  </div>
-
-                  {isCompleted && (
-                    <div className="absolute top-3 right-3">
-                      <Trophy className="w-6 h-6 text-yellow-400" />
-                    </div>
-                  )}
-                </div>
-
-                {/* Game Info */}
-                <div className="p-4">
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors line-clamp-1">
-                    {level.title}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-2">
-                    {level.description}
-                  </p>
-
-                  {levelProgress && levelProgress.stars > 0 && (
-                    <div className="flex gap-1 mb-3">
-                      {[1, 2, 3].map((star) => (
-                        <Star
-                          key={star}
-                          className={`w-4 h-4 ${
-                            star <= levelProgress.stars
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  <button
-                    disabled={!isUnlocked}
-                    className={`w-full py-2 rounded-lg font-bold transition-all ${
-                      isUnlocked
-                        ? 'bg-yellow-400 hover:bg-yellow-500 text-white'
-                        : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                    }`}
-                  >
-                    {isUnlocked ? 'Chơi Ngay' : 'Đã Khóa'}
-                  </button>
-                </div>
+        <h2 className="text-2xl font-black text-white mb-4 flex items-center gap-2">
+          <Gamepad2 className="w-6 h-6 text-gray-400" /> Sắp Ra Mắt
+        </h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* SQL Detective */}
+          <div className="group bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl overflow-hidden border border-green-500/20 opacity-80">
+            <div className="h-32 bg-gradient-to-br from-green-700/50 to-emerald-800/50 flex items-center justify-center relative">
+              <span className="text-4xl">🔍</span>
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <span className="px-3 py-1.5 bg-green-600/80 text-white text-xs font-bold rounded-lg">Coming Soon</span>
               </div>
-            );
-          })}
-        </div>
-
-        {filteredLevels.length === 0 && (
-          <div className="text-center py-16 bg-gray-800/60 backdrop-blur-md rounded-3xl border border-gray-700">
-            <Gamepad2 className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">
-              Không tìm thấy trò chơi
-            </h3>
-            <p className="text-gray-400">
-              Thử tìm kiếm với từ khóa khác
-            </p>
+            </div>
+            <div className="p-3">
+              <h3 className="font-bold text-white mb-1">SQL Detective</h3>
+              <p className="text-gray-400 text-xs mb-2">Giải mã dữ liệu với SQL queries</p>
+              <div className="flex gap-1">
+                <span className="px-1.5 py-0.5 bg-green-500/20 text-green-400 text-[10px] rounded">SQL</span>
+                <span className="px-1.5 py-0.5 bg-emerald-500/20 text-emerald-400 text-[10px] rounded">Mystery</span>
+              </div>
+            </div>
           </div>
-        )}
+
+          {/* HTML Builder */}
+          <div className="group bg-gradient-to-br from-orange-900/30 to-red-900/30 rounded-xl overflow-hidden border border-orange-500/20 opacity-80">
+            <div className="h-32 bg-gradient-to-br from-orange-700/50 to-red-800/50 flex items-center justify-center relative">
+              <span className="text-4xl">🏗️</span>
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <span className="px-3 py-1.5 bg-orange-600/80 text-white text-xs font-bold rounded-lg">Coming Soon</span>
+              </div>
+            </div>
+            <div className="p-3">
+              <h3 className="font-bold text-white mb-1">HTML Builder</h3>
+              <p className="text-gray-400 text-xs mb-2">Xây dựng website từ các khối</p>
+              <div className="flex gap-1">
+                <span className="px-1.5 py-0.5 bg-orange-500/20 text-orange-400 text-[10px] rounded">HTML</span>
+                <span className="px-1.5 py-0.5 bg-red-500/20 text-red-400 text-[10px] rounded">CSS</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Algorithm Race */}
+          <div className="group bg-gradient-to-br from-cyan-900/30 to-blue-900/30 rounded-xl overflow-hidden border border-cyan-500/20 opacity-80">
+            <div className="h-32 bg-gradient-to-br from-cyan-700/50 to-blue-800/50 flex items-center justify-center relative">
+              <span className="text-4xl">🏎️</span>
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <span className="px-3 py-1.5 bg-cyan-600/80 text-white text-xs font-bold rounded-lg">Coming Soon</span>
+              </div>
+            </div>
+            <div className="p-3">
+              <h3 className="font-bold text-white mb-1">Algorithm Race</h3>
+              <p className="text-gray-400 text-xs mb-2">Đua xe với thuật toán tối ưu</p>
+              <div className="flex gap-1">
+                <span className="px-1.5 py-0.5 bg-cyan-500/20 text-cyan-400 text-[10px] rounded">Algorithm</span>
+                <span className="px-1.5 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] rounded">Racing</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Git Quest */}
+          <div className="group bg-gradient-to-br from-pink-900/30 to-purple-900/30 rounded-xl overflow-hidden border border-pink-500/20 opacity-80">
+            <div className="h-32 bg-gradient-to-br from-pink-700/50 to-purple-800/50 flex items-center justify-center relative">
+              <span className="text-4xl">🌳</span>
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <span className="px-3 py-1.5 bg-pink-600/80 text-white text-xs font-bold rounded-lg">Coming Soon</span>
+              </div>
+            </div>
+            <div className="p-3">
+              <h3 className="font-bold text-white mb-1">Git Quest</h3>
+              <p className="text-gray-400 text-xs mb-2">Làm chủ Git qua phiêu lưu</p>
+              <div className="flex gap-1">
+                <span className="px-1.5 py-0.5 bg-pink-500/20 text-pink-400 text-[10px] rounded">Git</span>
+                <span className="px-1.5 py-0.5 bg-purple-500/20 text-purple-400 text-[10px] rounded">Adventure</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
+
+      {/* Database Games - Hidden when empty */}
+      {filteredLevels.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-2xl font-black text-white mb-4">Thêm Trò Chơi</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {filteredLevels.map((level) => {
+              const levelProgress = getLevelProgress(level.id);
+              const isUnlocked = isLevelUnlocked(level);
+              const isCompleted = levelProgress?.completed || false;
+              return (
+                <div key={level.id} onClick={() => isUnlocked && setSelectedLevel(level)}
+                  className="bg-gray-800/70 rounded-xl overflow-hidden border border-gray-700 hover:border-yellow-400 transition-all hover:scale-105 cursor-pointer group">
+                  <div className="relative h-32 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+                    {!isUnlocked && <div className="absolute inset-0 bg-black/60 flex items-center justify-center"><Lock className="w-10 h-10 text-gray-400" /></div>}
+                    <Gamepad2 className="w-12 h-12 text-yellow-400 opacity-50 group-hover:opacity-100" />
+                    {isCompleted && <Trophy className="absolute top-2 right-2 w-5 h-5 text-yellow-400" />}
+                  </div>
+                  <div className="p-3">
+                    <h3 className="font-bold text-white text-sm mb-1 group-hover:text-yellow-400">{level.title}</h3>
+                    <p className="text-gray-400 text-xs line-clamp-2">{level.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+
 
       {selectedLevel && (
         <GameLevelPlayer
@@ -329,6 +349,21 @@ export const GameCategories = ({ onLevelSelect, onTreasureQuestClick }: GameCate
             fetchLevels(selectedCategory);
           }}
         />
+      )}
+
+      {/* Code Hero Adventure Modal */}
+      {showCodeHero && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="relative bg-gray-900 rounded-3xl p-6 max-w-5xl w-full border border-gray-700">
+            <button
+              onClick={() => setShowCodeHero(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-white z-10"
+            >
+              ✕
+            </button>
+            <CodeHeroGame />
+          </div>
+        </div>
       )}
     </div>
   );

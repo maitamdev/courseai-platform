@@ -12,8 +12,9 @@ import { TreasureQuestGame } from './TreasureQuestGame';
 import { Friends } from './Friends';
 import { Messages } from './Messages';
 import { Events } from './Events';
+import { SocialFeed } from './SocialFeed';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social';
 
 export const Dashboard = () => {
   useAuth(); // Keep auth context active
@@ -134,6 +135,12 @@ export const Dashboard = () => {
             {activeTab === 'events' && (
               <div key="events" className="animate-fadeIn">
                 <Events />
+              </div>
+            )}
+
+            {activeTab === 'social' && (
+              <div key="social" className="animate-fadeIn">
+                <SocialFeed />
               </div>
             )}
 

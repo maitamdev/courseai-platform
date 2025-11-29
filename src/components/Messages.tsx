@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import {
   MessageCircle, Send, ArrowLeft, Search, Phone, Video, Smile, Image as ImageIcon,
   Check, CheckCheck, X, Mic, MicOff, Copy, Trash2, Edit3, Pin, Reply,
-  Users, Palette, Search as SearchIcon, Play, Volume2
+  Users, Palette, Search as SearchIcon, Play, Volume2, Loader2
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
@@ -100,6 +100,8 @@ export const Messages = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Media upload
   const [uploadingMedia, setUploadingMedia] = useState(false);
@@ -230,13 +232,11 @@ export const Messages = () => {
     return () => clearInterval(interval);
   }, [selectedFriend, user]);
 
-  // Recording timer
+  // Recording timer - chỉ reset khi cancel, không reset khi stop
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isRecording) {
       interval = setInterval(() => setRecordingTime(t => t + 1), 1000);
-    } else {
-      setRecordingTime(0);
     }
     return () => clearInterval(interval);
   }, [isRecording]);
@@ -559,6 +559,7 @@ export const Messages = () => {
       const { data: { publicUrl } } = supabase.storage.from('chat-media').getPublicUrl(fileName);
       await sendMessage('voice', publicUrl, recordingTime);
       setAudioBlob(null);
+      setRecordingTime(0);
     } catch {
       alert('Không thể gửi tin nhắn thoại');
     }
@@ -685,6 +686,28 @@ export const Messages = () => {
   );
 
 
+  // Play/Pause voice message
+  const togglePlayAudio = (msgId: string, audioUrl: string) => {
+    if (playingAudioId === msgId) {
+      // Đang phát -> dừng
+      audioRef.current?.pause();
+      setPlayingAudioId(null);
+    } else {
+      // Dừng audio cũ nếu có
+      audioRef.current?.pause();
+      
+      // Phát audio mới
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+      audio.play();
+      setPlayingAudioId(msgId);
+      
+      audio.onended = () => {
+        setPlayingAudioId(null);
+      };
+    }
+  };
+
   // Render message content based on type
   const renderMessageContent = (msg: Message) => {
     if (msg.is_deleted) {
@@ -700,15 +723,19 @@ export const Messages = () => {
           </div>
         );
       case 'voice':
+        const isPlaying = playingAudioId === msg.id;
         return (
-          <div className="flex items-center gap-3 min-w-[200px]">
-            <button className="p-2 bg-white/20 rounded-full hover:bg-white/30">
-              <Play className="w-4 h-4" />
+          <div className="flex items-center gap-3 min-w-[180px]">
+            <button 
+              onClick={() => togglePlayAudio(msg.id, msg.media_url!)}
+              className="p-2 bg-white/20 rounded-full hover:bg-white/30 transition-colors"
+            >
+              {isPlaying ? <Volume2 className="w-4 h-4 animate-pulse" /> : <Play className="w-4 h-4" />}
             </button>
-            <div className="flex-1 h-1 bg-white/30 rounded-full">
-              <div className="h-full w-0 bg-white rounded-full"></div>
+            <div className="flex-1 h-1.5 bg-white/30 rounded-full overflow-hidden">
+              <div className={`h-full bg-white rounded-full transition-all ${isPlaying ? 'animate-pulse w-full' : 'w-0'}`}></div>
             </div>
-            <span className="text-xs">{formatDuration(msg.voice_duration || 0)}</span>
+            <span className="text-xs font-medium">{formatDuration(msg.voice_duration || 0)}</span>
           </div>
         );
       default:
@@ -977,25 +1004,29 @@ export const Messages = () => {
                                 </div>
                               </div>
                               
-                              {/* Reactions */}
+                              {/* Reactions - hiển thị bên cạnh bubble giống Messenger */}
                               {msg.reactions && msg.reactions.length > 0 && (
-                                <div className={`flex gap-1 mt-1 ${isSender ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`absolute -bottom-2 ${isSender ? '-left-2' : '-right-2'} flex gap-0.5 bg-gray-700 rounded-full px-1.5 py-0.5 shadow-lg border border-gray-600 z-30`}>
                                   {Array.from(new Set(msg.reactions.map(r => r.emoji))).map(emoji => {
                                     const count = msg.reactions!.filter(r => r.emoji === emoji).length;
                                     return (
-                                      <span key={emoji} className="px-2 py-0.5 bg-gray-700 rounded-full text-sm">
-                                        {emoji} {count > 1 && count}
+                                      <span key={emoji} className="text-sm flex items-center">
+                                        {emoji}{count > 1 && <span className="text-[10px] text-gray-300 ml-0.5">{count}</span>}
                                       </span>
                                     );
                                   })}
                                 </div>
                               )}
                               
-                              {/* Quick reactions */}
+                              {/* Quick reactions - hiển thị phía trên bubble khi hover */}
                               {!msg.is_deleted && (
-                                <div className={`absolute ${isSender ? 'left-0' : 'right-0'} -bottom-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-0.5 bg-gray-800 rounded-full px-1 py-0.5 shadow-lg`}>
+                                <div className={`absolute ${isSender ? 'right-0' : 'left-0'} -top-10 opacity-0 group-hover:opacity-100 transition-all duration-200 flex gap-1 bg-gray-800 rounded-full px-2 py-1.5 shadow-xl border border-gray-700 z-40`}>
                                   {REACTION_EMOJIS.map(emoji => (
-                                    <button key={emoji} onClick={() => addReaction(msg.id, emoji)} className="hover:scale-125 transition-transform text-sm p-0.5">
+                                    <button 
+                                      key={emoji} 
+                                      onClick={() => addReaction(msg.id, emoji)} 
+                                      className="hover:scale-125 transition-transform text-base hover:bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center"
+                                    >
                                       {emoji}
                                     </button>
                                   ))}
@@ -1003,7 +1034,7 @@ export const Messages = () => {
                               )}
                               
                               {/* Time and status */}
-                              <div className={`flex items-center gap-1 mt-1 ${isSender ? 'justify-end' : 'justify-start'}`}>
+                              <div className={`flex items-center gap-1 ${msg.reactions && msg.reactions.length > 0 ? 'mt-4' : 'mt-1'} ${isSender ? 'justify-end' : 'justify-start'}`}>
                                 <span className="text-[10px] text-gray-500">{new Date(msg.created_at).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>
                                 {isSender && (msg.is_read ? <CheckCheck className="w-3.5 h-3.5 text-blue-400" /> : <Check className="w-3.5 h-3.5 text-gray-500" />)}
                               </div>
@@ -1084,16 +1115,26 @@ export const Messages = () => {
                           <MicOff className="w-5 h-5" />
                         </button>
                       </>
-                    ) : (
+                    ) : audioBlob && (
                       <>
-                        <Volume2 className="w-5 h-5 text-gray-400" />
-                        <span className="text-white">{formatDuration(recordingTime)}</span>
-                        <div className="flex-1"></div>
-                        <button onClick={cancelRecording} className="p-2 hover:bg-gray-700 rounded-full text-gray-400">
+                        <button 
+                          onClick={() => {
+                            const url = URL.createObjectURL(audioBlob);
+                            const audio = new Audio(url);
+                            audio.play();
+                          }} 
+                          className="p-2 bg-gray-700 hover:bg-gray-600 rounded-full text-white"
+                          title="Nghe thử"
+                        >
+                          <Play className="w-5 h-5" />
+                        </button>
+                        <span className="text-white font-medium">{formatDuration(recordingTime)}</span>
+                        <div className="flex-1 h-1 bg-gray-700 rounded-full"></div>
+                        <button onClick={cancelRecording} className="p-2 hover:bg-gray-700 rounded-full text-gray-400" title="Hủy">
                           <X className="w-5 h-5" />
                         </button>
-                        <button onClick={sendVoiceMessage} disabled={uploadingMedia} className="p-2 bg-yellow-400 rounded-full text-gray-900">
-                          <Send className="w-5 h-5" />
+                        <button onClick={sendVoiceMessage} disabled={uploadingMedia} className="p-2 bg-yellow-400 rounded-full text-gray-900" title="Gửi">
+                          {uploadingMedia ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                         </button>
                       </>
                     )}
