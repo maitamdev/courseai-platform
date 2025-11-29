@@ -158,7 +158,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               className="group relative bg-gradient-to-r from-emerald-500 via-green-400 to-emerald-500 text-gray-900 px-2 md:pl-3 md:pr-4 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2 shadow-lg hover:shadow-emerald-500/40 transition-all cursor-pointer overflow-hidden"
               title="Bấm để nạp xu"
             >
-              <span className="text-base md:text-lg">🪙</span>
+              <Coins className="w-4 h-4 md:w-5 md:h-5 text-gray-900" />
               <span className="font-black text-sm md:text-lg text-gray-900">{(profile?.total_coins || 0).toLocaleString()}</span>
               <span className="text-gray-900 font-bold text-xs hidden sm:inline">+</span>
             </button>
@@ -195,11 +195,20 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800" />
               </div>
-              <div className="flex flex-col items-start leading-tight">
+              <div className="flex flex-col items-start leading-tight gap-0.5">
                 <span className="font-bold text-white text-sm">{profile?.username}</span>
-                <div className="flex items-center gap-0.5 bg-gradient-to-r from-emerald-500 to-green-400 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">
-                  <Zap className="w-3 h-3" />
-                  <span>Lv {profile?.level || 1}</span>
+                <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-0.5 bg-gradient-to-r from-emerald-500 to-green-400 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">
+                    <Zap className="w-3 h-3" />
+                    <span>Lv {profile?.level || 1}</span>
+                  </div>
+                  {/* XP Progress mini bar */}
+                  <div className="w-12 h-1.5 bg-gray-700 rounded-full overflow-hidden" title={`${profile?.xp || 0} XP`}>
+                    <div 
+                      className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all"
+                      style={{ width: `${Math.min(((profile?.xp || 0) % 100), 100)}%` }}
+                    />
+                  </div>
                 </div>
               </div>
             </button>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Gift, Flame, Coins, Star, Sparkles } from 'lucide-react';
+import { Calendar, Gift, Flame, Coins, Star, Sparkles, Check, Crown, Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -8,17 +8,17 @@ type DayReward = {
   coins: number;
   xp: number;
   bonus?: string;
-  icon: string;
+  isSpecial?: boolean;
 };
 
 const DAILY_REWARDS: DayReward[] = [
-  { day: 1, coins: 10, xp: 20, icon: '🎁' },
-  { day: 2, coins: 15, xp: 30, icon: '🎁' },
-  { day: 3, coins: 20, xp: 40, icon: '🎁' },
-  { day: 4, coins: 30, xp: 50, icon: '🎁' },
-  { day: 5, coins: 40, xp: 60, icon: '🎁' },
-  { day: 6, coins: 50, xp: 80, icon: '🎁' },
-  { day: 7, coins: 100, xp: 150, bonus: 'Bonus x2!', icon: '👑' },
+  { day: 1, coins: 10, xp: 20 },
+  { day: 2, coins: 15, xp: 30 },
+  { day: 3, coins: 20, xp: 40 },
+  { day: 4, coins: 30, xp: 50 },
+  { day: 5, coins: 40, xp: 60 },
+  { day: 6, coins: 50, xp: 80 },
+  { day: 7, coins: 100, xp: 150, bonus: 'Bonus x2!', isSpecial: true },
 ];
 
 export const DailyRewards = () => {
@@ -236,7 +236,15 @@ export const DailyRewards = () => {
                   : 'bg-gray-800/50 border-2 border-gray-700/50 opacity-50'
               }`}
             >
-              <div className="text-2xl mb-1">{isPast ? '✅' : reward.icon}</div>
+              <div className="flex items-center justify-center mb-1">
+                {isPast ? (
+                  <CheckCircle2 className="w-6 h-6 text-green-400" />
+                ) : reward.isSpecial ? (
+                  <Crown className="w-6 h-6 text-yellow-400" />
+                ) : (
+                  <Gift className="w-6 h-6 text-emerald-400" />
+                )}
+              </div>
               <div className="text-xs text-gray-400">Ngày {reward.day}</div>
               <div className="text-xs text-emerald-400 font-bold">+{reward.coins}</div>
               {reward.bonus && (
@@ -260,7 +268,7 @@ export const DailyRewards = () => {
         }`}
       >
         {claiming ? (
-          <span className="animate-spin">⏳</span>
+          <Loader2 className="w-5 h-5 animate-spin" />
         ) : canClaim ? (
           <>
             <Gift className="w-5 h-5" />
@@ -268,7 +276,8 @@ export const DailyRewards = () => {
           </>
         ) : (
           <>
-            <span>✅ Đã nhận hôm nay</span>
+            <CheckCircle2 className="w-5 h-5" />
+            <span>Đã nhận hôm nay</span>
           </>
         )}
       </button>

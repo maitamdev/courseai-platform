@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Heart, Sword, Shield, Coins, Star, X, Zap, SkullIcon, ChevronRight } from 'lucide-react';
+import { Heart, Sword, Shield, Coins, Star, X, Zap, SkullIcon, ChevronRight, Trophy, Crown, Castle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -308,7 +308,7 @@ export const DungeonCodeQuest = () => {
         const bonus = Math.floor(level.coinsReward / 3);
         setCollectedCoins(prev => prev + bonus);
         setOpenedChests(prev => [...prev, entityAtPos.id]);
-        setMessage(`🎁 Mở rương nhận ${bonus} xu!`);
+        setMessage(`Mở rương nhận ${bonus} xu!`);
       } else if (entityAtPos.type === 'door') {
         // Check if all enemies defeated
         const allEnemies = entities.filter(e => e.type === 'enemy');
@@ -464,7 +464,7 @@ export const DungeonCodeQuest = () => {
                 )}
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center text-2xl">
-                    {index === 4 ? '👑' : '🏰'}
+                    {index === 4 ? <Crown className="w-6 h-6 text-yellow-400" /> : <Castle className="w-6 h-6 text-purple-400" />}
                   </div>
                   <div>
                     <h3 className="font-bold text-white">Level {index + 1}</h3>
@@ -561,7 +561,7 @@ export const DungeonCodeQuest = () => {
           {showResult && (
             <div className={`mt-4 p-4 rounded-xl ${isCorrect ? 'bg-green-500/20 border border-green-500/50' : 'bg-red-500/20 border border-red-500/50'}`}>
               <p className={`font-bold mb-1 ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
-                {isCorrect ? '✅ Chính xác! Tấn công thành công!' : '❌ Sai rồi! Bạn bị tấn công!'}
+                {isCorrect ? 'Chính xác! Tấn công thành công!' : 'Sai rồi! Bạn bị tấn công!'}
               </p>
               <p className="text-gray-300 text-sm">{currentChallenge.explanation}</p>
             </div>
@@ -576,7 +576,7 @@ export const DungeonCodeQuest = () => {
     return (
       <div className="max-w-md mx-auto text-center">
         <div className="bg-gradient-to-br from-emerald-900/50 to-green-900/50 rounded-3xl p-8 border-2 border-emerald-500/50">
-          <div className="text-6xl mb-4">🏆</div>
+          <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
           <h2 className="text-3xl font-black text-emerald-400 mb-2">Chiến Thắng!</h2>
           <p className="text-gray-300 mb-6">Bạn đã hoàn thành {level.name}!</p>
           

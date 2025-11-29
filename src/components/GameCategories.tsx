@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Gamepad2, Trophy, Star, Lock, Bug, Sword } from 'lucide-react';
+import { Gamepad2, Trophy, Star, Lock, Bug, Sword, Flame, Sparkles } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { GameLevelPlayer } from './GameLevelPlayer';
 import { CodeHeroGame } from './CodeHeroGame';
 import { DungeonCodeQuest } from './DungeonCodeQuest';
+import { JavaNinjaGame } from './JavaNinjaGame';
 
 type GameLevel = {
   id: string;
@@ -26,11 +27,7 @@ type UserProgress = {
   stars: number;
 };
 
-type GameCategoriesProps = {
-  onTreasureQuestClick?: () => void;
-};
-
-export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) => {
+export const GameCategories = () => {
   const { user, profile } = useAuth();
   const [levels, setLevels] = useState<GameLevel[]>([]);
   const [progress, setProgress] = useState<UserProgress[]>([]);
@@ -38,6 +35,7 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
   const [selectedLevel, setSelectedLevel] = useState<GameLevel | null>(null);
   const [showCodeHero, setShowCodeHero] = useState(false);
   const [showDungeonQuest, setShowDungeonQuest] = useState(false);
+  const [showJavaNinja, setShowJavaNinja] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -117,14 +115,13 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-emerald-500/10"></div>
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-black text-white mb-2">🎮 Trung Tâm Trò Chơi</h1>
+            <h1 className="text-3xl font-black text-white mb-2 flex items-center gap-3">
+              <Gamepad2 className="w-8 h-8 text-emerald-400" />
+              Trung Tâm Trò Chơi
+            </h1>
             <p className="text-gray-400">Học lập trình qua các trò chơi thú vị!</p>
           </div>
-          <div className="flex gap-3">
-            <button onClick={onTreasureQuestClick} className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-gray-900 rounded-xl font-bold transition-all hover:scale-105 flex items-center gap-2">
-              🏆 Kho Báu
-            </button>
-          </div>
+
         </div>
       </section>
 
@@ -153,8 +150,9 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
                 </div>
               </div>
               {/* Badge */}
-              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-emerald-400 to-green-500 text-gray-900 text-xs font-black rounded-full">
-                🔥 HOT
+              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-emerald-400 to-green-500 text-gray-900 text-xs font-black rounded-full flex items-center gap-1">
+                <Flame className="w-3 h-3" />
+                HOT
               </div>
               <div className="absolute top-3 right-3 px-2 py-1 bg-purple-500/80 text-white text-xs font-bold rounded">
                 30 Màn
@@ -181,32 +179,45 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
             </div>
           </div>
 
-          {/* Treasure Quest Card */}
+          {/* Java Ninja Adventure Card */}
           <div 
-            onClick={onTreasureQuestClick}
-            className="group relative bg-gradient-to-br from-emerald-900/50 to-green-900/50 rounded-2xl overflow-hidden border-2 border-emerald-500/30 hover:border-emerald-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/20"
+            onClick={() => setShowJavaNinja(true)}
+            className="group relative bg-gradient-to-br from-indigo-900/50 to-purple-900/50 rounded-2xl overflow-hidden border-2 border-indigo-500/30 hover:border-indigo-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-indigo-500/20"
           >
-            <div className="relative h-40 bg-gradient-to-br from-emerald-600 to-green-600 flex items-center justify-center">
-              <div className="text-6xl group-hover:scale-110 transition-transform">🗺️</div>
-              <div className="absolute top-3 left-3 px-3 py-1 bg-white/20 text-white text-xs font-bold rounded-full">
-                ⭐ Popular
+            <div className="relative h-40 bg-gradient-to-br from-indigo-700 to-purple-700 flex items-center justify-center overflow-hidden">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+              <div className="relative flex items-center gap-6">
+                <div className="w-16 h-16 flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                  <span className="text-5xl">🥷</span>
+                </div>
+                <div className="text-3xl animate-pulse">⚔️</div>
+                <div className="w-14 h-14 flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                  <span className="text-4xl">👹</span>
+                </div>
+              </div>
+              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 text-xs font-black rounded-full flex items-center gap-1">
+                <Sparkles className="w-3 h-3" />
+                NEW
+              </div>
+              <div className="absolute top-3 right-3 px-2 py-1 bg-indigo-500/80 text-white text-xs font-bold rounded">
+                5 Màn
               </div>
             </div>
             <div className="p-4">
-              <h3 className="text-xl font-black text-white mb-1 group-hover:text-emerald-400 transition-colors">
-                Kho Báu Bị Mất
+              <h3 className="text-xl font-black text-white mb-1 group-hover:text-indigo-400 transition-colors">
+                Java Ninja Adventure
               </h3>
               <p className="text-gray-400 text-sm mb-3">
-                Khám phá bản đồ, giải câu đố và tìm kho báu ẩn giấu!
+                Chiến đấu với quái vật, học Java qua từng trận chiến sử thi!
               </p>
               <div className="flex items-center justify-between">
                 <div className="flex gap-2">
-                  <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded font-medium">Puzzle</span>
-                  <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded font-medium">Adventure</span>
+                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded font-medium">Java</span>
+                  <span className="px-2 py-1 bg-indigo-500/20 text-indigo-400 text-xs rounded font-medium">RPG</span>
                 </div>
-                <div className="flex items-center gap-1 text-emerald-400 text-sm">
-                  <Star className="w-4 h-4 fill-emerald-400" />
-                  <span className="font-bold">4.8</span>
+                <div className="flex items-center gap-1 text-yellow-400 text-sm">
+                  <Star className="w-4 h-4 fill-yellow-400" />
+                  <span className="font-bold">5.0</span>
                 </div>
               </div>
             </div>
@@ -404,6 +415,23 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
               ✕
             </button>
             <DungeonCodeQuest />
+          </div>
+        </div>
+      )}
+
+      {/* Java Ninja Adventure Modal */}
+      {showJavaNinja && (
+        <div className="fixed inset-0 bg-black/95 backdrop-blur-sm z-50 overflow-y-auto">
+          <div className="min-h-full flex items-start justify-center p-2 sm:p-4">
+            <div className="relative bg-gray-900 rounded-2xl sm:rounded-3xl w-full max-w-5xl border border-indigo-700/50 overflow-hidden my-2 sm:my-4">
+              <button
+                onClick={() => setShowJavaNinja(false)}
+                className="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 bg-black/50 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-white z-30"
+              >
+                ✕
+              </button>
+              <JavaNinjaGame />
+            </div>
           </div>
         </div>
       )}

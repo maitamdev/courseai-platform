@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { BookOpen, Users, Clock, Star, Play, CheckCircle, Lock, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { BookOpen, Users, Clock, Star, Play, CheckCircle, Lock, ChevronDown, ChevronUp, X, Gift, Rocket } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -687,8 +687,9 @@ export const Courses = () => {
                               {lesson.lesson_type === 'video' ? '📹 Video' : lesson.lesson_type === 'exercise' ? '✏️ Bài tập' : '❓ Quiz'}
                             </span>
                             {lesson.is_free && !isPurchased && (
-                              <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-medium rounded">
-                                🎁 Miễn phí
+                              <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-medium rounded flex items-center gap-1">
+                                <Gift className="w-3 h-3" />
+                                Miễn phí
                               </span>
                             )}
                             {isLocked && (
@@ -771,7 +772,7 @@ export const Courses = () => {
                   {selectedLesson.content?.theory && selectedLesson.content.theory.length > 0 && (
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-blue-400 mb-3 flex items-center gap-2">
-                        📚 Kiến thức chính
+                        <BookOpen className="w-5 h-5" /> Kiến thức chính
                       </h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.theory.map((item, idx) => (
@@ -788,7 +789,7 @@ export const Courses = () => {
                   {selectedLesson.content?.applications && selectedLesson.content.applications.length > 0 && (
                     <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-cyan-400 mb-3 flex items-center gap-2">
-                        🚀 Ứng dụng thực tế
+                        <Rocket className="w-5 h-5" /> Ứng dụng thực tế
                       </h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.applications.map((app, idx) => (
@@ -937,7 +938,7 @@ export const Courses = () => {
                     disabled={!userCode.trim()}
                     className="w-full py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-xl font-bold mb-6"
                   >
-                    🚀 Nộp bài
+                    Nộp bài
                   </button>
 
                   {/* Gợi ý */}

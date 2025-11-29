@@ -55,7 +55,7 @@ export const ManualTopup = ({ packages: _packages }: { packages: CoinPackage[] }
 
       if (error) throw error;
 
-      alert('✅ Đã gửi yêu cầu nạp xu! Admin sẽ xử lý trong vòng 1-24 giờ.');
+      alert('Đã gửi yêu cầu nạp xu! Admin sẽ xử lý trong vòng 1-24 giờ.');
       setSelectedPackage(null);
       setTransferNote('');
       loadRequests();
@@ -223,7 +223,7 @@ export const ManualTopup = ({ packages: _packages }: { packages: CoinPackage[] }
             disabled={submitting}
             className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {submitting ? 'Đang gửi...' : '✅ Xác Nhận Đã Chuyển Khoản'}
+            {submitting ? 'Đang gửi...' : 'Xác Nhận Đã Chuyển Khoản'}
           </button>
 
           <button

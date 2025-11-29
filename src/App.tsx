@@ -4,6 +4,7 @@ import { Auth } from './components/Auth';
 import { Dashboard } from './components/Dashboard';
 import { AnimatedBackground } from './components/AnimatedBackground';
 import { ResetPassword } from './components/ResetPassword';
+import { AIAssistant } from './components/AIAssistant';
 
 function App() {
   const { user, loading } = useAuth();
@@ -126,6 +127,7 @@ function App() {
       <div className="relative z-10">
         {user ? <Dashboard /> : <Auth />}
       </div>
+      {user && <AIAssistant />}
     </>
   );
 }

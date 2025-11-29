@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Gift, RotateCw } from 'lucide-react';
+import { Gift, RotateCw, Coins, Star, Gem, Crown, Trophy, Sparkles, Zap, Award } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -9,20 +9,35 @@ type Prize = {
   value: number;
   type: 'coins' | 'xp';
   color: string;
-  icon: string;
+  iconType: 'coins' | 'star' | 'gem' | 'sparkles' | 'crown' | 'trophy' | 'zap' | 'award';
   probability: number;
 };
 
 const PRIZES: Prize[] = [
-  { id: 1, label: '5 Xu', value: 5, type: 'coins', color: '#10b981', icon: '🪙', probability: 25 },
-  { id: 2, label: '10 XP', value: 10, type: 'xp', color: '#8b5cf6', icon: '⭐', probability: 25 },
-  { id: 3, label: '15 Xu', value: 15, type: 'coins', color: '#10b981', icon: '💰', probability: 20 },
-  { id: 4, label: '25 XP', value: 25, type: 'xp', color: '#8b5cf6', icon: '✨', probability: 15 },
-  { id: 5, label: '30 Xu', value: 30, type: 'coins', color: '#10b981', icon: '💎', probability: 8 },
-  { id: 6, label: '50 XP', value: 50, type: 'xp', color: '#8b5cf6', icon: '🌟', probability: 5 },
-  { id: 7, label: '100 Xu', value: 100, type: 'coins', color: '#ef4444', icon: '👑', probability: 1.5 },
-  { id: 8, label: '200 XP', value: 200, type: 'xp', color: '#ef4444', icon: '🏆', probability: 0.5 },
+  { id: 1, label: '5 Xu', value: 5, type: 'coins', color: '#10b981', iconType: 'coins', probability: 25 },
+  { id: 2, label: '10 XP', value: 10, type: 'xp', color: '#8b5cf6', iconType: 'star', probability: 25 },
+  { id: 3, label: '15 Xu', value: 15, type: 'coins', color: '#10b981', iconType: 'coins', probability: 20 },
+  { id: 4, label: '25 XP', value: 25, type: 'xp', color: '#8b5cf6', iconType: 'sparkles', probability: 15 },
+  { id: 5, label: '30 Xu', value: 30, type: 'coins', color: '#10b981', iconType: 'gem', probability: 8 },
+  { id: 6, label: '50 XP', value: 50, type: 'xp', color: '#8b5cf6', iconType: 'zap', probability: 5 },
+  { id: 7, label: '100 Xu', value: 100, type: 'coins', color: '#ef4444', iconType: 'crown', probability: 1.5 },
+  { id: 8, label: '200 XP', value: 200, type: 'xp', color: '#ef4444', iconType: 'trophy', probability: 0.5 },
 ];
+
+const PrizeIcon = ({ type, className }: { type: Prize['iconType']; className?: string }) => {
+  const icons = {
+    coins: Coins,
+    star: Star,
+    gem: Gem,
+    sparkles: Sparkles,
+    crown: Crown,
+    trophy: Trophy,
+    zap: Zap,
+    award: Award,
+  };
+  const Icon = icons[type];
+  return <Icon className={className} />;
+};
 
 export const LuckyWheel = () => {
   const { user, profile, refreshProfile } = useAuth();
@@ -220,11 +235,11 @@ export const LuckyWheel = () => {
                     y="20"
                     textAnchor="middle"
                     fill="white"
-                    fontSize="6"
+                    fontSize="5"
                     fontWeight="bold"
                     transform={`rotate(${startAngle + angle / 2 + 90}, 50, 50)`}
                   >
-                    {p.icon}
+                    {p.label.split(' ')[0]}
                   </text>
                 </g>
               );
@@ -252,7 +267,9 @@ export const LuckyWheel = () => {
       <div className="grid grid-cols-4 gap-2">
         {PRIZES.map(p => (
           <div key={p.id} className="text-center p-2 bg-gray-800/50 rounded-lg">
-            <div className="text-lg">{p.icon}</div>
+            <div className="flex justify-center mb-1">
+              <PrizeIcon type={p.iconType} className={`w-5 h-5 ${p.type === 'coins' ? 'text-emerald-400' : 'text-purple-400'}`} />
+            </div>
             <div className="text-xs text-gray-400">{p.label}</div>
           </div>
         ))}
@@ -262,7 +279,9 @@ export const LuckyWheel = () => {
       {showResult && prize && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowResult(false)}>
           <div className="bg-gradient-to-br from-purple-900 to-pink-900 rounded-3xl p-8 max-w-sm w-full text-center border-2 border-purple-500/50">
-            <div className="text-6xl mb-4">{prize.icon}</div>
+            <div className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: `${prize.color}20` }}>
+              <PrizeIcon type={prize.iconType} className="w-10 h-10" style={{ color: prize.color }} />
+            </div>
             <h2 className="text-2xl font-black text-white mb-2">Chúc mừng!</h2>
             <p className="text-gray-300 mb-4">Bạn nhận được:</p>
             <div className="text-4xl font-black mb-6" style={{ color: prize.color }}>

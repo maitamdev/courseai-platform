@@ -148,7 +148,7 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
                 ⏱️ {formatTime(timeLeft)}
               </span>
               <span className="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-full">
-                🎯 Lần thử: {attempts}
+                Lần thử: {attempts}
               </span>
             </div>
           </div>

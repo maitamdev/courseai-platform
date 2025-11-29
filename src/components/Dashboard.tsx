@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Gift } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { AIAssistant } from './AIAssistant';
 import { Header } from './Header';
@@ -8,7 +9,7 @@ import { Courses } from './Courses';
 import { CoinPurchase } from './CoinPurchase';
 import { GameCategories } from './GameCategories';
 import { ProfilePage } from './ProfilePage';
-import { TreasureQuestGame } from './TreasureQuestGame';
+
 import { Friends } from './Friends';
 import { Messages } from './Messages';
 import { Events } from './Events';
@@ -17,7 +18,7 @@ import { DailyRewards } from './DailyRewards';
 import { LuckyWheel } from './LuckyWheel';
 import { DailyQuests } from './DailyQuests';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'friends' | 'messages' | 'events' | 'social' | 'rewards';
 
 export const Dashboard = () => {
   useAuth(); // Keep auth context active
@@ -101,15 +102,11 @@ export const Dashboard = () => {
 
             {activeTab === 'games' && (
               <div key="games" className="animate-fadeIn">
-                <GameCategories onTreasureQuestClick={() => setActiveTab('treasure-quest')} />
+                <GameCategories />
               </div>
             )}
 
-            {activeTab === 'treasure-quest' && (
-              <div key="treasure-quest" className="animate-fadeIn">
-                <TreasureQuestGame />
-              </div>
-            )}
+
 
             {activeTab === 'coins' && (
               <div key="coins" className="animate-fadeIn">
@@ -149,7 +146,10 @@ export const Dashboard = () => {
 
             {activeTab === 'rewards' && (
               <div key="rewards" className="animate-fadeIn space-y-6">
-                <h1 className="text-3xl font-black text-white mb-6">🎁 Phần Thưởng & Nhiệm Vụ</h1>
+                <h1 className="text-3xl font-black text-white mb-6 flex items-center gap-3">
+                  <Gift className="w-8 h-8 text-emerald-400" />
+                  Phần Thưởng & Nhiệm Vụ
+                </h1>
                 <div className="grid lg:grid-cols-2 gap-6">
                   <DailyRewards />
                   <LuckyWheel />

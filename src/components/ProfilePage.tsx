@@ -256,9 +256,9 @@ export const ProfilePage = () => {
               </button>
             </div>
 
-            {/* Stats */}
+            {/* Stats & XP Progress */}
             <div className="p-4 bg-gray-900/50 border-t border-gray-700">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3 mb-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-emerald-400">{profile?.total_coins || 0}</div>
                   <div className="text-xs text-gray-400">Xu</div>
@@ -267,6 +267,26 @@ export const ProfilePage = () => {
                   <div className="text-2xl font-bold text-blue-400">{profile?.level || 1}</div>
                   <div className="text-xs text-gray-400">Level</div>
                 </div>
+              </div>
+              
+              {/* XP Progress Bar */}
+              <div className="bg-gray-800 rounded-lg p-3">
+                <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                  <span className="flex items-center gap-1">
+                    <Award className="w-3 h-3 text-purple-400" />
+                    {profile?.xp || 0} XP
+                  </span>
+                  <span>{((profile?.level || 1)) * 100} XP</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all duration-500"
+                    style={{ width: `${Math.min(((profile?.xp || 0) % 100), 100)}%` }}
+                  />
+                </div>
+                <p className="text-[10px] text-gray-500 mt-1 text-center">
+                  Còn {100 - ((profile?.xp || 0) % 100)} XP lên Level {(profile?.level || 1) + 1}
+                </p>
               </div>
             </div>
           </div>
