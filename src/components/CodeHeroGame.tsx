@@ -840,7 +840,7 @@ export const CodeHeroGame = () => {
       {gameState !== 'menu' && (
         <div className="flex items-center gap-4 bg-gray-800/80 px-4 py-2 rounded-xl border border-gray-700 flex-wrap justify-center">
           <div className="flex items-center gap-1.5">
-            <Trophy className="w-4 h-4 text-yellow-400" />
+            <Trophy className="w-4 h-4 text-emerald-400" />
             <span className="font-bold text-white text-sm">{score.toLocaleString()}</span>
           </div>
           <div className="flex items-center gap-1">
@@ -867,11 +867,11 @@ export const CodeHeroGame = () => {
             <span className="text-white text-sm">{bugsCount}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Flame className="w-4 h-4 text-orange-400" />
+            <Flame className="w-4 h-4 text-green-400" />
             <span className="text-white text-sm">{combo}x</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <Star className="w-4 h-4 text-yellow-400" />
+            <Star className="w-4 h-4 text-emerald-400" />
             <span className="text-white text-sm">{totalXP} XP</span>
           </div>
           <div className="flex items-center gap-1.5">
@@ -914,7 +914,7 @@ export const CodeHeroGame = () => {
                 <div key={t.name} className="flex flex-col items-center gap-1">
                   <div className="w-8 h-8 rounded-full" style={{background: t.color}} />
                   <span className="text-xs text-gray-400">{t.name}</span>
-                  <span className="text-xs text-yellow-400">+{t.points}</span>
+                  <span className="text-xs text-emerald-400">+{t.points}</span>
                 </div>
               ))}
             </div>
@@ -939,7 +939,7 @@ export const CodeHeroGame = () => {
                 <Target className="w-5 h-5" /> 30 Màn chơi
               </button>
               <button onClick={() => { fetchLeaderboard(); setGameState('leaderboard'); }} 
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-xl font-bold hover:scale-105 transition-transform shadow-lg">
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 text-white rounded-xl font-bold hover:scale-105 transition-transform shadow-lg">
                 <Trophy className="w-5 h-5" /> Xếp hạng
               </button>
             </div>
@@ -980,15 +980,15 @@ export const CodeHeroGame = () => {
                         isCompleted ? 'bg-green-500/20 border-2 border-green-500' :
                         isUnlocked ? 'bg-gray-700 border-2 border-gray-600 hover:border-purple-500 hover:scale-105' :
                         'bg-gray-800/50 border-2 border-gray-700 opacity-50 cursor-not-allowed'
-                      } ${isBoss ? 'ring-2 ring-yellow-500/50' : ''}`}
+                      } ${isBoss ? 'ring-2 ring-emerald-500/50' : ''}`}
                     >
                       <div className={`text-2xl font-black ${isCompleted ? 'text-green-400' : isUnlocked ? 'text-white' : 'text-gray-500'}`}>
                         {lvl.level}
                       </div>
                       <div className="text-[10px] text-gray-400 truncate">{lvl.name}</div>
-                      <div className="text-[9px] text-yellow-400">🪙{lvl.reward}</div>
+                      <div className="text-[9px] text-emerald-400">🪙{lvl.reward}</div>
                       {isCompleted && <div className="absolute -top-1 -right-1 text-green-400">✓</div>}
-                      {isBoss && !isCompleted && <div className="absolute -top-1 -left-1 text-yellow-400 text-xs">👑</div>}
+                      {isBoss && !isCompleted && <div className="absolute -top-1 -left-1 text-emerald-400 text-xs">👑</div>}
                     </button>
                   );
                 })}
@@ -1004,9 +1004,9 @@ export const CodeHeroGame = () => {
         {/* Victory */}
         {gameState === 'victory' && (
           <div className="absolute inset-0 bg-black/90 rounded-2xl flex items-center justify-center p-4">
-            <div className="bg-gradient-to-b from-yellow-900/50 to-gray-800 rounded-2xl p-6 max-w-md w-full border-2 border-yellow-500 text-center">
+            <div className="bg-gradient-to-b from-emerald-900/50 to-gray-800 rounded-2xl p-6 max-w-md w-full border-2 border-emerald-500 text-center">
               <div className="text-6xl mb-2 animate-bounce">🏆</div>
-              <h2 className="text-3xl font-black text-yellow-400 mb-1">Chiến thắng!</h2>
+              <h2 className="text-3xl font-black text-emerald-400 mb-1">Chiến thắng!</h2>
               <p className="text-gray-300 mb-2">Level {currentLevel}: {GAME_LEVELS[currentLevel-1]?.name}</p>
               
               {/* Auto advance indicator */}
@@ -1034,8 +1034,8 @@ export const CodeHeroGame = () => {
                 </div>
               </div>
               
-              <div className="bg-yellow-500/20 rounded-xl p-3 mb-4 border border-yellow-500/30">
-                <p className="text-yellow-400 font-bold text-lg">
+              <div className="bg-emerald-500/20 rounded-xl p-3 mb-4 border border-emerald-500/30">
+                <p className="text-emerald-400 font-bold text-lg">
                   🪙 +{(GAME_LEVELS[currentLevel-1]?.reward || 100) + bugsKilled * 5 + questionsCorrect * 10} xu
                 </p>
               </div>
@@ -1084,7 +1084,7 @@ export const CodeHeroGame = () => {
                     <h3 className="text-lg font-bold text-white">Câu hỏi Python</h3>
                     <div className="flex gap-2 text-xs">
                       <span className="px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded">{currentQuestion.category}</span>
-                      <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded">Lv.{currentQuestion.difficulty}</span>
+                      <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded">Lv.{currentQuestion.difficulty}</span>
                     </div>
                   </div>
                 </div>
@@ -1095,19 +1095,19 @@ export const CodeHeroGame = () => {
               
               {/* Timer bar */}
               <div className="h-2 bg-gray-700 rounded-full mb-4 overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-green-500 to-yellow-500 transition-all duration-1000"
+                <div className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-1000"
                   style={{width: `${(timeLeft / (30 - (currentQuestion.difficulty * 5))) * 100}%`}} />
               </div>
               
               {/* Question */}
               <div className="bg-gray-900 rounded-xl p-4 mb-4 border border-gray-700">
-                <code className="text-lg text-yellow-400 font-mono">{currentQuestion.question}</code>
+                <code className="text-lg text-emerald-400 font-mono">{currentQuestion.question}</code>
               </div>
               
               {/* Streak & Combo */}
               {streak > 0 && (
                 <div className="flex gap-2 mb-4">
-                  <span className="px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-sm font-bold">
+                  <span className="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm font-bold">
                     🔥 {streak} streak
                   </span>
                   {combo > 0 && (
@@ -1135,7 +1135,7 @@ export const CodeHeroGame = () => {
                     placeholder="Nhập câu trả lời..." autoFocus
                     className="w-full bg-gray-700 border-2 border-gray-600 rounded-xl px-4 py-3 text-white text-lg mb-4 focus:border-purple-500 focus:outline-none" />
                   {showHint && (
-                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mb-4 text-yellow-400 text-sm">
+                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 mb-4 text-emerald-400 text-sm">
                       💡 Gợi ý: {currentQuestion.hint}
                     </div>
                   )}
@@ -1145,7 +1145,7 @@ export const CodeHeroGame = () => {
                       Trả lời
                     </button>
                     <button onClick={() => setShowHint(true)} disabled={showHint} 
-                      className="px-6 py-3 bg-yellow-500/20 text-yellow-400 rounded-xl font-bold disabled:opacity-50 hover:bg-yellow-500/30 transition-all">
+                      className="px-6 py-3 bg-emerald-500/20 text-emerald-400 rounded-xl font-bold disabled:opacity-50 hover:bg-emerald-500/30 transition-all">
                       Gợi ý
                     </button>
                   </div>
@@ -1167,8 +1167,8 @@ export const CodeHeroGame = () => {
               
               {/* Main stats */}
               <div className="grid grid-cols-3 gap-3 mb-4">
-                <div className="bg-yellow-500/10 rounded-xl p-3 text-center border border-yellow-500/30">
-                  <Trophy className="w-6 h-6 text-yellow-400 mx-auto mb-1" />
+                <div className="bg-emerald-500/10 rounded-xl p-3 text-center border border-emerald-500/30">
+                  <Trophy className="w-6 h-6 text-emerald-400 mx-auto mb-1" />
                   <p className="text-xl font-black text-white">{score.toLocaleString()}</p>
                   <p className="text-gray-400 text-xs">Điểm</p>
                 </div>
@@ -1200,7 +1200,7 @@ export const CodeHeroGame = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Max Combo</span>
-                  <span className="text-orange-400 font-bold">{maxCombo}x</span>
+                  <span className="text-green-400 font-bold">{maxCombo}x</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Tốc độ max</span>
@@ -1213,8 +1213,8 @@ export const CodeHeroGame = () => {
               </div>
               
               {/* Rewards */}
-              <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-xl p-3 mb-4 border border-yellow-500/30 text-center">
-                <p className="text-yellow-400 font-bold">
+              <div className="bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-xl p-3 mb-4 border border-emerald-500/30 text-center">
+                <p className="text-emerald-400 font-bold">
                   🪙 +{bugsKilled * 5 + questionsCorrect * 10 + Math.floor(totalXP / 10)} xu
                 </p>
               </div>
@@ -1237,7 +1237,7 @@ export const CodeHeroGame = () => {
             <div className="bg-gray-800 rounded-2xl p-5 max-w-lg w-full border border-gray-700">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <Award className="w-7 h-7 text-yellow-400" />
+                  <Award className="w-7 h-7 text-emerald-400" />
                   <h2 className="text-2xl font-black text-white">Bảng xếp hạng</h2>
                 </div>
                 <button onClick={() => setGameState('menu')} className="p-2 hover:bg-gray-700 rounded-lg text-gray-400">
@@ -1253,7 +1253,7 @@ export const CodeHeroGame = () => {
                       <span className="text-white font-bold">{profile?.username}</span>
                     </div>
                     <div className="text-right">
-                      <p className="text-yellow-400 font-bold text-lg">🏆 {myBestScore.best_score.toLocaleString()}</p>
+                      <p className="text-emerald-400 font-bold text-lg">🏆 {myBestScore.best_score.toLocaleString()}</p>
                       <p className="text-gray-400 text-xs">{myBestScore.total_games_played} games</p>
                     </div>
                   </div>
@@ -1263,14 +1263,14 @@ export const CodeHeroGame = () => {
               <div className="space-y-2 max-h-60 overflow-y-auto">
                 {leaderboard.map((e, i) => (
                   <div key={e.user_id} className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
-                    i === 0 ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30' : 
+                    i === 0 ? 'bg-gradient-to-r from-emerald-500/20 to-green-500/20 border border-emerald-500/30' : 
                     i === 1 ? 'bg-gray-400/10 border border-gray-400/30' : 
-                    i === 2 ? 'bg-orange-500/10 border border-orange-500/30' : 'bg-gray-700/30'
+                    i === 2 ? 'bg-green-500/10 border border-green-500/30' : 'bg-gray-700/30'
                   }`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                      i === 0 ? 'bg-yellow-500 text-black' : 
+                      i === 0 ? 'bg-emerald-500 text-black' : 
                       i === 1 ? 'bg-gray-400 text-black' : 
-                      i === 2 ? 'bg-orange-500 text-black' : 'bg-gray-600 text-white'
+                      i === 2 ? 'bg-green-500 text-black' : 'bg-gray-600 text-white'
                     }`}>
                       {i === 0 ? '👑' : i + 1}
                     </div>
@@ -1287,7 +1287,7 @@ export const CodeHeroGame = () => {
                       <span className="text-white font-medium">{e.profiles?.username}</span>
                       <p className="text-gray-500 text-xs">{e.total_bugs_killed} bugs • {e.total_games_played} games</p>
                     </div>
-                    <span className="text-yellow-400 font-bold">{e.best_score.toLocaleString()}</span>
+                    <span className="text-emerald-400 font-bold">{e.best_score.toLocaleString()}</span>
                   </div>
                 ))}
                 {leaderboard.length === 0 && (

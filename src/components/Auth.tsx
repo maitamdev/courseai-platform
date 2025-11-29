@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { Code2, Sparkles, Mail, ArrowLeft, Eye, EyeOff, BookOpen, Users, Star, Award } from 'lucide-react';
+import { Mail, ArrowLeft, Eye, EyeOff, BookOpen, Users, Star, Award } from 'lucide-react';
 
 type AuthView = 'login' | 'signup' | 'forgot-password' | 'check-email';
 
@@ -91,7 +91,7 @@ export const Auth = () => {
           <h2 className="text-2xl font-bold text-white mb-4">Kiểm Tra Email</h2>
           <p className="text-gray-300 mb-6">
             {success || 'Chúng tôi đã gửi email xác nhận đến'}<br />
-            <span className="font-bold text-yellow-400">{email}</span>
+            <span className="font-bold text-emerald-400">{email}</span>
           </p>
           <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-6">
             <p className="text-sm text-blue-300">
@@ -100,7 +100,7 @@ export const Auth = () => {
           </div>
           <button
             onClick={() => { setView('login'); setSuccess(''); setError(''); }}
-            className="text-yellow-400 hover:text-yellow-300 font-semibold flex items-center gap-2 mx-auto"
+            className="text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-2 mx-auto"
           >
             <ArrowLeft className="w-4 h-4" />
             Quay lại đăng nhập
@@ -134,7 +134,7 @@ export const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
+                  className="w-full pl-12 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none"
                   placeholder="email@example.com"
                 />
               </div>
@@ -143,7 +143,7 @@ export const Auth = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-xl font-bold hover:opacity-90 transition-all disabled:opacity-50"
+              className="w-full py-3 bg-gradient-to-r from-emerald-400 to-green-500 text-gray-900 rounded-xl font-bold hover:opacity-90 transition-all disabled:opacity-50"
             >
               {loading ? 'Đang gửi...' : 'Gửi Link Đặt Lại'}
             </button>
@@ -160,26 +160,27 @@ export const Auth = () => {
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-center px-16 relative overflow-hidden">
         {/* Background decorations */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-96 h-96 bg-yellow-400/10 rounded-full blur-3xl -top-48 -left-48"></div>
+          <div className="absolute w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl -top-48 -left-48"></div>
           <div className="absolute w-96 h-96 bg-blue-400/10 rounded-full blur-3xl bottom-0 right-0"></div>
         </div>
 
         <div className="relative z-10">
           {/* Logo */}
-          <div className="flex items-center gap-3 mb-8">
-            <div className="relative">
-              <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center">
-                <Code2 className="w-9 h-9 text-gray-900" />
-              </div>
-              <Sparkles className="w-6 h-6 text-yellow-400 absolute -top-2 -right-2" />
-            </div>
+          <div className="flex items-center gap-4 mb-8">
+            <img 
+              src="/logo.png" 
+              alt="CodeMind AI" 
+              className="w-20 h-20 object-contain drop-shadow-2xl"
+            />
           </div>
 
           {/* Title */}
-          <h1 className="text-5xl font-black text-white mb-2">CodeMind AI</h1>
-          <p className="text-xl text-yellow-400 font-semibold mb-4">NỀN TẢNG HỌC LẬP TRÌNH THÔNG MINH</p>
+          <h1 className="text-5xl font-black mb-2">
+            <span className="text-[#c4e538]">CODE</span><span className="text-white">MIND</span>
+          </h1>
+          <p className="text-xl text-emerald-400 font-semibold mb-4">NỀN TẢNG HỌC LẬP TRÌNH THÔNG MINH</p>
           
-          <div className="w-16 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-8"></div>
+          <div className="w-16 h-1 bg-gradient-to-r from-emerald-400 to-green-500 rounded-full mb-8"></div>
 
           <p className="text-gray-300 text-lg mb-12 max-w-md">
             Nâng cao kỹ năng lập trình với các khóa học chất lượng, 
@@ -189,9 +190,9 @@ export const Auth = () => {
           {/* Stats */}
           <div className="space-y-4">
             {stats.map((stat, idx) => (
-              <div key={idx} className="flex items-center gap-4 bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-yellow-400/30 transition-all">
-                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400/20 to-orange-500/20 rounded-xl flex items-center justify-center">
-                  <stat.icon className="w-6 h-6 text-yellow-400" />
+              <div key={idx} className="flex items-center gap-4 bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-emerald-400/30 transition-all">
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-400/20 to-green-500/20 rounded-xl flex items-center justify-center">
+                  <stat.icon className="w-6 h-6 text-emerald-400" />
                 </div>
                 <div>
                   <div className="text-white font-bold text-lg">{stat.value}</div>
@@ -209,10 +210,14 @@ export const Auth = () => {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
-              <Code2 className="w-7 h-7 text-gray-900" />
-            </div>
-            <span className="text-2xl font-black text-white">CodeMind AI</span>
+            <img 
+              src="/logo.png" 
+              alt="CodeMind AI" 
+              className="w-12 h-12 object-contain"
+            />
+            <span className="text-2xl font-black">
+              <span className="text-[#c4e538]">CODE</span><span className="text-white">MIND</span>
+            </span>
           </div>
 
           <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-8 border border-gray-700/50 shadow-2xl">
@@ -232,7 +237,7 @@ export const Auth = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none transition-all"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none transition-all"
                     placeholder="Nhập tên của bạn"
                   />
                 </div>
@@ -247,7 +252,7 @@ export const Auth = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none transition-all"
                     placeholder="email@example.com"
                   />
                 </div>
@@ -262,7 +267,7 @@ export const Auth = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     minLength={6}
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none transition-all pr-12"
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none transition-all pr-12"
                     placeholder="••••••••"
                   />
                   <button
@@ -282,14 +287,14 @@ export const Auth = () => {
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 rounded border-gray-600 text-yellow-400 focus:ring-yellow-400 bg-gray-700"
+                      className="w-4 h-4 rounded border-gray-600 text-emerald-400 focus:ring-emerald-400 bg-gray-700"
                     />
                     <span className="text-sm text-gray-400">Ghi nhớ đăng nhập</span>
                   </label>
                   <button
                     type="button"
                     onClick={() => setView('forgot-password')}
-                    className="text-sm text-yellow-400 hover:text-yellow-300 font-medium"
+                    className="text-sm text-emerald-400 hover:text-emerald-300 font-medium"
                   >
                     Quên mật khẩu?
                   </button>
@@ -305,7 +310,7 @@ export const Auth = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-xl font-bold text-lg hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-yellow-400/20"
+                className="w-full py-3.5 bg-gradient-to-r from-emerald-400 to-green-500 text-gray-900 rounded-xl font-bold text-lg hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-emerald-400/20"
               >
                 {loading ? 'Đang xử lý...' : view === 'login' ? 'Đăng Nhập' : 'Đăng Ký'}
               </button>
@@ -317,7 +322,7 @@ export const Auth = () => {
               </p>
               <button
                 onClick={() => { setView(view === 'login' ? 'signup' : 'login'); setError(''); }}
-                className="mt-2 w-full py-3 border-2 border-gray-600 text-white rounded-xl font-semibold hover:border-yellow-400 hover:text-yellow-400 transition-all"
+                className="mt-2 w-full py-3 border-2 border-gray-600 text-white rounded-xl font-semibold hover:border-emerald-400 hover:text-emerald-400 transition-all"
               >
                 {view === 'login' ? 'Đăng Ký Ngay' : 'Đăng Nhập'}
               </button>

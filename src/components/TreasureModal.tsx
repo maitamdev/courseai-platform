@@ -25,7 +25,7 @@ export const TreasureModal = ({ treasure, onClose, onSolve }: TreasureModalProps
       if (!isCorrect) {
         setError('Câu trả lời chưa đúng. Hãy thử lại!');
       }
-    } catch (err) {
+    } catch {
       setError('Có lỗi xảy ra. Vui lòng thử lại.');
     } finally {
       setSubmitting(false);
@@ -35,7 +35,7 @@ export const TreasureModal = ({ treasure, onClose, onSolve }: TreasureModalProps
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl max-w-lg w-full">
-        <div className="bg-gradient-to-r from-orange-400 to-pink-500 p-6 rounded-t-2xl text-white">
+        <div className="bg-gradient-to-r from-green-400 to-pink-500 p-6 rounded-t-2xl text-white">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-3">
               <MapPin className="w-8 h-8" />
@@ -61,7 +61,7 @@ export const TreasureModal = ({ treasure, onClose, onSolve }: TreasureModalProps
         <div className="p-6 space-y-6">
           <div>
             <h3 className="font-semibold text-white mb-2">Câu đố:</h3>
-            <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-orange-500">
+            <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-green-500">
               <p className="text-gray-300 italic leading-relaxed">
                 "{treasure.riddle}"
               </p>
@@ -78,7 +78,7 @@ export const TreasureModal = ({ treasure, onClose, onSolve }: TreasureModalProps
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder="Nhập câu trả lời..."
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 autoFocus
               />
             </div>
@@ -93,7 +93,7 @@ export const TreasureModal = ({ treasure, onClose, onSolve }: TreasureModalProps
             <button
               type="submit"
               disabled={!answer.trim() || submitting}
-              className="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-green-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-green-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {submitting ? 'Đang kiểm tra...' : 'Mở kho báu'}
             </button>

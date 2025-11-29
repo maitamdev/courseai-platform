@@ -23,7 +23,7 @@ export const ThemeToggle = () => {
       title={isDark ? 'Chế độ sáng' : 'Chế độ tối'}
     >
       {isDark ? (
-        <Sun className="w-5 h-5 text-yellow-400" />
+        <Sun className="w-5 h-5 text-emerald-400" />
       ) : (
         <Moon className="w-5 h-5 text-blue-400" />
       )}

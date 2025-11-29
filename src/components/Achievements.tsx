@@ -39,7 +39,7 @@ const RARITY_COLORS = {
   common: 'from-gray-500 to-gray-600',
   rare: 'from-blue-500 to-blue-600',
   epic: 'from-purple-500 to-purple-600',
-  legendary: 'from-yellow-500 to-orange-500',
+  legendary: 'from-emerald-500 to-green-500',
 };
 
 export const Achievements = () => {
@@ -92,10 +92,10 @@ export const Achievements = () => {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
-      <div className="bg-gradient-to-r from-yellow-900/50 to-orange-900/50 rounded-2xl p-6 mb-6 border border-yellow-500/30">
+      <div className="bg-gradient-to-r from-emerald-900/50 to-green-900/50 rounded-2xl p-6 mb-6 border border-emerald-500/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-green-500 rounded-2xl flex items-center justify-center">
               <Trophy className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -104,7 +104,7 @@ export const Achievements = () => {
             </div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-black text-yellow-400">{unlockedCount}/{ACHIEVEMENTS.length}</div>
+            <div className="text-4xl font-black text-emerald-400">{unlockedCount}/{ACHIEVEMENTS.length}</div>
             <div className="text-sm text-gray-400">Đã mở khóa</div>
           </div>
         </div>
@@ -118,7 +118,7 @@ export const Achievements = () => {
             onClick={() => setSelectedCategory(cat.id)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium whitespace-nowrap transition-all ${
               selectedCategory === cat.id
-                ? 'bg-yellow-500 text-gray-900'
+                ? 'bg-emerald-500 text-gray-900'
                 : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
             }`}
           >
@@ -139,7 +139,7 @@ export const Achievements = () => {
               key={achievement.id}
               className={`relative p-4 rounded-xl border-2 transition-all ${
                 unlocked
-                  ? 'bg-gradient-to-br from-yellow-900/30 to-orange-900/30 border-yellow-500/50'
+                  ? 'bg-gradient-to-br from-emerald-900/30 to-green-900/30 border-emerald-500/50'
                   : 'bg-gray-800/50 border-gray-700/50'
               }`}
             >
@@ -150,7 +150,7 @@ export const Achievements = () => {
 
               <div className="flex items-start gap-4">
                 <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-3xl ${
-                  unlocked ? 'bg-yellow-500/20' : 'bg-gray-700/50'
+                  unlocked ? 'bg-emerald-500/20' : 'bg-gray-700/50'
                 }`}>
                   {unlocked ? achievement.icon : <Lock className="w-6 h-6 text-gray-500" />}
                 </div>
@@ -165,7 +165,7 @@ export const Achievements = () => {
                     <div className="mb-2">
                       <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-gradient-to-r from-yellow-500 to-orange-500 transition-all"
+                          className="h-full bg-gradient-to-r from-emerald-500 to-green-500 transition-all"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -176,7 +176,7 @@ export const Achievements = () => {
                   {/* Rewards */}
                   <div className="flex items-center gap-3 text-xs">
                     {achievement.reward.coins > 0 && (
-                      <span className="flex items-center gap-1 text-yellow-400">
+                      <span className="flex items-center gap-1 text-emerald-400">
                         <Coins className="w-3 h-3" /> +{achievement.reward.coins}
                       </span>
                     )}

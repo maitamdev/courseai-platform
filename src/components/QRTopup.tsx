@@ -26,6 +26,29 @@ type Props = {
   onClose: () => void;
 };
 
+type PaymentMethod = 'mbbank' | 'momo';
+
+const PAYMENT_INFO = {
+  mbbank: {
+    name: 'MBBank',
+    accountNumber: '0877724374',
+    accountName: 'MAI TRAN THIEN TAM',
+    logo: '🏦',
+    color: 'cyan',
+    qrTemplate: (amount: number, content: string) => 
+      `https://img.vietqr.io/image/MB-0877724374-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(content)}&accountName=MAI%20TRAN%20THIEN%20TAM`
+  },
+  momo: {
+    name: 'MoMo',
+    accountNumber: '0877724374',
+    accountName: 'MAI TRAN THIEN TAM',
+    logo: '💜',
+    color: 'pink',
+    qrTemplate: (amount: number, content: string) => 
+      `https://momosv3.apimienphi.com/api/QRCode?phone=0877724374&amount=${amount}&note=${encodeURIComponent(content)}`
+  }
+};
+
 export const QRTopup = ({ selectedPackage, onClose }: Props) => {
   const { user, refreshProfile } = useAuth();
   const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null);
@@ -33,13 +56,14 @@ export const QRTopup = ({ selectedPackage, onClose }: Props) => {
   const [countdown, setCountdown] = useState(600);
   const [checking, setChecking] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('mbbank');
 
-  // Generate QR on mount
+  // Generate QR on mount or payment method change
   useEffect(() => {
     if (selectedPackage && user) {
       generateQRCode();
     }
-  }, [selectedPackage, user]);
+  }, [selectedPackage, user, paymentMethod]);
 
   // Countdown timer
   useEffect(() => {
@@ -79,7 +103,8 @@ export const QRTopup = ({ selectedPackage, onClose }: Props) => {
     const transactionCode = `NAPXU${Date.now().toString().slice(-8)}`;
     const transferContent = `${transactionCode} ${user.id.slice(0, 8)}`;
     
-    const qrUrl = `https://img.vietqr.io/image/MB-0877724374-compact2.png?amount=${selectedPackage.price_vnd}&addInfo=${encodeURIComponent(transferContent)}&accountName=MAI%20TRAN%20THIEN%20TAM`;
+    const paymentInfo = PAYMENT_INFO[paymentMethod];
+    const qrUrl = paymentInfo.qrTemplate(selectedPackage.price_vnd, transferContent);
 
     try {
       const { data: session, error } = await supabase
@@ -200,19 +225,53 @@ export const QRTopup = ({ selectedPackage, onClose }: Props) => {
             </div>
           ) : paymentSession && (
             <div className="w-full max-w-4xl mx-auto">
+              {/* Payment Method Selector */}
+              <div className="flex justify-center gap-4 mb-8">
+                <button
+                  onClick={() => setPaymentMethod('mbbank')}
+                  className={`flex items-center gap-3 px-6 py-3 rounded-xl font-bold transition-all ${
+                    paymentMethod === 'mbbank'
+                      ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/30'
+                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  }`}
+                >
+                  <span className="text-2xl">🏦</span>
+                  <span>MBBank</span>
+                </button>
+                <button
+                  onClick={() => setPaymentMethod('momo')}
+                  className={`flex items-center gap-3 px-6 py-3 rounded-xl font-bold transition-all ${
+                    paymentMethod === 'momo'
+                      ? 'bg-pink-500 text-white shadow-lg shadow-pink-500/30'
+                      : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  }`}
+                >
+                  <span className="text-2xl">💜</span>
+                  <span>MoMo</span>
+                </button>
+              </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left - QR Code */}
-                <div className="bg-[#0d1829] rounded-2xl p-8 border border-gray-800">
+                <div className={`bg-[#0d1829] rounded-2xl p-8 border ${paymentMethod === 'momo' ? 'border-pink-500/30' : 'border-gray-800'}`}>
                   <div className="text-center">
                     <div className="bg-white p-6 rounded-2xl inline-block mb-6 shadow-xl">
                       <img 
                         src={paymentSession.qr_code_url} 
                         alt="QR Code" 
                         className="w-64 h-64 mx-auto"
+                        onError={(e) => {
+                          // Fallback nếu QR Momo lỗi
+                          if (paymentMethod === 'momo') {
+                            (e.target as HTMLImageElement).src = `https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=momo://app?action=payWithApp&isScanQR=true&serviceCode=&billId=&amount=${paymentSession.amount}&phone=0877724374`;
+                          }
+                        }}
                       />
                     </div>
-                    <p className="text-gray-400 mb-3">Quét mã bằng app ngân hàng</p>
-                    <p className="text-4xl font-bold text-cyan-400">
+                    <p className="text-gray-400 mb-3">
+                      Quét mã bằng app {paymentMethod === 'momo' ? 'MoMo' : 'ngân hàng'}
+                    </p>
+                    <p className={`text-4xl font-bold ${paymentMethod === 'momo' ? 'text-pink-400' : 'text-cyan-400'}`}>
                       {formatPrice(paymentSession.amount)}
                     </p>
                     <p className="text-gray-500 mt-2">
@@ -229,16 +288,18 @@ export const QRTopup = ({ selectedPackage, onClose }: Props) => {
                     
                     <div className="space-y-4">
                       <div className="flex justify-between items-center py-2 border-b border-gray-800">
-                        <span className="text-gray-400">Ngân hàng</span>
-                        <span className="font-semibold text-white">MBBank</span>
+                        <span className="text-gray-400">{paymentMethod === 'momo' ? 'Ví điện tử' : 'Ngân hàng'}</span>
+                        <span className={`font-semibold ${paymentMethod === 'momo' ? 'text-pink-400' : 'text-white'}`}>
+                          {PAYMENT_INFO[paymentMethod].name}
+                        </span>
                       </div>
                       
                       <div className="flex justify-between items-center py-2 border-b border-gray-800">
-                        <span className="text-gray-400">Số tài khoản</span>
+                        <span className="text-gray-400">{paymentMethod === 'momo' ? 'Số điện thoại' : 'Số tài khoản'}</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-white">0877724374</span>
+                          <span className="font-semibold text-white">{PAYMENT_INFO[paymentMethod].accountNumber}</span>
                           <button
-                            onClick={() => handleCopy('0877724374', 'account')}
+                            onClick={() => handleCopy(PAYMENT_INFO[paymentMethod].accountNumber, 'account')}
                             className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
                           >
                             {copied === 'account' ? (
@@ -251,8 +312,8 @@ export const QRTopup = ({ selectedPackage, onClose }: Props) => {
                       </div>
                       
                       <div className="flex justify-between items-center py-2 border-b border-gray-800">
-                        <span className="text-gray-400">Chủ tài khoản</span>
-                        <span className="font-semibold text-white">MAI TRAN THIEN TAM</span>
+                        <span className="text-gray-400">{paymentMethod === 'momo' ? 'Tên tài khoản' : 'Chủ tài khoản'}</span>
+                        <span className="font-semibold text-white">{PAYMENT_INFO[paymentMethod].accountName}</span>
                       </div>
                       
                       <div className="flex justify-between items-center py-2 border-b border-gray-800">

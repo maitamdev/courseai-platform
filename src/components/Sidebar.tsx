@@ -128,7 +128,7 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
             <div className="p-4 border-t border-gray-200">
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Trophy className="w-5 h-5 text-yellow-600" />
+                  <Trophy className="w-5 h-5 text-emerald-600" />
                   <h3 className="font-bold text-white">Mẹo học tập</h3>
                 </div>
                 <p className="text-sm text-gray-300">

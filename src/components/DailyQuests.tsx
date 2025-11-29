@@ -171,7 +171,7 @@ export const DailyQuests = () => {
                     <span className="text-xs text-gray-500">Đã nhận</span>
                   ) : (
                     <div className="text-xs text-gray-400">
-                      <div className="flex items-center gap-1"><Coins className="w-3 h-3 text-yellow-400" />+{quest.reward.coins}</div>
+                      <div className="flex items-center gap-1"><Coins className="w-3 h-3 text-emerald-400" />+{quest.reward.coins}</div>
                       <div className="flex items-center gap-1"><Star className="w-3 h-3 text-purple-400" />+{quest.reward.xp}</div>
                     </div>
                   )}

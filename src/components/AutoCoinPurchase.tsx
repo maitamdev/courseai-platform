@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { QrCode, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { QrCode, Clock, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -173,8 +173,8 @@ export const AutoCoinPurchase = () => {
                   </>
                 ) : (
                   <>
-                    <AlertCircle className="w-6 h-6 text-orange-600" />
-                    <span className="font-bold text-orange-900">Quét mã để thanh toán</span>
+                    <AlertCircle className="w-6 h-6 text-green-600" />
+                    <span className="font-bold text-green-900">Quét mã để thanh toán</span>
                   </>
                 )}
               </div>
@@ -209,12 +209,12 @@ export const AutoCoinPurchase = () => {
         )}
       </div>
 
-      <div className="mt-6 bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-6">
-        <h3 className="font-bold text-yellow-900 mb-2 flex items-center gap-2">
+      <div className="mt-6 bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-6">
+        <h3 className="font-bold text-emerald-900 mb-2 flex items-center gap-2">
           <AlertCircle className="w-5 h-5" />
           Lưu ý quan trọng
         </h3>
-        <ul className="text-sm text-yellow-800 space-y-1">
+        <ul className="text-sm text-emerald-800 space-y-1">
           <li>• Chuyển khoản ĐÚNG nội dung để được cộng xu tự động</li>
           <li>• Xu sẽ được cộng sau 5-30 giây kể từ khi chuyển khoản thành công</li>
           <li>• Nếu sau 5 phút chưa nhận được xu, vui lòng liên hệ hỗ trợ</li>

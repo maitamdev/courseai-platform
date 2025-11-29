@@ -164,7 +164,7 @@ export const Friends = () => {
               <div className="text-gray-300 text-sm">Bạn bè</div>
             </div>
             <div className="bg-white/10 backdrop-blur-md rounded-2xl px-6 py-4 text-center border border-white/20">
-              <div className="text-3xl font-black text-yellow-400">{requests.length}</div>
+              <div className="text-3xl font-black text-emerald-400">{requests.length}</div>
               <div className="text-gray-300 text-sm">Lời mời</div>
             </div>
           </div>
@@ -175,7 +175,7 @@ export const Friends = () => {
       <div className="flex gap-2 mb-6">
         {[
           { id: 'friends', label: 'Bạn bè', icon: Users, count: friends.length, color: 'cyan' },
-          { id: 'requests', label: 'Lời mời', icon: UserPlus, count: requests.length, color: 'yellow' },
+          { id: 'requests', label: 'Lời mời', icon: UserPlus, count: requests.length, color: 'emerald' },
           { id: 'search', label: 'Tìm kiếm', icon: Search, color: 'green' },
           { id: 'leaderboard', label: 'Xếp hạng', icon: Trophy, color: 'purple' },
         ].map((tab) => (
@@ -230,11 +230,11 @@ export const Friends = () => {
                         <p className="text-gray-400 text-sm">@{friend.username}</p>
                         <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
                           <span className="flex items-center gap-1">
-                            <Zap className="w-3 h-3 text-yellow-400" />
+                            <Zap className="w-3 h-3 text-emerald-400" />
                             {friend.total_xp} XP
                           </span>
                           <span className="flex items-center gap-1">
-                            <Coins className="w-3 h-3 text-yellow-400" />
+                            <Coins className="w-3 h-3 text-emerald-400" />
                             {friend.total_coins}
                           </span>
                         </div>
@@ -274,12 +274,12 @@ export const Friends = () => {
             ) : (
               <div className="space-y-3">
                 {requests.map((req) => (
-                  <div key={req.id} className="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50 hover:border-yellow-500/50 transition-all">
+                  <div key={req.id} className="bg-gray-900/50 rounded-xl p-4 border border-gray-700/50 hover:border-emerald-500/50 transition-all">
                     <div className="flex items-center gap-4">
                       <img
                         src={req.sender_avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${req.sender_username}`}
                         alt={req.sender_username}
-                        className="w-12 h-12 rounded-full border-2 border-yellow-500/50"
+                        className="w-12 h-12 rounded-full border-2 border-emerald-500/50"
                       />
                       <div className="flex-1">
                         <h3 className="font-bold text-white">{req.sender_full_name || req.sender_username}</h3>
@@ -379,22 +379,22 @@ export const Friends = () => {
                   key={player.id}
                   className={`rounded-xl p-4 border transition-all ${
                     index === 0
-                      ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/50'
+                      ? 'bg-gradient-to-r from-emerald-500/20 to-green-500/20 border-emerald-500/50'
                       : index === 1
                       ? 'bg-gradient-to-r from-gray-400/20 to-gray-500/20 border-gray-400/50'
                       : index === 2
-                      ? 'bg-gradient-to-r from-orange-600/20 to-orange-700/20 border-orange-600/50'
+                      ? 'bg-gradient-to-r from-green-600/20 to-green-700/20 border-green-600/50'
                       : 'bg-gray-900/50 border-gray-700/50 hover:border-purple-500/50'
                   }`}
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 flex items-center justify-center">
                       {index === 0 ? (
-                        <Crown className="w-8 h-8 text-yellow-400" />
+                        <Crown className="w-8 h-8 text-emerald-400" />
                       ) : index === 1 ? (
                         <Crown className="w-7 h-7 text-gray-400" />
                       ) : index === 2 ? (
-                        <Crown className="w-6 h-6 text-orange-500" />
+                        <Crown className="w-6 h-6 text-green-500" />
                       ) : (
                         <span className="text-xl font-bold text-gray-500">#{index + 1}</span>
                       )}
@@ -414,7 +414,7 @@ export const Friends = () => {
                       <p className="text-gray-400 text-sm">@{player.username}</p>
                     </div>
                     <div className="text-right">
-                      <div className="flex items-center gap-1 text-yellow-400 font-bold">
+                      <div className="flex items-center gap-1 text-emerald-400 font-bold">
                         <Star className="w-4 h-4" />
                         {player.total_xp.toLocaleString()} XP
                       </div>

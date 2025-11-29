@@ -172,7 +172,7 @@ export const ProfilePage = () => {
                 </div>
                 <button
                   onClick={() => setShowAvatarSelector(true)}
-                  className="absolute bottom-2 right-0 w-8 h-8 bg-yellow-400 hover:bg-yellow-500 rounded-full flex items-center justify-center shadow-lg transition-colors"
+                  className="absolute bottom-2 right-0 w-8 h-8 bg-emerald-400 hover:bg-emerald-500 rounded-full flex items-center justify-center shadow-lg transition-colors"
                   title="Đổi avatar"
                 >
                   <Camera className="w-4 h-4 text-gray-900" />
@@ -190,7 +190,7 @@ export const ProfilePage = () => {
                 onClick={() => setActiveTab('info')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                   activeTab === 'info'
-                    ? 'bg-yellow-400 text-white font-semibold'
+                    ? 'bg-emerald-400 text-white font-semibold'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -202,7 +202,7 @@ export const ProfilePage = () => {
                 onClick={() => setActiveTab('courses')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                   activeTab === 'courses'
-                    ? 'bg-yellow-400 text-white font-semibold'
+                    ? 'bg-emerald-400 text-white font-semibold'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -214,7 +214,7 @@ export const ProfilePage = () => {
                 onClick={() => setActiveTab('transactions')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                   activeTab === 'transactions'
-                    ? 'bg-yellow-400 text-white font-semibold'
+                    ? 'bg-emerald-400 text-white font-semibold'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -228,7 +228,7 @@ export const ProfilePage = () => {
                 onClick={() => setActiveTab('achievements')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                   activeTab === 'achievements'
-                    ? 'bg-yellow-400 text-white font-semibold'
+                    ? 'bg-emerald-400 text-white font-semibold'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -240,7 +240,7 @@ export const ProfilePage = () => {
                 onClick={() => setActiveTab('playground')}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
                   activeTab === 'playground'
-                    ? 'bg-yellow-400 text-white font-semibold'
+                    ? 'bg-emerald-400 text-white font-semibold'
                     : 'text-gray-300 hover:bg-gray-700'
                 }`}
               >
@@ -260,7 +260,7 @@ export const ProfilePage = () => {
             <div className="p-4 bg-gray-900/50 border-t border-gray-700">
               <div className="grid grid-cols-2 gap-3">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-400">{profile?.total_coins || 0}</div>
+                  <div className="text-2xl font-bold text-emerald-400">{profile?.total_coins || 0}</div>
                   <div className="text-xs text-gray-400">Xu</div>
                 </div>
                 <div className="text-center">
@@ -287,7 +287,7 @@ export const ProfilePage = () => {
                       type="text"
                       value={formData.full_name}
                       onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
                       placeholder="Nhập họ tên"
                     />
                   </div>
@@ -298,7 +298,7 @@ export const ProfilePage = () => {
                       type="text"
                       value={formData.username}
                       onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
                       placeholder="Nhập tên đăng nhập"
                     />
                   </div>
@@ -321,7 +321,7 @@ export const ProfilePage = () => {
                       type="tel"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
                       placeholder="Nhập số điện thoại"
                     />
                   </div>
@@ -334,7 +334,7 @@ export const ProfilePage = () => {
                       type="date"
                       value={formData.birthday}
                       onChange={(e) => setFormData({ ...formData, birthday: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
                     />
                   </div>
 
@@ -343,7 +343,7 @@ export const ProfilePage = () => {
                     <select
                       value={formData.gender}
                       onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                      className="w-full px-4 py-2 bg-gray-900/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-emerald-400 focus:border-transparent"
                     >
                       <option value="Nam" className="bg-gray-800">Nam</option>
                       <option value="Nữ" className="bg-gray-800">Nữ</option>
@@ -365,7 +365,7 @@ export const ProfilePage = () => {
                 <div className="flex gap-3 pt-4">
                   <button
                     onClick={handleSaveProfile}
-                    className="px-6 py-2 bg-yellow-400 text-white rounded-lg font-semibold hover:bg-yellow-500 transition-colors"
+                    className="px-6 py-2 bg-emerald-400 text-white rounded-lg font-semibold hover:bg-emerald-500 transition-colors"
                   >
                     Lưu thay đổi
                   </button>
@@ -392,7 +392,7 @@ export const ProfilePage = () => {
                       // Chuyển sang tab lessons
                       window.dispatchEvent(new CustomEvent('changeTab', { detail: 'lessons' }));
                     }}
-                    className="px-6 py-2 bg-yellow-400 text-white rounded-lg font-semibold hover:bg-yellow-500"
+                    className="px-6 py-2 bg-emerald-400 text-white rounded-lg font-semibold hover:bg-emerald-500"
                   >
                     Xem khóa học
                   </button>
@@ -402,20 +402,20 @@ export const ProfilePage = () => {
                   {purchasedCourses.map((pc) => (
                     <div
                       key={pc.id}
-                      className="bg-gray-700/50 border border-gray-600 rounded-xl p-5 hover:border-yellow-400/50 transition-all group"
+                      className="bg-gray-700/50 border border-gray-600 rounded-xl p-5 hover:border-emerald-400/50 transition-all group"
                     >
                       <div className="flex items-start gap-4">
-                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-yellow-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                           <BookOpen className="w-8 h-8 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                          <h3 className="font-bold text-white mb-2 group-hover:text-emerald-400 transition-colors">
                             {pc.course_title}
                           </h3>
                           <div className="flex items-center gap-4 text-sm text-gray-300 mb-2">
                             <span>👨‍🏫 {pc.course_instructor}</span>
                             <span className="flex items-center gap-1">
-                              <Coins className="w-4 h-4 text-yellow-500" />
+                              <Coins className="w-4 h-4 text-emerald-500" />
                               {pc.course_price} xu
                             </span>
                             <span className="px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded text-xs">
@@ -432,10 +432,10 @@ export const ProfilePage = () => {
                             // Lưu course_id và chuyển sang tab lessons
                             try {
                               sessionStorage.setItem('openCourseId', pc.course_id);
-                            } catch (e) {}
+                            } catch {}
                             window.dispatchEvent(new CustomEvent('changeTab', { detail: 'lessons' }));
                           }}
-                          className="px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg text-sm font-bold transition-colors"
+                          className="px-4 py-2 bg-emerald-400 hover:bg-emerald-500 text-gray-900 rounded-lg text-sm font-bold transition-colors"
                         >
                           Bắt đầu học →
                         </button>

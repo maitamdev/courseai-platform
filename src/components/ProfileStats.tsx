@@ -97,7 +97,7 @@ export const ProfileStats = ({
 
       <div className="bg-white rounded-xl shadow-md p-6">
         <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <Target className="w-5 h-5 text-orange-600" />
+          <Target className="w-5 h-5 text-green-600" />
           Nhiệm Vụ Hàng Ngày
         </h3>
         <div className="space-y-3">
@@ -125,7 +125,7 @@ export const ProfileStats = ({
                   <span className="text-gray-300">
                     {current}/{quest.target_value}
                   </span>
-                  <span className="font-semibold text-orange-600">
+                  <span className="font-semibold text-green-600">
                     +{quest.xp_reward} XP, +{quest.coins_reward} xu
                   </span>
                 </div>
@@ -145,7 +145,7 @@ export const ProfileStats = ({
 
       <div className="bg-white rounded-xl shadow-md p-6">
         <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-yellow-600" />
+          <Trophy className="w-5 h-5 text-emerald-600" />
           Huy Hiệu ({earnedBadges.length}/{badges.length})
         </h3>
         <div className="grid grid-cols-2 gap-3">
@@ -158,14 +158,14 @@ export const ProfileStats = ({
                 key={badge.id}
                 className={`p-4 rounded-lg border-2 text-center transition-all ${
                   earned
-                    ? 'bg-yellow-50 border-yellow-300'
+                    ? 'bg-emerald-50 border-emerald-300'
                     : 'bg-gray-50 border-gray-200 opacity-50'
                 }`}
                 title={badge.description}
               >
                 <Icon
                   className={`w-8 h-8 mx-auto mb-2 ${
-                    earned ? 'text-yellow-600' : 'text-gray-400'
+                    earned ? 'text-emerald-600' : 'text-gray-400'
                   }`}
                 />
                 <p className="text-xs font-semibold text-white">{badge.name}</p>
@@ -183,7 +183,7 @@ export const ProfileStats = ({
             <p className="text-xs text-gray-300 mt-1">Bài học</p>
           </div>
           <div>
-            <div className="text-3xl font-bold text-orange-600">{foundTreasuresCount}</div>
+            <div className="text-3xl font-bold text-green-600">{foundTreasuresCount}</div>
             <p className="text-xs text-gray-300 mt-1">Kho báu</p>
           </div>
           <div>

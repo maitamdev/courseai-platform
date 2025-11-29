@@ -18,12 +18,12 @@ const EMOJI_CATEGORIES = [
 
 // Chat themes
 const CHAT_THEMES = [
-  { id: 'default', name: 'Mặc định', gradient: 'from-yellow-400 to-yellow-500', bg: 'bg-gray-900/95' },
+  { id: 'default', name: 'Mặc định', gradient: 'from-emerald-400 to-emerald-500', bg: 'bg-gray-900/95' },
   { id: 'ocean', name: 'Đại dương', gradient: 'from-blue-400 to-cyan-500', bg: 'bg-slate-900/95' },
-  { id: 'sunset', name: 'Hoàng hôn', gradient: 'from-orange-400 to-pink-500', bg: 'bg-gray-900/95' },
+  { id: 'sunset', name: 'Hoàng hôn', gradient: 'from-green-400 to-pink-500', bg: 'bg-gray-900/95' },
   { id: 'forest', name: 'Rừng xanh', gradient: 'from-green-400 to-emerald-500', bg: 'bg-gray-900/95' },
   { id: 'purple', name: 'Tím mộng', gradient: 'from-purple-400 to-pink-500', bg: 'bg-gray-900/95' },
-  { id: 'fire', name: 'Lửa', gradient: 'from-red-500 to-orange-500', bg: 'bg-gray-900/95' },
+  { id: 'fire', name: 'Lửa', gradient: 'from-red-500 to-green-500', bg: 'bg-gray-900/95' },
 ];
 
 const REACTION_EMOJIS = ['❤️', '😂', '😮', '😢', '😡', '👍'];
@@ -763,11 +763,11 @@ export const Messages = () => {
             {/* View mode tabs */}
             <div className="flex gap-2 mb-4">
               <button onClick={() => setViewMode('direct')}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === 'direct' ? 'bg-yellow-400 text-gray-900' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === 'direct' ? 'bg-emerald-400 text-gray-900' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
                 Trực tiếp
               </button>
               <button onClick={() => setViewMode('groups')}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === 'groups' ? 'bg-yellow-400 text-gray-900' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${viewMode === 'groups' ? 'bg-emerald-400 text-gray-900' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
                 Nhóm ({groupChats.length})
               </button>
             </div>
@@ -775,7 +775,7 @@ export const Messages = () => {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
               <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Tìm kiếm..."
-                className="w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:border-yellow-400/50 focus:outline-none" />
+                className="w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:border-emerald-400/50 focus:outline-none" />
             </div>
           </div>
 
@@ -792,7 +792,7 @@ export const Messages = () => {
                 <div className="divide-y divide-gray-700/30">
                   {filtered.map(conv => (
                     <button key={conv.friend_id} onClick={() => { setSelectedFriend(conv); setSelectedGroup(null); setShowMobileChat(true); }}
-                      className={`w-full p-4 hover:bg-gray-800/50 transition-all text-left ${selectedFriend?.friend_id === conv.friend_id ? 'bg-gradient-to-r from-yellow-400/10 to-transparent border-l-4 border-yellow-400' : ''}`}>
+                      className={`w-full p-4 hover:bg-gray-800/50 transition-all text-left ${selectedFriend?.friend_id === conv.friend_id ? 'bg-gradient-to-r from-emerald-400/10 to-transparent border-l-4 border-emerald-400' : ''}`}>
                       <div className="flex items-center gap-3">
                         <div className="relative flex-shrink-0">
                           <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-gray-700 bg-gradient-to-br from-blue-500 to-purple-600">
@@ -819,7 +819,7 @@ export const Messages = () => {
                 <div className="flex flex-col items-center justify-center h-full text-center px-6">
                   <Users className="w-16 h-16 text-gray-600 mb-4" />
                   <p className="text-gray-400">Chưa có nhóm chat</p>
-                  <button onClick={() => setShowCreateGroup(true)} className="mt-4 px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-medium hover:bg-yellow-500">
+                  <button onClick={() => setShowCreateGroup(true)} className="mt-4 px-4 py-2 bg-emerald-400 text-gray-900 rounded-lg font-medium hover:bg-emerald-500">
                     Tạo nhóm mới
                   </button>
                 </div>
@@ -827,7 +827,7 @@ export const Messages = () => {
                 <div className="divide-y divide-gray-700/30">
                   {groupChats.map(group => (
                     <button key={group.id} onClick={() => { setSelectedGroup(group); setSelectedFriend(null); setShowMobileChat(true); }}
-                      className={`w-full p-4 hover:bg-gray-800/50 transition-all text-left ${selectedGroup?.id === group.id ? 'bg-gradient-to-r from-yellow-400/10 to-transparent border-l-4 border-yellow-400' : ''}`}>
+                      className={`w-full p-4 hover:bg-gray-800/50 transition-all text-left ${selectedGroup?.id === group.id ? 'bg-gradient-to-r from-emerald-400/10 to-transparent border-l-4 border-emerald-400' : ''}`}>
                       <div className="flex items-center gap-3">
                         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
                           <Users className="w-7 h-7 text-white" />
@@ -875,7 +875,7 @@ export const Messages = () => {
                   </div>
                 </div>
                 <div className="flex gap-1">
-                  <button onClick={() => setShowChatSearch(!showChatSearch)} className={`p-2.5 rounded-xl ${showChatSearch ? 'bg-yellow-400 text-gray-900' : 'hover:bg-gray-700/50 text-gray-400 hover:text-white'}`}>
+                  <button onClick={() => setShowChatSearch(!showChatSearch)} className={`p-2.5 rounded-xl ${showChatSearch ? 'bg-emerald-400 text-gray-900' : 'hover:bg-gray-700/50 text-gray-400 hover:text-white'}`}>
                     <SearchIcon className="w-5 h-5" />
                   </button>
                   <button onClick={() => setShowThemeSelector(!showThemeSelector)} className="p-2.5 hover:bg-gray-700/50 rounded-xl text-gray-400 hover:text-white">
@@ -892,7 +892,7 @@ export const Messages = () => {
                   <div className="flex gap-2">
                     <input type="text" value={chatSearchQuery} onChange={e => setChatSearchQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && searchInChat()}
                       placeholder="Tìm trong cuộc trò chuyện..." className="flex-1 px-4 py-2 bg-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none" />
-                    <button onClick={searchInChat} className="px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-medium">Tìm</button>
+                    <button onClick={searchInChat} className="px-4 py-2 bg-emerald-400 text-gray-900 rounded-lg font-medium">Tìm</button>
                   </div>
                   {searchResults.length > 0 && (
                     <div className="mt-2 max-h-40 overflow-y-auto">
@@ -924,8 +924,8 @@ export const Messages = () => {
 
               {/* Pinned messages */}
               {pinnedMessages.length > 0 && (
-                <div className="px-4 py-2 border-b border-gray-700/50 bg-yellow-400/10">
-                  <div className="flex items-center gap-2 text-yellow-400">
+                <div className="px-4 py-2 border-b border-gray-700/50 bg-emerald-400/10">
+                  <div className="flex items-center gap-2 text-emerald-400">
                     <Pin className="w-4 h-4" />
                     <span className="text-sm font-medium">Tin nhắn đã ghim ({pinnedMessages.length})</span>
                   </div>
@@ -972,7 +972,7 @@ export const Messages = () => {
                                 isSender 
                                   ? `bg-gradient-to-r ${currentTheme.gradient} text-gray-900 rounded-br-md` 
                                   : 'bg-gray-800 text-white rounded-bl-md'
-                              } ${msg.is_pinned ? 'ring-2 ring-yellow-400' : ''}`}>
+                              } ${msg.is_pinned ? 'ring-2 ring-emerald-400' : ''}`}>
                                 {renderMessageContent(msg)}
                                 {msg.is_edited && <span className="text-[10px] opacity-60 ml-1">(đã chỉnh sửa)</span>}
                                 
@@ -997,7 +997,7 @@ export const Messages = () => {
                                         </>
                                       )}
                                       <button onClick={() => togglePinMessage(msg.id)} className="p-1.5 bg-gray-700 rounded-lg hover:bg-gray-600" title={msg.is_pinned ? 'Bỏ ghim' : 'Ghim'}>
-                                        <Pin className={`w-3.5 h-3.5 ${msg.is_pinned ? 'text-yellow-400' : 'text-gray-300'}`} />
+                                        <Pin className={`w-3.5 h-3.5 ${msg.is_pinned ? 'text-emerald-400' : 'text-gray-300'}`} />
                                       </button>
                                     </>
                                   )}
@@ -1070,8 +1070,8 @@ export const Messages = () => {
               {editingMessage && (
                 <div className="px-4 py-3 border-t border-gray-700/50 bg-gray-800/50">
                   <div className="flex items-center gap-2 mb-2">
-                    <Edit3 className="w-4 h-4 text-yellow-400" />
-                    <span className="text-sm text-yellow-400">Đang chỉnh sửa tin nhắn</span>
+                    <Edit3 className="w-4 h-4 text-emerald-400" />
+                    <span className="text-sm text-emerald-400">Đang chỉnh sửa tin nhắn</span>
                     <button onClick={() => { setEditingMessage(null); setEditText(''); }} className="ml-auto text-gray-400 hover:text-white">
                       <X className="w-4 h-4" />
                     </button>
@@ -1079,7 +1079,7 @@ export const Messages = () => {
                   <div className="flex gap-2">
                     <input type="text" value={editText} onChange={e => setEditText(e.target.value)} onKeyDown={e => e.key === 'Enter' && editMessage()}
                       className="flex-1 px-4 py-2 bg-gray-700 rounded-lg text-white focus:outline-none" />
-                    <button onClick={editMessage} className="px-4 py-2 bg-yellow-400 text-gray-900 rounded-lg font-medium">Lưu</button>
+                    <button onClick={editMessage} className="px-4 py-2 bg-emerald-400 text-gray-900 rounded-lg font-medium">Lưu</button>
                   </div>
                 </div>
               )}
@@ -1133,7 +1133,7 @@ export const Messages = () => {
                         <button onClick={cancelRecording} className="p-2 hover:bg-gray-700 rounded-full text-gray-400" title="Hủy">
                           <X className="w-5 h-5" />
                         </button>
-                        <button onClick={sendVoiceMessage} disabled={uploadingMedia} className="p-2 bg-yellow-400 rounded-full text-gray-900" title="Gửi">
+                        <button onClick={sendVoiceMessage} disabled={uploadingMedia} className="p-2 bg-emerald-400 rounded-full text-gray-900" title="Gửi">
                           {uploadingMedia ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                         </button>
                       </>
@@ -1157,7 +1157,7 @@ export const Messages = () => {
                       <div className="flex gap-1 px-2 py-2 border-b border-gray-700 overflow-x-auto">
                         {EMOJI_CATEGORIES.map((cat, idx) => (
                           <button key={idx} onClick={() => setActiveEmojiCategory(idx)}
-                            className={`p-2 rounded-lg text-xl hover:bg-gray-700 flex-shrink-0 ${activeEmojiCategory === idx ? 'bg-yellow-400/20 ring-2 ring-yellow-400' : ''}`}>
+                            className={`p-2 rounded-lg text-xl hover:bg-gray-700 flex-shrink-0 ${activeEmojiCategory === idx ? 'bg-emerald-400/20 ring-2 ring-emerald-400' : ''}`}>
                             {cat.icon}
                           </button>
                         ))}
@@ -1177,10 +1177,10 @@ export const Messages = () => {
                   <div className="flex items-end gap-3">
                     <div className="flex gap-1">
                       <input type="file" ref={fileInputRef} onChange={handleFileSelect} accept="image/*" className="hidden" />
-                      <button onClick={() => fileInputRef.current?.click()} disabled={uploadingMedia} className="p-2.5 hover:bg-gray-700/50 rounded-xl text-gray-400 hover:text-yellow-400 disabled:opacity-50">
+                      <button onClick={() => fileInputRef.current?.click()} disabled={uploadingMedia} className="p-2.5 hover:bg-gray-700/50 rounded-xl text-gray-400 hover:text-emerald-400 disabled:opacity-50">
                         <ImageIcon className="w-5 h-5" />
                       </button>
-                      <button onClick={startRecording} className="p-2.5 hover:bg-gray-700/50 rounded-xl text-gray-400 hover:text-yellow-400">
+                      <button onClick={startRecording} className="p-2.5 hover:bg-gray-700/50 rounded-xl text-gray-400 hover:text-emerald-400">
                         <Mic className="w-5 h-5" />
                       </button>
                     </div>
@@ -1188,9 +1188,9 @@ export const Messages = () => {
                       <input ref={inputRef} type="text" value={newMessage} onChange={handleInputChange}
                         onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
                         onBlur={() => updateTypingStatus(false)}
-                        placeholder="Nhập tin nhắn..." className="w-full px-5 py-3.5 bg-gray-800/80 border border-gray-700/50 rounded-2xl text-white placeholder-gray-500 focus:border-yellow-400/50 focus:outline-none pr-12" />
+                        placeholder="Nhập tin nhắn..." className="w-full px-5 py-3.5 bg-gray-800/80 border border-gray-700/50 rounded-2xl text-white placeholder-gray-500 focus:border-emerald-400/50 focus:outline-none pr-12" />
                       <button onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                        className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-colors ${showEmojiPicker ? 'text-yellow-400 bg-gray-700/50' : 'text-gray-400 hover:text-yellow-400'}`}>
+                        className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-colors ${showEmojiPicker ? 'text-emerald-400 bg-gray-700/50' : 'text-gray-400 hover:text-emerald-400'}`}>
                         <Smile className="w-5 h-5" />
                       </button>
                     </div>
@@ -1231,7 +1231,7 @@ export const Messages = () => {
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Tên nhóm</label>
                 <input type="text" value={newGroupName} onChange={e => setNewGroupName(e.target.value)}
-                  placeholder="Nhập tên nhóm..." className="w-full px-4 py-3 bg-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+                  placeholder="Nhập tên nhóm..." className="w-full px-4 py-3 bg-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-400" />
               </div>
               <div>
                 <label className="block text-sm text-gray-400 mb-2">Chọn thành viên</label>
@@ -1243,7 +1243,7 @@ export const Messages = () => {
                           if (e.target.checked) setSelectedGroupMembers(prev => [...prev, conv.friend_id]);
                           else setSelectedGroupMembers(prev => prev.filter(id => id !== conv.friend_id));
                         }}
-                        className="w-5 h-5 rounded border-gray-600 text-yellow-400 focus:ring-yellow-400" />
+                        className="w-5 h-5 rounded border-gray-600 text-emerald-400 focus:ring-emerald-400" />
                       <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600">
                         {conv.friend_avatar ? <img src={conv.friend_avatar} alt="" className="w-full h-full object-cover" /> :
                           <div className="w-full h-full flex items-center justify-center text-white font-bold">{(conv.friend_username || '?')[0]?.toUpperCase()}</div>}
@@ -1259,7 +1259,7 @@ export const Messages = () => {
                 Hủy
               </button>
               <button onClick={createGroupChat} disabled={!newGroupName.trim() || selectedGroupMembers.length === 0}
-                className="flex-1 py-3 bg-yellow-400 text-gray-900 rounded-xl font-medium hover:bg-yellow-500 disabled:opacity-50">
+                className="flex-1 py-3 bg-emerald-400 text-gray-900 rounded-xl font-medium hover:bg-emerald-500 disabled:opacity-50">
                 Tạo nhóm
               </button>
             </div>

@@ -101,7 +101,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
             </p>
             <button
               onClick={onGetStarted}
-              className={`px-10 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-xl hover:shadow-2xl delay-200 ${
+              className={`px-10 py-4 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-lg font-bold text-lg transition-all hover:scale-105 shadow-xl hover:shadow-2xl delay-200 ${
                 isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
               }`}
             >
@@ -116,7 +116,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                 key={index}
                 onClick={() => changeSlide(index)}
                 className={`h-3 rounded-full transition-all duration-500 ${
-                  index === currentSlide ? 'bg-yellow-400 w-8' : 'bg-white/30 hover:bg-white/50 w-3'
+                  index === currentSlide ? 'bg-emerald-400 w-8' : 'bg-white/30 hover:bg-white/50 w-3'
                 }`}
               />
             ))}
@@ -127,14 +127,14 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
       {/* Features Section - Enhanced */}
       <section className="relative bg-gray-900/70 backdrop-blur-lg w-full py-24 overflow-hidden">
         {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"></div>
         
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400/20 rounded-full mb-4">
-              <Sparkles className="w-5 h-5 text-yellow-400" />
-              <span className="text-yellow-400 font-bold text-sm">Tại Sao Chọn CodeMind AI?</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-400/20 rounded-full mb-4">
+              <Sparkles className="w-5 h-5 text-emerald-400" />
+              <span className="text-emerald-400 font-bold text-sm">Tại Sao Chọn CodeMind AI?</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
               Học Lập Trình Hiệu Quả Hơn
@@ -150,7 +150,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                 icon: Zap,
                 title: 'Học Tập Nhanh Chóng',
                 description: 'Phương pháp học tập được tối ưu giúp bạn tiếp thu kiến thức nhanh gấp 3 lần.',
-                color: 'from-yellow-400 to-orange-500'
+                color: 'from-emerald-400 to-green-500'
               },
               {
                 icon: Target,
@@ -169,15 +169,15 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
               return (
                 <ScrollReveal key={index}>
                 <div
-                  className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-yellow-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                  className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-emerald-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   
                   <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
                     <Icon className="w-8 h-8 text-white" />
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-yellow-400 transition-colors">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">
                     {feature.title}
                   </h3>
                   <p className="text-white/70 leading-relaxed">
@@ -201,7 +201,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
               { number: '10K+', label: 'Học viên', icon: Users, color: 'from-blue-500 to-cyan-500' },
               { number: '50+', label: 'Khóa học', icon: BookOpen, color: 'from-purple-500 to-pink-500' },
               { number: '100+', label: 'Bài học', icon: Rocket, color: 'from-green-500 to-emerald-500' },
-              { number: '4.9★', label: 'Đánh giá', icon: Star, color: 'from-yellow-400 to-orange-500' }
+              { number: '4.9★', label: 'Đánh giá', icon: Star, color: 'from-emerald-400 to-green-500' }
             ].map((stat, index) => {
               const Icon = stat.icon;
               return (
@@ -213,7 +213,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                         <Icon className="w-10 h-10 text-white" />
                       </div>
                     </div>
-                    <div className="text-5xl md:text-6xl font-black mb-2 bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent group-hover:scale-110 transition-transform inline-block">
+                    <div className="text-5xl md:text-6xl font-black mb-2 bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent group-hover:scale-110 transition-transform inline-block">
                       {stat.number}
                     </div>
                     <div className="text-lg text-white/80 font-medium">{stat.label}</div>
@@ -270,7 +270,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
             ].map((course, index) => (
               <div
                 key={index}
-                className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700 hover:border-yellow-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+                className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700 hover:border-emerald-400 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
               >
                 {/* Course Image/Icon */}
                 <div className={`relative h-48 bg-gradient-to-br ${course.color} flex items-center justify-center overflow-hidden`}>
@@ -285,7 +285,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
 
                 {/* Course Content */}
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-yellow-400 transition-colors">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">
                     {course.title}
                   </h3>
                   
@@ -311,7 +311,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
 
                   <button
                     onClick={onGetStarted}
-                    className="w-full py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-bold rounded-xl transition-all hover:shadow-lg"
+                    className="w-full py-3 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold rounded-xl transition-all hover:shadow-lg"
                   >
                     Xem Chi Tiết
                   </button>
@@ -359,7 +359,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                 comment: 'Từ zero đến hero chỉ trong 6 tháng. CodeMind AI thực sự thay đổi cuộc đời tôi!'
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-gray-700/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-600 hover:border-yellow-400 transition-all hover:scale-105">
+              <div key={index} className="bg-gray-700/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-600 hover:border-emerald-400 transition-all hover:scale-105">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="text-5xl">{testimonial.avatar}</div>
                   <div>
@@ -369,7 +369,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
                 </div>
                 <div className="flex gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    <Star key={i} className="w-5 h-5 fill-emerald-400 text-emerald-400" />
                   ))}
                 </div>
                 <p className="text-white/80 leading-relaxed italic">"{testimonial.comment}"</p>
@@ -380,7 +380,7 @@ export const HomePage = ({ onGetStarted }: HomePageProps) => {
       </section>
 
       {/* CTA Section - Enhanced */}
-      <section className="relative bg-gradient-to-br from-yellow-400 via-yellow-500 to-orange-500 w-full py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-emerald-400 via-emerald-500 to-green-500 w-full py-24 overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAgMTJjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6TTEyIDM0YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00em0wIDEyYzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
         
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">

@@ -21,7 +21,7 @@ type CodeEditorProps = {
   onSubmit: (code: string, score: number) => void;
 };
 
-export const CodeEditor = ({ starterCode, testCases, rubric, solution, onSubmit }: CodeEditorProps) => {
+export const CodeEditor = ({ starterCode, testCases: _testCases, rubric, solution, onSubmit }: CodeEditorProps) => {
   const [code, setCode] = useState(starterCode);
   const [output, setOutput] = useState('');
   const [testResults, setTestResults] = useState<any[]>([]);
@@ -40,7 +40,7 @@ export const CodeEditor = ({ starterCode, testCases, rubric, solution, onSubmit 
       const hasClass = code.includes('class');
       const hasVirtual = code.includes('virtual');
 
-      let results: any[] = [];
+      const results: any[] = [];
       let totalScore = 0;
 
       // Chấm điểm theo rubric
@@ -146,7 +146,7 @@ export const CodeEditor = ({ starterCode, testCases, rubric, solution, onSubmit 
       {testResults.length > 0 && (
         <div className="bg-white rounded-2xl p-6 border-2 border-gray-200">
           <h4 className="font-bold text-white mb-4 flex items-center gap-2">
-            <Award className="w-5 h-5 text-yellow-600" />
+            <Award className="w-5 h-5 text-emerald-600" />
             Chi tiết chấm điểm
           </h4>
           <div className="space-y-2">
@@ -174,7 +174,7 @@ export const CodeEditor = ({ starterCode, testCases, rubric, solution, onSubmit 
           <div className="mt-4 pt-4 border-t-2 border-gray-200 flex justify-between items-center">
             <span className="text-lg font-bold text-white">Tổng điểm:</span>
             <span className={`text-3xl font-black ${
-              score >= 80 ? 'text-green-600' : score >= 60 ? 'text-yellow-600' : 'text-red-600'
+              score >= 80 ? 'text-green-600' : score >= 60 ? 'text-emerald-600' : 'text-red-600'
             }`}>
               {score}/100
             </span>
@@ -183,8 +183,8 @@ export const CodeEditor = ({ starterCode, testCases, rubric, solution, onSubmit 
       )}
 
       {/* Solution */}
-      <details className="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-6">
-        <summary className="font-bold text-yellow-900 cursor-pointer hover:text-yellow-700">
+      <details className="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-6">
+        <summary className="font-bold text-emerald-900 cursor-pointer hover:text-emerald-700">
           🔒 Xem lời giải mẫu (Click để mở)
         </summary>
         <pre className="mt-4 bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto text-sm font-mono">

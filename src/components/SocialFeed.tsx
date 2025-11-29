@@ -151,7 +151,7 @@ export const SocialFeed = () => {
     setPosting(true);
 
     try {
-      let mediaUrls: string[] = [];
+      const mediaUrls: string[] = [];
 
       // Upload images
       for (const file of newPostImages) {
@@ -176,7 +176,7 @@ export const SocialFeed = () => {
       setNewPostImages([]);
       setPreviewUrls([]);
       fetchPosts();
-    } catch (err) {
+    } catch {
       alert('Không thể đăng bài');
     }
     setPosting(false);
@@ -283,7 +283,7 @@ export const SocialFeed = () => {
       {/* Create post */}
       <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-4 mb-6 border border-gray-700">
         <div className="flex gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-yellow-400 to-orange-500 flex-shrink-0">
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-emerald-400 to-green-500 flex-shrink-0">
             {profile?.avatar_url ? (
               <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
             ) : (
@@ -297,7 +297,7 @@ export const SocialFeed = () => {
               value={newPostContent}
               onChange={(e) => setNewPostContent(e.target.value)}
               placeholder="Bạn đang nghĩ gì?"
-              className="w-full bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none resize-none"
+              className="w-full bg-gray-700/50 border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none resize-none"
               rows={3}
             />
             
@@ -328,14 +328,14 @@ export const SocialFeed = () => {
                 >
                   <ImageIcon className="w-5 h-5" />
                 </button>
-                <button className="p-2 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-yellow-400 transition-colors">
+                <button className="p-2 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-emerald-400 transition-colors">
                   <Smile className="w-5 h-5" />
                 </button>
               </div>
               <button
                 onClick={createPost}
                 disabled={posting || (!newPostContent.trim() && newPostImages.length === 0)}
-                className="px-6 py-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-xl font-bold disabled:opacity-50 hover:opacity-90 transition-all flex items-center gap-2"
+                className="px-6 py-2 bg-gradient-to-r from-emerald-400 to-green-500 text-gray-900 rounded-xl font-bold disabled:opacity-50 hover:opacity-90 transition-all flex items-center gap-2"
               >
                 {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 Đăng
@@ -348,7 +348,7 @@ export const SocialFeed = () => {
       {/* Posts */}
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-yellow-400 animate-spin" />
+          <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
         </div>
       ) : posts.length === 0 ? (
         <div className="text-center py-12">
@@ -376,7 +376,7 @@ export const SocialFeed = () => {
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-white">{post.user?.full_name || post.user?.username}</span>
                       {post.user?.level && (
-                        <span className="px-2 py-0.5 bg-yellow-400/20 text-yellow-400 text-xs rounded-full">Lv.{post.user.level}</span>
+                        <span className="px-2 py-0.5 bg-emerald-400/20 text-emerald-400 text-xs rounded-full">Lv.{post.user.level}</span>
                       )}
                     </div>
                     <span className="text-sm text-gray-500">{formatTime(post.created_at)}</span>
@@ -474,7 +474,7 @@ export const SocialFeed = () => {
                 <button
                   onClick={() => toggleSave(post.id)}
                   className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg transition-colors ${
-                    post.is_saved ? 'text-yellow-400 bg-yellow-400/10' : 'text-gray-400 hover:bg-gray-700'
+                    post.is_saved ? 'text-emerald-400 bg-emerald-400/10' : 'text-gray-400 hover:bg-gray-700'
                   }`}
                 >
                   <Bookmark className={`w-5 h-5 ${post.is_saved ? 'fill-current' : ''}`} />
@@ -534,7 +534,7 @@ export const SocialFeed = () => {
             {/* Comment input */}
             <div className="p-4 border-t border-gray-700">
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-yellow-400 to-orange-500 flex-shrink-0">
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-emerald-400 to-green-500 flex-shrink-0">
                   {profile?.avatar_url ? (
                     <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
                   ) : (
@@ -550,12 +550,12 @@ export const SocialFeed = () => {
                     onChange={(e) => setNewComment(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && addComment()}
                     placeholder="Viết bình luận..."
-                    className="flex-1 bg-gray-700 border border-gray-600 rounded-full px-4 py-2 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none text-sm"
+                    className="flex-1 bg-gray-700 border border-gray-600 rounded-full px-4 py-2 text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none text-sm"
                   />
                   <button
                     onClick={addComment}
                     disabled={!newComment.trim()}
-                    className="p-2 bg-yellow-400 rounded-full text-gray-900 disabled:opacity-50 hover:bg-yellow-500 transition-colors"
+                    className="p-2 bg-emerald-400 rounded-full text-gray-900 disabled:opacity-50 hover:bg-emerald-500 transition-colors"
                   >
                     <Send className="w-4 h-4" />
                   </button>

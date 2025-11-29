@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { BookOpen, Users, Clock, Star, Code2, Play, CheckCircle, Lock, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { BookOpen, Users, Clock, Star, Play, CheckCircle, Lock, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -102,7 +102,7 @@ export const Courses = () => {
             setExpandedSections(new Set([course.sections[0]?.id]));
           }
         }
-      } catch (e) {}
+      } catch {}
     }
   }, [courses]);
 
@@ -215,7 +215,7 @@ export const Courses = () => {
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'beginner': return 'bg-green-500';
-      case 'intermediate': return 'bg-yellow-500';
+      case 'intermediate': return 'bg-emerald-500';
       case 'advanced': return 'bg-red-500';
       default: return 'bg-gray-500';
     }
@@ -232,10 +232,10 @@ export const Courses = () => {
 
   const getLanguageGradient = (language: string) => {
     switch (language) {
-      case 'Python': return 'from-blue-500 to-yellow-500';
-      case 'JavaScript': return 'from-yellow-400 to-yellow-600';
+      case 'Python': return 'from-blue-500 to-emerald-500';
+      case 'JavaScript': return 'from-emerald-400 to-emerald-600';
       case 'React': return 'from-cyan-400 to-blue-500';
-      case 'Java': return 'from-red-500 to-orange-500';
+      case 'Java': return 'from-red-500 to-green-500';
       case 'C++': return 'from-blue-600 to-purple-600';
       default: return 'from-gray-500 to-gray-700';
     }
@@ -390,7 +390,7 @@ export const Courses = () => {
     return (
       <div className="max-w-7xl mx-auto">
         <div className="text-center py-12">
-          <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-gray-400">Đang tải khóa học...</p>
         </div>
       </div>
@@ -414,7 +414,7 @@ export const Courses = () => {
               onClick={() => setSelectedLanguage(lang)}
               className={`px-5 py-2.5 rounded-xl font-semibold whitespace-nowrap transition-all ${
                 selectedLanguage === lang
-                  ? 'bg-yellow-400 text-gray-900'
+                  ? 'bg-emerald-400 text-gray-900'
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
@@ -432,7 +432,7 @@ export const Courses = () => {
                 setSelectedCourse(course);
                 setExpandedSections(new Set([course.sections[0]?.id]));
               }}
-              className="bg-gray-800/50 rounded-2xl border border-gray-700 overflow-hidden hover:border-yellow-400/50 cursor-pointer transition-all hover:scale-[1.02]"
+              className="bg-gray-800/50 rounded-2xl border border-gray-700 overflow-hidden hover:border-emerald-400/50 cursor-pointer transition-all hover:scale-[1.02]"
             >
               {/* Header với ảnh nền */}
               <div 
@@ -469,7 +469,7 @@ export const Courses = () => {
                     {course.duration_hours}h
                   </span>
                   <span className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                    <Star className="w-4 h-4 text-emerald-400 fill-emerald-400" />
                     {course.rating}
                   </span>
                 </div>
@@ -478,7 +478,7 @@ export const Courses = () => {
                   {course.price_coins === 0 ? (
                     <span className="text-green-400 font-bold">Miễn phí</span>
                   ) : (
-                    <span className="text-yellow-400 font-bold">{course.price_coins} xu</span>
+                    <span className="text-emerald-400 font-bold">{course.price_coins} xu</span>
                   )}
                   <span className="text-sm text-gray-400">{getTotalLessons(course)} bài học</span>
                 </div>
@@ -536,7 +536,7 @@ export const Courses = () => {
             {selectedCourse.duration_hours} giờ
           </span>
           <span className="flex items-center gap-1">
-            <Star className="w-4 h-4 text-yellow-300 fill-yellow-300" />
+            <Star className="w-4 h-4 text-emerald-300 fill-emerald-300" />
             {selectedCourse.rating}
           </span>
           <span className="flex items-center gap-1">
@@ -561,15 +561,15 @@ export const Courses = () => {
         {/* Purchase button */}
         {!isPurchased && selectedCourse.price_coins > 0 && (
           <div className="space-y-4">
-            <div className="bg-orange-500/20 border border-orange-500/30 rounded-xl p-4">
-              <p className="text-orange-300 text-sm">
+            <div className="bg-green-500/20 border border-green-500/30 rounded-xl p-4">
+              <p className="text-green-300 text-sm">
                 🔒 <strong>Khóa học trả phí:</strong> Bạn cần mua khóa học này để truy cập tất cả bài học. 
                 Chỉ bài học đầu tiên được miễn phí để xem trước.
               </p>
             </div>
             <button
               onClick={() => handlePurchase(selectedCourse)}
-              className="px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-bold"
+              className="px-8 py-3 bg-emerald-400 hover:bg-emerald-500 text-gray-900 rounded-xl font-bold"
             >
               Mua khóa học - {selectedCourse.price_coins} xu
             </button>
@@ -602,8 +602,8 @@ export const Courses = () => {
       {!isPurchased && selectedCourse.price_coins > 0 && (
         <div className="bg-gray-800/50 rounded-xl border border-gray-700 p-6 mb-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-yellow-400/20 rounded-full flex items-center justify-center">
-              <Lock className="w-8 h-8 text-yellow-400" />
+            <div className="w-16 h-16 bg-emerald-400/20 rounded-full flex items-center justify-center">
+              <Lock className="w-8 h-8 text-emerald-400" />
             </div>
             <div>
               <h3 className="text-xl font-bold text-white mb-1">Mua khóa học để xem lộ trình đầy đủ</h3>
@@ -623,7 +623,7 @@ export const Courses = () => {
             >
               <div className="flex items-center gap-4">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold text-lg ${
-                  isPurchased ? 'bg-yellow-400 text-gray-900' : 'bg-gray-700 text-gray-400'
+                  isPurchased ? 'bg-emerald-400 text-gray-900' : 'bg-gray-700 text-gray-400'
                 }`}>
                   {isPurchased ? sIndex + 1 : <Lock className="w-5 h-5" />}
                 </div>
@@ -636,7 +636,7 @@ export const Courses = () => {
               </div>
               <div className="flex items-center gap-2">
                 {expandedSections.has(section.id) ? (
-                  <ChevronUp className="w-5 h-5 text-yellow-400" />
+                  <ChevronUp className="w-5 h-5 text-emerald-400" />
                 ) : (
                   <ChevronDown className="w-5 h-5 text-gray-400" />
                 )}
@@ -750,7 +750,7 @@ export const Courses = () => {
                   ) : (
                     <div className="aspect-video bg-gray-900 rounded-xl mb-6 flex items-center justify-center">
                       <div className="text-center">
-                        <Play className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+                        <Play className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
                         <p className="text-gray-400">Video: {selectedLesson.title}</p>
                         <p className="text-sm text-gray-500">Thời lượng: {formatDuration(selectedLesson.video_duration)}</p>
                       </div>
@@ -803,14 +803,14 @@ export const Courses = () => {
 
                   {/* Công ty sử dụng */}
                   {selectedLesson.content?.companies && selectedLesson.content.companies.length > 0 && (
-                    <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl p-5 mb-6">
-                      <h3 className="font-bold text-orange-400 mb-3 flex items-center gap-2">
+                    <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-5 mb-6">
+                      <h3 className="font-bold text-green-400 mb-3 flex items-center gap-2">
                         🏢 Các công ty lớn sử dụng Python
                       </h3>
                       <div className="grid grid-cols-2 gap-2">
                         {selectedLesson.content.companies.map((company, idx) => (
                           <div key={idx} className="flex items-center gap-2 text-gray-300 bg-gray-800/50 rounded-lg px-3 py-2">
-                            <span className="text-orange-400">✦</span>
+                            <span className="text-green-400">✦</span>
                             <span>{company}</span>
                           </div>
                         ))}
@@ -836,14 +836,14 @@ export const Courses = () => {
 
                   {/* Điểm quan trọng */}
                   {selectedLesson.content?.key_points && selectedLesson.content.key_points.length > 0 && (
-                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-5 mb-6">
-                      <h3 className="font-bold text-yellow-400 mb-3 flex items-center gap-2">
+                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5 mb-6">
+                      <h3 className="font-bold text-emerald-400 mb-3 flex items-center gap-2">
                         ⭐ Điểm quan trọng cần nhớ
                       </h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.key_points.map((point, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-gray-300">
-                            <span className="text-yellow-400 mt-1">✓</span>
+                            <span className="text-emerald-400 mt-1">✓</span>
                             <span>{point}</span>
                           </li>
                         ))}
@@ -901,7 +901,7 @@ export const Courses = () => {
                         setUserCode(e.target.value);
                         setSubmitResult(null);
                       }}
-                      className="w-full h-48 bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-xl border border-gray-700 focus:border-yellow-400 focus:outline-none resize-none"
+                      className="w-full h-48 bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-xl border border-gray-700 focus:border-emerald-400 focus:outline-none resize-none"
                       placeholder="Viết code của bạn ở đây..."
                       spellCheck={false}
                     />
@@ -942,12 +942,12 @@ export const Courses = () => {
 
                   {/* Gợi ý */}
                   {selectedLesson.content?.hints && selectedLesson.content.hints.length > 0 && (
-                    <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-5 mb-6">
-                      <h3 className="font-bold text-yellow-400 mb-3">💡 Gợi ý</h3>
+                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5 mb-6">
+                      <h3 className="font-bold text-emerald-400 mb-3">💡 Gợi ý</h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.hints.map((hint, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-gray-300">
-                            <span className="text-yellow-400">{idx + 1}.</span>
+                            <span className="text-emerald-400">{idx + 1}.</span>
                             <span>{hint}</span>
                           </li>
                         ))}

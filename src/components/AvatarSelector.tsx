@@ -85,7 +85,7 @@ export const AvatarSelector = ({ currentAvatar, onSelect, onClose }: AvatarSelec
                 onClick={() => setSelected(avatar.url)}
                 className={`relative aspect-square rounded-xl overflow-hidden border-3 transition-all hover:scale-105 ${
                   selected === avatar.url
-                    ? 'border-yellow-400 ring-2 ring-yellow-400/50'
+                    ? 'border-emerald-400 ring-2 ring-emerald-400/50'
                     : 'border-gray-700 hover:border-gray-500'
                 }`}
               >
@@ -95,8 +95,8 @@ export const AvatarSelector = ({ currentAvatar, onSelect, onClose }: AvatarSelec
                   className="w-full h-full object-cover bg-gray-800"
                 />
                 {selected === avatar.url && (
-                  <div className="absolute inset-0 bg-yellow-400/20 flex items-center justify-center">
-                    <div className="w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <div className="absolute inset-0 bg-emerald-400/20 flex items-center justify-center">
+                    <div className="w-6 h-6 bg-emerald-400 rounded-full flex items-center justify-center">
                       <Check className="w-4 h-4 text-gray-900" />
                     </div>
                   </div>
@@ -117,7 +117,7 @@ export const AvatarSelector = ({ currentAvatar, onSelect, onClose }: AvatarSelec
           <button
             onClick={handleConfirm}
             disabled={!selected}
-            className="px-6 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-xl font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-6 py-2.5 bg-emerald-400 hover:bg-emerald-500 text-gray-900 rounded-xl font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Xác nhận
           </button>

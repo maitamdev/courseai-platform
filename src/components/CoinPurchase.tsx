@@ -145,8 +145,8 @@ export const CoinPurchase = () => {
         {/* Features */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-[#0d1829] border border-gray-800 rounded-xl p-6 text-center">
-            <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-6 h-6 text-yellow-400" />
+            <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-6 h-6 text-emerald-400" />
             </div>
             <h3 className="text-white font-semibold mb-2">Tự Động Cộng Xu</h3>
             <p className="text-gray-500 text-sm">Xu được cộng ngay sau khi thanh toán thành công</p>

@@ -75,7 +75,7 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
 
   const levelColors = {
     beginner: 'bg-green-100 text-green-700',
-    intermediate: 'bg-yellow-100 text-yellow-700',
+    intermediate: 'bg-emerald-100 text-emerald-700',
     advanced: 'bg-red-100 text-red-700',
   };
 
@@ -105,7 +105,7 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
                 course.level === 'beginner'
                   ? 'from-green-400 to-blue-500'
                   : course.level === 'intermediate'
-                  ? 'from-yellow-400 to-orange-500'
+                  ? 'from-emerald-400 to-green-500'
                   : 'from-red-400 to-pink-500'
               } flex items-center justify-center`}>
                 <BookOpen className="w-16 h-16 text-white" />
@@ -127,7 +127,7 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
 
                 <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                   <span>{course.lessons_count} bài học</span>
-                  <div className="flex items-center gap-1 font-semibold text-orange-600">
+                  <div className="flex items-center gap-1 font-semibold text-green-600">
                     <Coins className="w-4 h-4" />
                     <span>{course.price} xu</span>
                   </div>
@@ -179,7 +179,7 @@ export const Shop = ({ onCoinsChange }: ShopProps) => {
               <div className="bg-gray-50 rounded-lg p-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-300">Giá:</span>
-                  <span className="font-semibold text-orange-600 flex items-center gap-1">
+                  <span className="font-semibold text-green-600 flex items-center gap-1">
                     <Coins className="w-4 h-4" />
                     {selectedCourse.price} xu
                   </span>

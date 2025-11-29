@@ -114,14 +114,14 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
     <div className="w-full">
       {/* Hero Section - Compact */}
       <section className="relative bg-gradient-to-r from-gray-800/80 to-gray-900/80 backdrop-blur-md rounded-2xl p-6 mb-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-yellow-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-transparent to-emerald-500/10"></div>
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-black text-white mb-2">🎮 Trung Tâm Trò Chơi</h1>
             <p className="text-gray-400">Học lập trình qua các trò chơi thú vị!</p>
           </div>
           <div className="flex gap-3">
-            <button onClick={onTreasureQuestClick} className="px-5 py-2.5 bg-yellow-500 hover:bg-yellow-600 text-gray-900 rounded-xl font-bold transition-all hover:scale-105 flex items-center gap-2">
+            <button onClick={onTreasureQuestClick} className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-gray-900 rounded-xl font-bold transition-all hover:scale-105 flex items-center gap-2">
               🏆 Kho Báu
             </button>
           </div>
@@ -131,7 +131,7 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
       {/* Featured Games - Code Hero Adventure */}
       <section className="mb-8">
         <h2 className="text-2xl font-black text-white mb-4 flex items-center gap-2">
-          <Star className="w-6 h-6 text-yellow-400" /> Game Nổi Bật
+          <Star className="w-6 h-6 text-emerald-400" /> Game Nổi Bật
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Code Hero Adventure Card */}
@@ -153,7 +153,7 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
                 </div>
               </div>
               {/* Badge */}
-              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 text-xs font-black rounded-full">
+              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-emerald-400 to-green-500 text-gray-900 text-xs font-black rounded-full">
                 🔥 HOT
               </div>
               <div className="absolute top-3 right-3 px-2 py-1 bg-purple-500/80 text-white text-xs font-bold rounded">
@@ -173,8 +173,8 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
                   <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded font-medium">Python</span>
                   <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded font-medium">Action</span>
                 </div>
-                <div className="flex items-center gap-1 text-yellow-400 text-sm">
-                  <Star className="w-4 h-4 fill-yellow-400" />
+                <div className="flex items-center gap-1 text-emerald-400 text-sm">
+                  <Star className="w-4 h-4 fill-emerald-400" />
                   <span className="font-bold">4.9</span>
                 </div>
               </div>
@@ -184,16 +184,16 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
           {/* Treasure Quest Card */}
           <div 
             onClick={onTreasureQuestClick}
-            className="group relative bg-gradient-to-br from-yellow-900/50 to-orange-900/50 rounded-2xl overflow-hidden border-2 border-yellow-500/30 hover:border-yellow-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-yellow-500/20"
+            className="group relative bg-gradient-to-br from-emerald-900/50 to-green-900/50 rounded-2xl overflow-hidden border-2 border-emerald-500/30 hover:border-emerald-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-emerald-500/20"
           >
-            <div className="relative h-40 bg-gradient-to-br from-yellow-600 to-orange-600 flex items-center justify-center">
+            <div className="relative h-40 bg-gradient-to-br from-emerald-600 to-green-600 flex items-center justify-center">
               <div className="text-6xl group-hover:scale-110 transition-transform">🗺️</div>
               <div className="absolute top-3 left-3 px-3 py-1 bg-white/20 text-white text-xs font-bold rounded-full">
                 ⭐ Popular
               </div>
             </div>
             <div className="p-4">
-              <h3 className="text-xl font-black text-white mb-1 group-hover:text-yellow-400 transition-colors">
+              <h3 className="text-xl font-black text-white mb-1 group-hover:text-emerald-400 transition-colors">
                 Kho Báu Bị Mất
               </h3>
               <p className="text-gray-400 text-sm mb-3">
@@ -201,11 +201,11 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
               </p>
               <div className="flex items-center justify-between">
                 <div className="flex gap-2">
-                  <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded font-medium">Puzzle</span>
-                  <span className="px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded font-medium">Adventure</span>
+                  <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs rounded font-medium">Puzzle</span>
+                  <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded font-medium">Adventure</span>
                 </div>
-                <div className="flex items-center gap-1 text-yellow-400 text-sm">
-                  <Star className="w-4 h-4 fill-yellow-400" />
+                <div className="flex items-center gap-1 text-emerald-400 text-sm">
+                  <Star className="w-4 h-4 fill-emerald-400" />
                   <span className="font-bold">4.8</span>
                 </div>
               </div>
@@ -223,7 +223,7 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
                 <div className="w-14 h-14 bg-purple-500 rounded-lg flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
                   <span className="text-3xl">🧙</span>
                 </div>
-                <Sword className="w-10 h-10 text-yellow-400 animate-pulse" />
+                <Sword className="w-10 h-10 text-emerald-400 animate-pulse" />
                 <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
                   <span className="text-2xl">👹</span>
                 </div>
@@ -247,8 +247,8 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
                   <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded font-medium">Python</span>
                   <span className="px-2 py-1 bg-pink-500/20 text-pink-400 text-xs rounded font-medium">RPG</span>
                 </div>
-                <div className="flex items-center gap-1 text-yellow-400 text-sm">
-                  <Star className="w-4 h-4 fill-yellow-400" />
+                <div className="flex items-center gap-1 text-emerald-400 text-sm">
+                  <Star className="w-4 h-4 fill-emerald-400" />
                   <span className="font-bold">4.9</span>
                 </div>
               </div>
@@ -282,18 +282,18 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
           </div>
 
           {/* HTML Builder */}
-          <div className="group bg-gradient-to-br from-orange-900/30 to-red-900/30 rounded-xl overflow-hidden border border-orange-500/20 opacity-80">
-            <div className="h-32 bg-gradient-to-br from-orange-700/50 to-red-800/50 flex items-center justify-center relative">
+          <div className="group bg-gradient-to-br from-green-900/30 to-red-900/30 rounded-xl overflow-hidden border border-green-500/20 opacity-80">
+            <div className="h-32 bg-gradient-to-br from-green-700/50 to-red-800/50 flex items-center justify-center relative">
               <span className="text-4xl">🏗️</span>
               <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                <span className="px-3 py-1.5 bg-orange-600/80 text-white text-xs font-bold rounded-lg">Coming Soon</span>
+                <span className="px-3 py-1.5 bg-green-600/80 text-white text-xs font-bold rounded-lg">Coming Soon</span>
               </div>
             </div>
             <div className="p-3">
               <h3 className="font-bold text-white mb-1">HTML Builder</h3>
               <p className="text-gray-400 text-xs mb-2">Xây dựng website từ các khối</p>
               <div className="flex gap-1">
-                <span className="px-1.5 py-0.5 bg-orange-500/20 text-orange-400 text-[10px] rounded">HTML</span>
+                <span className="px-1.5 py-0.5 bg-green-500/20 text-green-400 text-[10px] rounded">HTML</span>
                 <span className="px-1.5 py-0.5 bg-red-500/20 text-red-400 text-[10px] rounded">CSS</span>
               </div>
             </div>
@@ -348,14 +348,14 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
               const isCompleted = levelProgress?.completed || false;
               return (
                 <div key={level.id} onClick={() => isUnlocked && setSelectedLevel(level)}
-                  className="bg-gray-800/70 rounded-xl overflow-hidden border border-gray-700 hover:border-yellow-400 transition-all hover:scale-105 cursor-pointer group">
+                  className="bg-gray-800/70 rounded-xl overflow-hidden border border-gray-700 hover:border-emerald-400 transition-all hover:scale-105 cursor-pointer group">
                   <div className="relative h-32 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
                     {!isUnlocked && <div className="absolute inset-0 bg-black/60 flex items-center justify-center"><Lock className="w-10 h-10 text-gray-400" /></div>}
-                    <Gamepad2 className="w-12 h-12 text-yellow-400 opacity-50 group-hover:opacity-100" />
-                    {isCompleted && <Trophy className="absolute top-2 right-2 w-5 h-5 text-yellow-400" />}
+                    <Gamepad2 className="w-12 h-12 text-emerald-400 opacity-50 group-hover:opacity-100" />
+                    {isCompleted && <Trophy className="absolute top-2 right-2 w-5 h-5 text-emerald-400" />}
                   </div>
                   <div className="p-3">
-                    <h3 className="font-bold text-white text-sm mb-1 group-hover:text-yellow-400">{level.title}</h3>
+                    <h3 className="font-bold text-white text-sm mb-1 group-hover:text-emerald-400">{level.title}</h3>
                     <p className="text-gray-400 text-xs line-clamp-2">{level.description}</p>
                   </div>
                 </div>

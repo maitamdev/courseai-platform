@@ -130,7 +130,7 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
 
   const difficultyColors = {
     easy: 'bg-green-100 text-green-700 border-green-300',
-    medium: 'bg-yellow-100 text-yellow-700 border-yellow-300',
+    medium: 'bg-emerald-100 text-emerald-700 border-emerald-300',
     hard: 'bg-red-100 text-red-700 border-red-300'
   };
 
@@ -176,16 +176,16 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border-2 border-yellow-200">
+              <div className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl p-6 border-2 border-emerald-200">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                    <Lightbulb className="w-6 h-6 text-yellow-600" />
+                    <Lightbulb className="w-6 h-6 text-emerald-600" />
                     Gợi ý
                   </h3>
                   {!showHints && (
                     <button
                       onClick={() => setShowHints(true)}
-                      className="px-4 py-2 bg-yellow-500 text-white rounded-xl font-bold hover:bg-yellow-600 transition-all text-sm"
+                      className="px-4 py-2 bg-emerald-500 text-white rounded-xl font-bold hover:bg-emerald-600 transition-all text-sm"
                     >
                       Xem gợi ý
                     </button>
@@ -195,14 +195,14 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
                 {showHints ? (
                   <div className="space-y-3">
                     {hints.slice(0, currentHint + 1).map((hint, index) => (
-                      <div key={index} className="bg-white rounded-xl p-4 border-2 border-yellow-300">
+                      <div key={index} className="bg-white rounded-xl p-4 border-2 border-emerald-300">
                         <span className="text-gray-300">💡 {hint}</span>
                       </div>
                     ))}
                     {currentHint < hints.length - 1 && (
                       <button
                         onClick={showNextHint}
-                        className="w-full px-4 py-2 bg-white border-2 border-yellow-300 text-yellow-700 rounded-xl font-bold hover:bg-yellow-50 transition-all"
+                        className="w-full px-4 py-2 bg-white border-2 border-emerald-300 text-emerald-700 rounded-xl font-bold hover:bg-emerald-50 transition-all"
                       >
                         Gợi ý tiếp theo
                       </button>
@@ -222,7 +222,7 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
                 </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-white rounded-xl p-4 text-center border-2 border-green-300">
-                    <Coins className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
+                    <Coins className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
                     <p className="text-2xl font-black text-white">+{level.coins_reward}</p>
                     <p className="text-sm text-gray-300">Xu</p>
                   </div>
@@ -240,7 +240,7 @@ export const GameLevelPlayer = ({ level, onClose, onComplete }: GameLevelPlayerP
                 <div className="bg-gray-800 px-4 py-3 flex items-center gap-2 border-b-2 border-gray-700">
                   <div className="flex gap-2">
                     <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   </div>
                   <span className="text-gray-400 text-sm ml-2">code-editor.js</span>

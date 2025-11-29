@@ -143,7 +143,7 @@ export const FriendChat = ({ friendId, friendName, friendUsername, onClose }: Fr
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-700">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center">
               <span className="text-xl font-black text-white">
                 {friendUsername?.[0]?.toUpperCase() || '?'}
               </span>
@@ -180,7 +180,7 @@ export const FriendChat = ({ friendId, friendName, friendUsername, onClose }: Fr
                   <div
                     className={`max-w-[70%] rounded-2xl px-4 py-3 ${
                       isSender
-                        ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-white'
+                        ? 'bg-gradient-to-r from-emerald-400 to-emerald-500 text-white'
                         : 'bg-gray-800 text-white'
                     }`}
                   >
@@ -209,13 +209,13 @@ export const FriendChat = ({ friendId, friendName, friendUsername, onClose }: Fr
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Nhập tin nhắn..."
-              className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:border-yellow-400 focus:outline-none"
+              className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-400 focus:border-emerald-400 focus:outline-none"
               disabled={sending}
             />
             <button
               type="submit"
               disabled={!newMessage.trim() || sending}
-              className="px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-6 py-3 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <Send className="w-5 h-5" />
               Gửi

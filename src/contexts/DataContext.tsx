@@ -206,7 +206,6 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     if (!hasFetchedFriends && friends.length === 0) {
       fetchFriends();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty deps - only run once on mount
   
   return (

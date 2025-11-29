@@ -147,7 +147,7 @@ export const Events = () => {
       setQuestionStartTime(Date.now());
       setSelectedAnswer(null);
       setAnswerResult(null);
-    } catch (err) {
+    } catch {
       alert('Không thể tham gia sự kiện');
     }
     setLoading(false);
@@ -243,7 +243,7 @@ export const Events = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'bg-green-500';
-      case 'upcoming': return 'bg-yellow-500';
+      case 'upcoming': return 'bg-emerald-500';
       case 'ended': return 'bg-gray-500';
       default: return 'bg-gray-500';
     }
@@ -273,7 +273,7 @@ export const Events = () => {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">{myScore}</div>
+                <div className="text-2xl font-bold text-emerald-400">{myScore}</div>
                 <div className="text-xs text-gray-400">Điểm</div>
               </div>
               <div className={`text-center px-4 py-2 rounded-xl ${timeLeft <= 10 ? 'bg-red-500/20 text-red-400' : 'bg-gray-700'}`}>
@@ -285,7 +285,7 @@ export const Events = () => {
           {/* Progress bar */}
           <div className="mt-4 h-2 bg-gray-700 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all"
+              className="h-full bg-gradient-to-r from-emerald-400 to-green-500 transition-all"
               style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
             />
           </div>
@@ -294,7 +294,7 @@ export const Events = () => {
         {/* Question */}
         <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-8 border border-gray-700">
           <div className="flex items-center gap-2 mb-4">
-            <span className="px-3 py-1 bg-yellow-400/20 text-yellow-400 rounded-full text-sm font-medium">
+            <span className="px-3 py-1 bg-emerald-400/20 text-emerald-400 rounded-full text-sm font-medium">
               +{currentQuestion.points} điểm
             </span>
           </div>
@@ -312,7 +312,7 @@ export const Events = () => {
                 if (isCorrect) bgClass = 'bg-green-500/20 border-green-500';
                 else if (isWrong) bgClass = 'bg-red-500/20 border-red-500';
               } else if (isSelected) {
-                bgClass = 'bg-yellow-400/20 border-yellow-400';
+                bgClass = 'bg-emerald-400/20 border-emerald-400';
               }
               
               return (
@@ -341,7 +341,7 @@ export const Events = () => {
               <button
                 onClick={handleSubmitAnswer}
                 disabled={!selectedAnswer}
-                className="px-8 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 rounded-xl font-bold disabled:opacity-50 hover:opacity-90 transition-all"
+                className="px-8 py-3 bg-gradient-to-r from-emerald-400 to-green-500 text-gray-900 rounded-xl font-bold disabled:opacity-50 hover:opacity-90 transition-all"
               >
                 Xác nhận
               </button>
@@ -370,18 +370,18 @@ export const Events = () => {
         </button>
 
         {/* Result card */}
-        <div className="bg-gradient-to-br from-yellow-400/20 to-orange-500/20 backdrop-blur-lg rounded-2xl p-8 mb-6 border border-yellow-400/30 text-center">
-          <Trophy className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+        <div className="bg-gradient-to-br from-emerald-400/20 to-green-500/20 backdrop-blur-lg rounded-2xl p-8 mb-6 border border-emerald-400/30 text-center">
+          <Trophy className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
           <h2 className="text-3xl font-bold text-white mb-2">Hoàn thành!</h2>
           <p className="text-gray-300 mb-4">{selectedEvent.title}</p>
-          <div className="text-5xl font-black text-yellow-400 mb-2">{myScore}</div>
+          <div className="text-5xl font-black text-emerald-400 mb-2">{myScore}</div>
           <p className="text-gray-400">điểm</p>
         </div>
 
         {/* Leaderboard */}
         <div className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-6 border border-gray-700">
           <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <Medal className="w-6 h-6 text-yellow-400" />
+            <Medal className="w-6 h-6 text-emerald-400" />
             Bảng xếp hạng
           </h3>
           
@@ -391,17 +391,17 @@ export const Events = () => {
             <div className="space-y-3">
               {leaderboard.map((entry, idx) => {
                 const isMe = entry.user_id === user?.id;
-                const medalColors = ['text-yellow-400', 'text-gray-300', 'text-orange-400'];
+                const medalColors = ['text-emerald-400', 'text-gray-300', 'text-green-400'];
                 
                 return (
                   <div
                     key={entry.user_id}
                     className={`flex items-center gap-4 p-4 rounded-xl ${
-                      isMe ? 'bg-yellow-400/10 border border-yellow-400/30' : 'bg-gray-700/30'
+                      isMe ? 'bg-emerald-400/10 border border-emerald-400/30' : 'bg-gray-700/30'
                     }`}
                   >
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      idx < 3 ? 'bg-gradient-to-br from-yellow-400 to-orange-500 text-gray-900' : 'bg-gray-700 text-white'
+                      idx < 3 ? 'bg-gradient-to-br from-emerald-400 to-green-500 text-gray-900' : 'bg-gray-700 text-white'
                     }`}>
                       {idx < 3 ? <Medal className={`w-5 h-5 ${medalColors[idx]}`} /> : entry.rank}
                     </div>
@@ -424,7 +424,7 @@ export const Events = () => {
                     </div>
                     
                     <div className="text-right">
-                      <div className="text-xl font-bold text-yellow-400">{entry.score}</div>
+                      <div className="text-xl font-bold text-emerald-400">{entry.score}</div>
                       <div className="text-xs text-gray-400">điểm</div>
                     </div>
                   </div>
@@ -443,7 +443,7 @@ export const Events = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-black text-white mb-2 flex items-center gap-3">
-          <Trophy className="w-10 h-10 text-yellow-400" />
+          <Trophy className="w-10 h-10 text-emerald-400" />
           Sự kiện thi đấu
         </h1>
         <p className="text-gray-400">Tham gia các cuộc thi để giành phần thưởng hấp dẫn!</p>
@@ -482,8 +482,8 @@ export const Events = () => {
                 </div>
 
                 <div className="flex items-center gap-2 mb-4">
-                  <Award className="w-4 h-4 text-yellow-400" />
-                  <span className="text-yellow-400 text-sm">
+                  <Award className="w-4 h-4 text-emerald-400" />
+                  <span className="text-emerald-400 text-sm">
                     Top 1: {event.rewards?.['1']} xu | Top 2: {event.rewards?.['2']} xu | Top 3: {event.rewards?.['3']} xu
                   </span>
                 </div>
@@ -505,21 +505,21 @@ export const Events = () => {
       {/* Upcoming events */}
       {events.filter(e => e.status === 'upcoming').length > 0 && (
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-yellow-400 mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-emerald-400 mb-4 flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             Sắp diễn ra
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {events.filter(e => e.status === 'upcoming').map(event => (
-              <div key={event.id} className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-6 border border-gray-700 hover:border-yellow-400/50 transition-all">
+              <div key={event.id} className="bg-gray-800/50 backdrop-blur-lg rounded-2xl p-6 border border-gray-700 hover:border-emerald-400/50 transition-all">
                 <span className={`px-3 py-1 ${getStatusColor(event.status)} text-white text-xs font-bold rounded-full`}>
                   {getStatusText(event.status)}
                 </span>
                 <h3 className="text-lg font-bold text-white mt-3">{event.title}</h3>
                 <p className="text-gray-400 text-sm mt-1 line-clamp-2">{event.description}</p>
                 
-                <div className="mt-4 p-3 bg-yellow-400/10 rounded-xl">
-                  <div className="flex items-center gap-2 text-yellow-400">
+                <div className="mt-4 p-3 bg-emerald-400/10 rounded-xl">
+                  <div className="flex items-center gap-2 text-emerald-400">
                     <Clock className="w-4 h-4" />
                     <span className="font-bold">{formatCountdown(event.start_time)}</span>
                   </div>
@@ -529,7 +529,7 @@ export const Events = () => {
                 </div>
 
                 <div className="mt-4 text-sm text-gray-400">
-                  <Award className="w-4 h-4 inline mr-1 text-yellow-400" />
+                  <Award className="w-4 h-4 inline mr-1 text-emerald-400" />
                   Top 1: {event.rewards?.['1']} xu
                 </div>
               </div>

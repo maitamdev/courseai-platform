@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, X, UserPlus, MessageCircle, Trophy, Gift, Coins, Check, Trash2 } from 'lucide-react';
+import { Bell, X, UserPlus, MessageCircle, Trophy, Gift, Check, Trash2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 type Notification = {
@@ -75,7 +75,7 @@ export const Notifications = () => {
     switch (type) {
       case 'friend_request': return <UserPlus className="w-5 h-5 text-blue-400" />;
       case 'message': return <MessageCircle className="w-5 h-5 text-green-400" />;
-      case 'achievement': return <Trophy className="w-5 h-5 text-yellow-400" />;
+      case 'achievement': return <Trophy className="w-5 h-5 text-emerald-400" />;
       case 'reward': return <Gift className="w-5 h-5 text-pink-400" />;
       default: return <Bell className="w-5 h-5 text-gray-400" />;
     }

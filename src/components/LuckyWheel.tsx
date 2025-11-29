@@ -119,12 +119,12 @@ export const LuckyWheel = () => {
       <div className="relative w-64 h-64 mx-auto mb-6">
         {/* Pointer */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
-          <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[25px] border-l-transparent border-r-transparent border-t-yellow-400"></div>
+          <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[25px] border-l-transparent border-r-transparent border-t-emerald-400"></div>
         </div>
         
         {/* Wheel */}
         <div
-          className="w-full h-full rounded-full border-4 border-yellow-400 overflow-hidden transition-transform duration-[4000ms] ease-out"
+          className="w-full h-full rounded-full border-4 border-emerald-400 overflow-hidden transition-transform duration-[4000ms] ease-out"
           style={{ transform: `rotate(${rotation}deg)` }}
         >
           <svg viewBox="0 0 100 100" className="w-full h-full">
@@ -171,7 +171,7 @@ export const LuckyWheel = () => {
             spinning
               ? 'bg-gray-600 cursor-not-allowed'
               : freeSpins > 0
-              ? 'bg-gradient-to-br from-yellow-400 to-orange-500 hover:scale-110 shadow-lg shadow-yellow-500/50'
+              ? 'bg-gradient-to-br from-emerald-400 to-green-500 hover:scale-110 shadow-lg shadow-emerald-500/50'
               : 'bg-gray-600 cursor-not-allowed'
           }`}
         >

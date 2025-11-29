@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Code2, Sparkles, Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, X, QrCode, Gift, Calendar, MoreHorizontal, Search } from 'lucide-react';
+import { Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, X, QrCode, Gift, Calendar, MoreHorizontal, Search } from 'lucide-react';
 import { QRTopup } from './QRTopup';
 import { Notifications } from './Notifications';
 import { SearchModal } from './SearchModal';
@@ -90,12 +90,15 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
         <div className="flex items-center justify-between gap-2 md:gap-6">
           {/* Logo - Left */}
           <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
-            <div className="flex items-center gap-1 relative">
-              <Code2 className="w-7 md:w-9 h-7 md:h-9 text-white drop-shadow-lg" />
-              <Sparkles className="w-5 md:w-7 h-5 md:h-7 text-yellow-300 drop-shadow-lg animate-pulse hidden sm:block" />
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="CodeMind AI" 
+              className="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-lg"
+            />
             <div className="hidden sm:block">
-              <h1 className="text-lg md:text-2xl font-black text-white drop-shadow-lg">CodeMind AI</h1>
+              <h1 className="text-lg md:text-2xl font-black text-white drop-shadow-lg">
+                <span className="text-[#c4e538]">CODE</span><span className="text-white">MIND</span>
+              </h1>
               <p className="text-[10px] md:text-xs text-white/80 font-medium hidden md:block">Học lập trình với AI</p>
             </div>
           </div>
@@ -114,7 +117,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                     onClick={() => onTabChange(item.id)}
                     className={`relative flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold transition-all whitespace-nowrap text-sm ${
                       isActive
-                        ? 'bg-yellow-400 text-gray-900 shadow-lg'
+                        ? 'bg-emerald-400 text-gray-900 shadow-lg'
                         : 'text-white/90 hover:bg-gray-700/50 hover:text-white'
                     }`}
                   >
@@ -152,7 +155,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             {/* Coin button - Compact on mobile */}
             <button
               onClick={() => setShowCoinModal(true)}
-              className="group relative bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-gray-900 px-2 md:pl-3 md:pr-4 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2 shadow-lg hover:shadow-amber-500/40 transition-all cursor-pointer overflow-hidden"
+              className="group relative bg-gradient-to-r from-emerald-500 via-green-400 to-emerald-500 text-gray-900 px-2 md:pl-3 md:pr-4 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2 shadow-lg hover:shadow-emerald-500/40 transition-all cursor-pointer overflow-hidden"
               title="Bấm để nạp xu"
             >
               <span className="text-base md:text-lg">🪙</span>
@@ -228,7 +231,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                 key={item.id}
                 onClick={() => { onTabChange(item.id); setShowMoreMenu(false); }}
                 className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all ${
-                  isActive ? 'text-yellow-400' : 'text-gray-400'
+                  isActive ? 'text-emerald-400' : 'text-gray-400'
                 }`}
               >
                 <div className="relative">
@@ -248,7 +251,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
           <button
             onClick={() => setShowMoreMenu(!showMoreMenu)}
             className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all ${
-              showMoreMenu ? 'text-yellow-400' : 'text-gray-400'
+              showMoreMenu ? 'text-emerald-400' : 'text-gray-400'
             }`}
           >
             <MoreHorizontal className="w-5 h-5" />
@@ -270,7 +273,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                     key={item.id}
                     onClick={() => { onTabChange(item.id); setShowMoreMenu(false); }}
                     className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all ${
-                      isActive ? 'bg-yellow-400/20 text-yellow-400' : 'text-gray-400 hover:bg-gray-800'
+                      isActive ? 'bg-emerald-400/20 text-emerald-400' : 'text-gray-400 hover:bg-gray-800'
                     }`}
                   >
                     <div className="relative">
@@ -289,7 +292,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               <button
                 onClick={() => { onTabChange('profile'); setShowMoreMenu(false); }}
                 className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all ${
-                  activeTab === 'profile' ? 'bg-yellow-400/20 text-yellow-400' : 'text-gray-400 hover:bg-gray-800'
+                  activeTab === 'profile' ? 'bg-emerald-400/20 text-emerald-400' : 'text-gray-400 hover:bg-gray-800'
                 }`}
               >
                 <User className="w-6 h-6" />
@@ -316,12 +319,12 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             {/* Modal Header */}
             <div className="sticky top-0 bg-[#0a0f1a] border-b border-gray-700 px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-yellow-500/20 rounded-xl flex items-center justify-center">
-                  <Coins className="w-5 h-5 text-yellow-400" />
+                <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+                  <Coins className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white">Nạp Xu</h2>
-                  <p className="text-sm text-gray-400">Số dư: <span className="text-yellow-400 font-bold">{profile?.total_coins || 0} xu</span></p>
+                  <p className="text-sm text-gray-400">Số dư: <span className="text-emerald-400 font-bold">{profile?.total_coins || 0} xu</span></p>
                 </div>
               </div>
               <button

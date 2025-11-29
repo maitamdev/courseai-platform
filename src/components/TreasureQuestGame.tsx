@@ -88,14 +88,14 @@ export const TreasureQuestGame = () => {
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30"></div>
           
           <div className="relative z-10 px-8 py-20 text-center">
-            <div className="inline-flex items-center gap-2 bg-yellow-400/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-yellow-400/30">
-              <Sparkles className="w-5 h-5 text-yellow-400" />
-              <span className="text-yellow-400 font-bold">Trò Chơi Phiêu Lưu Lập Trình</span>
+            <div className="inline-flex items-center gap-2 bg-emerald-400/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-emerald-400/30">
+              <Sparkles className="w-5 h-5 text-emerald-400" />
+              <span className="text-emerald-400 font-bold">Trò Chơi Phiêu Lưu Lập Trình</span>
             </div>
 
             <h1 className="text-6xl font-black text-white mb-6 leading-tight">
               Code Quest:<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-500">
                 Kho Báu Bị Mất
               </span>
             </h1>
@@ -107,7 +107,7 @@ export const TreasureQuestGame = () => {
 
             <button
               onClick={handleStartGame}
-              className="group px-10 py-5 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white rounded-xl font-black text-xl transition-all hover:scale-105 shadow-2xl inline-flex items-center gap-3"
+              className="group px-10 py-5 bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-white rounded-xl font-black text-xl transition-all hover:scale-105 shadow-2xl inline-flex items-center gap-3"
             >
               <span>Bắt Đầu Cuộc Phiêu Lưu</span>
               <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
@@ -115,15 +115,15 @@ export const TreasureQuestGame = () => {
 
             <div className="mt-12 flex items-center justify-center gap-8 text-sm">
               <div className="flex items-center gap-2 text-gray-400">
-                <Trophy className="w-5 h-5 text-yellow-400" />
+                <Trophy className="w-5 h-5 text-emerald-400" />
                 <span>3 Thử Thách</span>
               </div>
               <div className="flex items-center gap-2 text-gray-400">
-                <Zap className="w-5 h-5 text-yellow-400" />
+                <Zap className="w-5 h-5 text-emerald-400" />
                 <span>450 Xu Thưởng</span>
               </div>
               <div className="flex items-center gap-2 text-gray-400">
-                <Star className="w-5 h-5 text-yellow-400" />
+                <Star className="w-5 h-5 text-emerald-400" />
                 <span>Học Python</span>
               </div>
             </div>
@@ -132,7 +132,7 @@ export const TreasureQuestGame = () => {
 
         {/* Features Section */}
         <section className="grid md:grid-cols-3 gap-6">
-          <div className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 hover:border-yellow-400 transition-all group">
+          <div className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 hover:border-emerald-400 transition-all group">
             <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Code className="w-8 h-8 text-white" />
             </div>
@@ -142,7 +142,7 @@ export const TreasureQuestGame = () => {
             </p>
           </div>
 
-          <div className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 hover:border-yellow-400 transition-all group">
+          <div className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 hover:border-emerald-400 transition-all group">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Puzzle className="w-8 h-8 text-white" />
             </div>
@@ -152,8 +152,8 @@ export const TreasureQuestGame = () => {
             </p>
           </div>
 
-          <div className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 hover:border-yellow-400 transition-all group">
-            <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+          <div className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-8 border border-gray-700 hover:border-emerald-400 transition-all group">
+            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Map className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-3">Khám Phá Bản Đồ Động</h3>
@@ -169,8 +169,8 @@ export const TreasureQuestGame = () => {
   if (stage === 'completed') {
     return (
       <div className="w-full">
-        <div className="bg-gradient-to-br from-yellow-400/20 to-orange-500/20 backdrop-blur-lg rounded-3xl p-12 border-2 border-yellow-400 text-center">
-          <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
+        <div className="bg-gradient-to-br from-emerald-400/20 to-green-500/20 backdrop-blur-lg rounded-3xl p-12 border-2 border-emerald-400 text-center">
+          <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
             <Trophy className="w-12 h-12 text-white" />
           </div>
           
@@ -183,7 +183,7 @@ export const TreasureQuestGame = () => {
           </p>
 
           <div className="bg-gray-900/50 rounded-2xl p-8 mb-8 inline-block">
-            <div className="text-6xl font-black text-yellow-400 mb-2">
+            <div className="text-6xl font-black text-emerald-400 mb-2">
               {score}
             </div>
             <div className="text-xl text-gray-400">Xu Thưởng</div>
@@ -192,7 +192,7 @@ export const TreasureQuestGame = () => {
           <div className="flex gap-4 justify-center">
             <button
               onClick={handleStartGame}
-              className="px-8 py-4 bg-yellow-400 hover:bg-yellow-500 text-white rounded-xl font-bold transition-all hover:scale-105"
+              className="px-8 py-4 bg-emerald-400 hover:bg-emerald-500 text-white rounded-xl font-bold transition-all hover:scale-105"
             >
               Chơi Lại
             </button>
@@ -219,13 +219,13 @@ export const TreasureQuestGame = () => {
           <span className="text-sm font-bold text-gray-400">
             Thử Thách {currentChallenge + 1}/{challenges.length}
           </span>
-          <span className="text-sm font-bold text-yellow-400">
+          <span className="text-sm font-bold text-emerald-400">
             {score} Xu
           </span>
         </div>
         <div className="w-full bg-gray-800 rounded-full h-3">
           <div
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-emerald-400 to-green-500 h-3 rounded-full transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -235,7 +235,7 @@ export const TreasureQuestGame = () => {
         {/* Challenge Info */}
         <div className="bg-gray-800/70 backdrop-blur-lg rounded-2xl p-8 border border-gray-700">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-green-500 rounded-xl flex items-center justify-center">
               <Lock className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -259,11 +259,11 @@ export const TreasureQuestGame = () => {
           </div>
 
           {showHint && (
-            <div className="bg-yellow-400/10 border border-yellow-400/30 rounded-xl p-4 mb-4">
+            <div className="bg-emerald-400/10 border border-emerald-400/30 rounded-xl p-4 mb-4">
               <div className="flex items-start gap-2">
-                <Sparkles className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                <Sparkles className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <div className="font-bold text-yellow-400 mb-1">Gợi ý:</div>
+                  <div className="font-bold text-emerald-400 mb-1">Gợi ý:</div>
                   <div className="text-gray-300 text-sm">{challenge.hint}</div>
                 </div>
               </div>
@@ -294,7 +294,7 @@ export const TreasureQuestGame = () => {
               onChange={(e) => setUserCode(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
               placeholder="Nhập câu trả lời..."
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none font-mono text-lg"
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:border-emerald-400 focus:outline-none font-mono text-lg"
             />
           </div>
 
@@ -310,7 +310,7 @@ export const TreasureQuestGame = () => {
 
           <button
             onClick={handleSubmit}
-            className="w-full py-4 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white rounded-xl font-black text-lg transition-all hover:scale-105 shadow-xl"
+            className="w-full py-4 bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-500 hover:to-green-600 text-white rounded-xl font-black text-lg transition-all hover:scale-105 shadow-xl"
           >
             Kiểm Tra Đáp Án
           </button>
@@ -325,7 +325,7 @@ export const TreasureQuestGame = () => {
                     index < currentChallenge
                       ? 'bg-green-500'
                       : index === currentChallenge
-                      ? 'bg-yellow-400'
+                      ? 'bg-emerald-400'
                       : 'bg-gray-700'
                   }`}
                 />

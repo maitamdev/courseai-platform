@@ -34,14 +34,14 @@ export const TreasureMap = ({ treasures, foundTreasures, userProgress, onTreasur
   });
 
   return (
-    <div className="bg-gradient-to-br from-amber-100 via-orange-50 to-yellow-100 rounded-3xl shadow-2xl p-8 border-4 border-amber-700 relative overflow-hidden animate-slide-up">
+    <div className="bg-gradient-to-br from-emerald-100 via-green-50 to-emerald-100 rounded-3xl shadow-2xl p-8 border-4 border-emerald-700 relative overflow-hidden animate-slide-up">
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-20 h-20 bg-yellow-400 rounded-full blur-2xl animate-blob"></div>
-        <div className="absolute bottom-10 right-10 w-32 h-32 bg-orange-400 rounded-full blur-2xl animate-blob animation-delay-2000"></div>
+        <div className="absolute top-10 left-10 w-20 h-20 bg-emerald-400 rounded-full blur-2xl animate-blob"></div>
+        <div className="absolute bottom-10 right-10 w-32 h-32 bg-green-400 rounded-full blur-2xl animate-blob animation-delay-2000"></div>
       </div>
 
       <div className="flex justify-between items-center mb-6 relative z-10">
-        <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-800 to-orange-600 drop-shadow-lg">
+        <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-800 to-green-600 drop-shadow-lg">
           Bản Đồ Kho Báu
         </h2>
         <div className="flex gap-4 text-sm flex-wrap">
@@ -60,7 +60,7 @@ export const TreasureMap = ({ treasures, foundTreasures, userProgress, onTreasur
         </div>
       </div>
 
-      <div className="relative bg-gradient-to-br from-blue-300 via-emerald-200 to-yellow-300 rounded-2xl h-[500px] overflow-hidden border-4 border-amber-800 shadow-inner">
+      <div className="relative bg-gradient-to-br from-blue-300 via-emerald-200 to-emerald-300 rounded-2xl h-[500px] overflow-hidden border-4 border-emerald-800 shadow-inner">
         <svg
           className="absolute inset-0 w-full h-full"
           viewBox="0 0 800 500"

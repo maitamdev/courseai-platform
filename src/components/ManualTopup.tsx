@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Upload, Copy, Check, AlertCircle, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Copy, Check, AlertCircle, Clock, CheckCircle, XCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -20,7 +20,7 @@ type TopupRequest = {
   created_at: string;
 };
 
-export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
+export const ManualTopup = ({ packages: _packages }: { packages: CoinPackage[] }) => {
   const { user } = useAuth();
   const [selectedPackage, setSelectedPackage] = useState<CoinPackage | null>(null);
   const [transferNote, setTransferNote] = useState('');
@@ -89,7 +89,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
       case 'approved':
         return <CheckCircle className="w-5 h-5 text-green-600" />;
       case 'pending':
-        return <Clock className="w-5 h-5 text-yellow-600" />;
+        return <Clock className="w-5 h-5 text-emerald-600" />;
       case 'rejected':
         return <XCircle className="w-5 h-5 text-red-600" />;
       default:
@@ -115,7 +115,7 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
       case 'approved':
         return 'bg-green-100 text-green-800';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-emerald-100 text-emerald-800';
       case 'rejected':
         return 'bg-red-100 text-red-800';
       default:
@@ -189,13 +189,13 @@ export const ManualTopup = ({ packages }: { packages: CoinPackage[] }) => {
             
             <div className="border-t pt-3">
               <div className="text-gray-300 mb-2">Nội dung CK (gợi ý):</div>
-              <div className="flex items-center gap-2 bg-yellow-100 p-3 rounded-lg border-2 border-yellow-300">
+              <div className="flex items-center gap-2 bg-emerald-100 p-3 rounded-lg border-2 border-emerald-300">
                 <span className="font-mono font-bold text-white flex-1">
                   NAP XU {user?.email?.split('@')[0] || 'USER'}
                 </span>
                 <button
                   onClick={() => handleCopy(`NAP XU ${user?.email?.split('@')[0] || 'USER'}`)}
-                  className="p-2 hover:bg-yellow-200 rounded-lg transition-colors"
+                  className="p-2 hover:bg-emerald-200 rounded-lg transition-colors"
                 >
                   {copied ? <Check className="w-5 h-5 text-green-600" /> : <Copy className="w-5 h-5 text-gray-300" />}
                 </button>

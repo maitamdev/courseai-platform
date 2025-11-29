@@ -441,7 +441,7 @@ export const DungeonCodeQuest = () => {
                   </div>
                 </div>
                 <div className="flex items-center gap-4 text-sm">
-                  <span className="flex items-center gap-1 text-yellow-400">
+                  <span className="flex items-center gap-1 text-emerald-400">
                     <Coins className="w-4 h-4" /> {lvl.coinsReward}
                   </span>
                   <span className="flex items-center gap-1 text-purple-400">
@@ -478,7 +478,7 @@ export const DungeonCodeQuest = () => {
               </div>
             </div>
           </div>
-          <Sword className="w-8 h-8 text-yellow-400 animate-pulse" />
+          <Sword className="w-8 h-8 text-emerald-400 animate-pulse" />
           <div className="flex items-center gap-3">
             <div className="text-right">
               <p className="font-bold text-red-400">{currentEnemy.name}</p>
@@ -497,8 +497,8 @@ export const DungeonCodeQuest = () => {
         {/* Challenge */}
         <div className="bg-gray-800/80 rounded-2xl p-6 border border-purple-500/30">
           <div className="flex items-center gap-2 mb-4">
-            <Zap className="w-5 h-5 text-yellow-400" />
-            <span className="text-sm font-medium text-yellow-400">Trả lời đúng để tấn công!</span>
+            <Zap className="w-5 h-5 text-emerald-400" />
+            <span className="text-sm font-medium text-emerald-400">Trả lời đúng để tấn công!</span>
           </div>
           
           <div className="bg-gray-900/80 rounded-xl p-4 mb-4">
@@ -544,14 +544,14 @@ export const DungeonCodeQuest = () => {
   if (gameState === 'victory') {
     return (
       <div className="max-w-md mx-auto text-center">
-        <div className="bg-gradient-to-br from-yellow-900/50 to-orange-900/50 rounded-3xl p-8 border-2 border-yellow-500/50">
+        <div className="bg-gradient-to-br from-emerald-900/50 to-green-900/50 rounded-3xl p-8 border-2 border-emerald-500/50">
           <div className="text-6xl mb-4">🏆</div>
-          <h2 className="text-3xl font-black text-yellow-400 mb-2">Chiến Thắng!</h2>
+          <h2 className="text-3xl font-black text-emerald-400 mb-2">Chiến Thắng!</h2>
           <p className="text-gray-300 mb-6">Bạn đã hoàn thành {level.name}!</p>
           
           <div className="flex justify-center gap-6 mb-6">
             <div className="text-center">
-              <div className="text-3xl font-black text-yellow-400">{collectedCoins}</div>
+              <div className="text-3xl font-black text-emerald-400">{collectedCoins}</div>
               <div className="text-sm text-gray-400 flex items-center gap-1 justify-center">
                 <Coins className="w-4 h-4" /> Xu
               </div>
@@ -592,7 +592,7 @@ export const DungeonCodeQuest = () => {
             <button onClick={() => setGameState('menu')} className="flex-1 px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-bold transition-all">
               Menu
             </button>
-            <button onClick={() => startGame(currentLevel)} className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white rounded-xl font-bold transition-all">
+            <button onClick={() => startGame(currentLevel)} className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-green-500 hover:from-red-600 hover:to-green-600 text-white rounded-xl font-bold transition-all">
               Thử lại
             </button>
           </div>
@@ -616,9 +616,9 @@ export const DungeonCodeQuest = () => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-yellow-500/20 rounded-lg">
-            <Coins className="w-4 h-4 text-yellow-400" />
-            <span className="font-bold text-yellow-400">{collectedCoins}</span>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/20 rounded-lg">
+            <Coins className="w-4 h-4 text-emerald-400" />
+            <span className="font-bold text-emerald-400">{collectedCoins}</span>
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/20 rounded-lg">
             <Star className="w-4 h-4 text-purple-400" />
@@ -639,7 +639,7 @@ export const DungeonCodeQuest = () => {
             <span className="text-sm text-gray-400 w-16">{player?.health}/{player?.maxHealth}</span>
           </div>
           <div className="flex items-center gap-4 text-sm text-gray-400">
-            <span className="flex items-center gap-1"><Sword className="w-3 h-3 text-orange-400" /> {player?.attack}</span>
+            <span className="flex items-center gap-1"><Sword className="w-3 h-3 text-green-400" /> {player?.attack}</span>
             <span className="flex items-center gap-1"><Shield className="w-3 h-3 text-blue-400" /> {player?.defense}</span>
           </div>
         </div>
