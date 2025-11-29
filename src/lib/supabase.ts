@@ -5,9 +5,8 @@ const ALLOWED_DOMAINS = [
   'localhost',
   '127.0.0.1',
   // Vercel domains
-  'course-ai.vercel.app',
-  'codemind-ai.vercel.app',
-  'vercel.app', // Cho phép tất cả subdomain của vercel.app (preview deployments)
+  'courseai-platform-two.vercel.app',
+  'vercel.app', // Cho phép preview deployments
 ];
 
 const currentDomain = typeof window !== 'undefined' ? window.location.hostname : '';
