@@ -243,15 +243,15 @@ export const AIAssistant = () => {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button - Positioned above mobile navbar */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-6 right-6 z-50 group transition-all duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        className={`fixed bottom-20 lg:bottom-6 right-4 lg:right-6 z-40 group transition-all duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
       >
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity animate-pulse"></div>
-          <div className="relative w-16 h-16 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
-            <MessageCircle className="w-7 h-7 text-white" />
+          <div className="relative w-14 h-14 lg:w-16 lg:h-16 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform">
+            <MessageCircle className="w-6 h-6 lg:w-7 lg:h-7 text-white" />
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white animate-bounce">
               AI
             </span>
@@ -259,12 +259,12 @@ export const AIAssistant = () => {
         </div>
       </button>
 
-      {/* Chat Window */}
+      {/* Chat Window - Responsive positioning */}
       {isOpen && (
         <div className={`fixed z-50 transition-all duration-300 ${
           isMinimized 
-            ? 'bottom-6 right-6 w-80' 
-            : 'bottom-6 right-6 w-[420px] h-[600px] max-h-[80vh]'
+            ? 'bottom-20 lg:bottom-6 right-4 lg:right-6 w-72 sm:w-80' 
+            : 'bottom-20 lg:bottom-6 right-2 sm:right-4 lg:right-6 left-2 sm:left-auto w-auto sm:w-[380px] lg:w-[420px] h-[70vh] sm:h-[600px] max-h-[80vh]'
         }`}>
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-3xl blur-xl"></div>
           
