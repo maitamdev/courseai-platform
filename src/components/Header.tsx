@@ -80,24 +80,25 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
 
   return (
     <>
+    {/* Desktop Header */}
     <header className="bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 shadow-2xl sticky top-0 z-40 border-b border-gray-700">
-      <div className="max-w-full mx-auto px-6 py-4">
-        <div className="flex items-center justify-between gap-6">
+      <div className="max-w-full mx-auto px-3 md:px-6 py-2 md:py-4">
+        <div className="flex items-center justify-between gap-2 md:gap-6">
           {/* Logo - Left */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="flex items-center gap-1.5 relative">
-              <Code2 className="w-9 h-9 text-white drop-shadow-lg" />
-              <Sparkles className="w-7 h-7 text-yellow-300 drop-shadow-lg animate-pulse" />
+          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-1 relative">
+              <Code2 className="w-7 md:w-9 h-7 md:h-9 text-white drop-shadow-lg" />
+              <Sparkles className="w-5 md:w-7 h-5 md:h-7 text-yellow-300 drop-shadow-lg animate-pulse hidden sm:block" />
             </div>
-            <div>
-              <h1 className="text-2xl font-black text-white drop-shadow-lg">CodeMind AI</h1>
-              <p className="text-xs text-white/80 font-medium">Học lập trình với AI</p>
+            <div className="hidden sm:block">
+              <h1 className="text-lg md:text-2xl font-black text-white drop-shadow-lg">CodeMind AI</h1>
+              <p className="text-[10px] md:text-xs text-white/80 font-medium hidden md:block">Học lập trình với AI</p>
             </div>
           </div>
 
-          {/* Navigation Menu - Center (Full Width) */}
+          {/* Navigation Menu - Center (Hidden on mobile) */}
           {onTabChange && (
-            <div className="flex items-center gap-3 flex-1 justify-center max-w-5xl">
+            <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-1 justify-center max-w-4xl">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -107,16 +108,16 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                   <button
                     key={item.id}
                     onClick={() => onTabChange(item.id)}
-                    className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
+                    className={`relative flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold transition-all whitespace-nowrap text-sm ${
                       isActive
-                        ? 'bg-yellow-400 text-gray-900 shadow-lg scale-105'
-                        : 'text-white/90 hover:bg-gray-700/50 hover:text-white hover:scale-105'
+                        ? 'bg-yellow-400 text-gray-900 shadow-lg'
+                        : 'text-white/90 hover:bg-gray-700/50 hover:text-white'
                     }`}
                   >
                     <div className="relative">
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-4 h-4" />
                       {showBadge && (
-                        <span className="absolute -top-2 -right-2 min-w-[18px] h-[18px] bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center px-1 animate-pulse">
+                        <span className="absolute -top-2 -right-2 min-w-[16px] h-[16px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-0.5 animate-pulse">
                           {unreadCount > 99 ? '99+' : unreadCount}
                         </span>
                       )}
@@ -129,38 +130,38 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
           )}
 
           {/* User Info - Right */}
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            {/* Coin button - Compact on mobile */}
             <button
               onClick={() => setShowCoinModal(true)}
-              className="group relative bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-gray-900 pl-3 pr-4 py-2 rounded-xl flex items-center gap-2 shadow-lg hover:shadow-amber-500/40 hover:scale-105 transition-all cursor-pointer overflow-hidden"
+              className="group relative bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 text-gray-900 px-2 md:pl-3 md:pr-4 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2 shadow-lg hover:shadow-amber-500/40 transition-all cursor-pointer overflow-hidden"
               title="Bấm để nạp xu"
             >
-              {/* Shine effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-              
-              {/* Coin icon with glow */}
-              <div className="relative w-8 h-8 bg-amber-600/30 rounded-lg flex items-center justify-center">
-                <span className="text-lg">🪙</span>
-              </div>
-              
-              {/* Amount */}
-              <div className="flex flex-col items-start leading-none">
-                <span className="text-[10px] font-medium text-amber-800/70 uppercase tracking-wide">Xu</span>
-                <span className="font-black text-lg text-gray-900">{(profile?.total_coins || 0).toLocaleString()}</span>
-              </div>
-              
-              {/* Plus icon */}
-              <div className="w-5 h-5 bg-gray-900/20 rounded-full flex items-center justify-center ml-1">
-                <span className="text-gray-900 font-bold text-sm">+</span>
-              </div>
+              <span className="text-base md:text-lg">🪙</span>
+              <span className="font-black text-sm md:text-lg text-gray-900">{(profile?.total_coins || 0).toLocaleString()}</span>
+              <span className="text-gray-900 font-bold text-xs hidden sm:inline">+</span>
             </button>
 
+            {/* Profile button - Mobile */}
             <button
               onClick={() => onTabChange?.('profile')}
-              className="group hidden xl:flex items-center gap-3 bg-gray-800/80 backdrop-blur-md pl-1.5 pr-4 py-1.5 rounded-xl border border-gray-600/50 hover:border-purple-500/50 hover:bg-gray-700/80 hover:scale-105 transition-all cursor-pointer"
+              className="lg:hidden w-9 h-9 rounded-lg overflow-hidden ring-2 ring-purple-500/50"
+            >
+              {(profile as any)?.avatar_url ? (
+                <img src={(profile as any).avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                  <User className="w-4 h-4 text-white" />
+                </div>
+              )}
+            </button>
+
+            {/* Profile button - Desktop */}
+            <button
+              onClick={() => onTabChange?.('profile')}
+              className="group hidden lg:flex items-center gap-3 bg-gray-800/80 backdrop-blur-md pl-1.5 pr-4 py-1.5 rounded-xl border border-gray-600/50 hover:border-purple-500/50 hover:bg-gray-700/80 transition-all cursor-pointer"
               title="Xem hồ sơ"
             >
-              {/* Avatar with ring */}
               <div className="relative">
                 <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-purple-500/50 group-hover:ring-purple-400 transition-all">
                   {(profile as any)?.avatar_url ? (
@@ -171,33 +172,61 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                     </div>
                   )}
                 </div>
-                {/* Online indicator */}
                 <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-800" />
               </div>
-              
-              {/* User info */}
               <div className="flex flex-col items-start leading-tight">
                 <span className="font-bold text-white text-sm">{profile?.username}</span>
-                <div className="flex items-center gap-1">
-                  <div className="flex items-center gap-0.5 bg-gradient-to-r from-emerald-500 to-green-400 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">
-                    <Zap className="w-3 h-3" />
-                    <span>Lv {profile?.level || 1}</span>
-                  </div>
+                <div className="flex items-center gap-0.5 bg-gradient-to-r from-emerald-500 to-green-400 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">
+                  <Zap className="w-3 h-3" />
+                  <span>Lv {profile?.level || 1}</span>
                 </div>
               </div>
             </button>
 
             <button
               onClick={signOut}
-              className="p-2.5 bg-red-500/20 backdrop-blur-md hover:bg-red-500/30 rounded-xl transition-all border-2 border-red-500/30 hover:scale-110 group"
+              className="p-2 md:p-2.5 bg-red-500/20 backdrop-blur-md hover:bg-red-500/30 rounded-lg md:rounded-xl transition-all border border-red-500/30 group"
               title="Đăng xuất"
             >
-              <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-300 group-hover:rotate-12 transition-all" />
+              <LogOut className="w-4 md:w-5 h-4 md:h-5 text-red-400 group-hover:text-red-300 transition-all" />
             </button>
           </div>
         </div>
       </div>
     </header>
+
+    {/* Mobile Bottom Navigation */}
+    {onTabChange && (
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-lg border-t border-gray-700 z-50 safe-area-pb">
+        <div className="flex items-center justify-around px-1 py-2">
+          {menuItems.slice(0, 5).map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            const showBadge = item.id === 'messages' && unreadCount > 0;
+            
+            return (
+              <button
+                key={item.id}
+                onClick={() => onTabChange(item.id)}
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-all ${
+                  isActive ? 'text-yellow-400' : 'text-gray-400'
+                }`}
+              >
+                <div className="relative">
+                  <Icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''}`} />
+                  {showBadge && (
+                    <span className="absolute -top-1 -right-1 min-w-[14px] h-[14px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </div>
+                <span className="text-[10px] font-medium">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    )}
 
       {/* Coin Purchase Modal */}
       {showCoinModal && (

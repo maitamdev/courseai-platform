@@ -82,7 +82,7 @@ export const Dashboard = () => {
   }, [activeTab]);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20 lg:pb-0">
       <Header activeTab={activeTab} onTabChange={setActiveTab} />
 
       <div className="transition-opacity duration-300">
