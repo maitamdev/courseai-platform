@@ -24,7 +24,7 @@ const PRIZES: Prize[] = [
   { id: 8, label: '200 XP', value: 200, type: 'xp', color: '#ef4444', iconType: 'trophy', probability: 0.5 },
 ];
 
-const PrizeIcon = ({ type, className }: { type: Prize['iconType']; className?: string }) => {
+const PrizeIcon = ({ type, className, style }: { type: Prize['iconType']; className?: string; style?: React.CSSProperties }) => {
   const icons = {
     coins: Coins,
     star: Star,
@@ -36,7 +36,7 @@ const PrizeIcon = ({ type, className }: { type: Prize['iconType']; className?: s
     award: Award,
   };
   const Icon = icons[type];
-  return <Icon className={className} />;
+  return <Icon className={className} style={style} />;
 };
 
 export const LuckyWheel = () => {
@@ -183,24 +183,24 @@ export const LuckyWheel = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-2xl p-6 border border-purple-500/30">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-            <Gift className="w-6 h-6 text-white" />
+    <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-purple-500/30">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+            <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Vòng Quay May Mắn</h3>
-            <p className="text-gray-400 text-sm">Quay mỗi ngày để nhận thưởng!</p>
+            <h3 className="text-base sm:text-xl font-bold text-white">Vòng Quay May Mắn</h3>
+            <p className="text-gray-400 text-xs sm:text-sm">Quay mỗi ngày để nhận thưởng!</p>
           </div>
         </div>
-        <div className="px-4 py-2 bg-purple-500/20 rounded-xl">
-          <span className="font-bold text-purple-400">{freeSpins} lượt</span>
+        <div className="px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-500/20 rounded-lg sm:rounded-xl self-start sm:self-auto">
+          <span className="font-bold text-purple-400 text-sm sm:text-base">{freeSpins} lượt</span>
         </div>
       </div>
 
-      {/* Wheel */}
-      <div className="relative w-64 h-64 mx-auto mb-6">
+      {/* Wheel - Responsive */}
+      <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 mx-auto mb-4 sm:mb-6">
         {/* Pointer */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 z-10">
           <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[25px] border-l-transparent border-r-transparent border-t-emerald-400"></div>
@@ -251,7 +251,7 @@ export const LuckyWheel = () => {
         <button
           onClick={spin}
           disabled={spinning || freeSpins <= 0}
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full font-bold transition-all ${
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full font-bold transition-all ${
             spinning
               ? 'bg-gray-600 cursor-not-allowed'
               : freeSpins > 0
@@ -259,18 +259,18 @@ export const LuckyWheel = () => {
               : 'bg-gray-600 cursor-not-allowed'
           }`}
         >
-          <RotateCw className={`w-6 h-6 mx-auto text-white ${spinning ? 'animate-spin' : ''}`} />
+          <RotateCw className={`w-5 h-5 sm:w-6 sm:h-6 mx-auto text-white ${spinning ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
-      {/* Prizes list */}
-      <div className="grid grid-cols-4 gap-2">
+      {/* Prizes list - Responsive */}
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
         {PRIZES.map(p => (
-          <div key={p.id} className="text-center p-2 bg-gray-800/50 rounded-lg">
-            <div className="flex justify-center mb-1">
-              <PrizeIcon type={p.iconType} className={`w-5 h-5 ${p.type === 'coins' ? 'text-emerald-400' : 'text-purple-400'}`} />
+          <div key={p.id} className="text-center p-1.5 sm:p-2 bg-gray-800/50 rounded-md sm:rounded-lg">
+            <div className="flex justify-center mb-0.5 sm:mb-1">
+              <PrizeIcon type={p.iconType} className={`w-4 h-4 sm:w-5 sm:h-5 ${p.type === 'coins' ? 'text-emerald-400' : 'text-purple-400'}`} />
             </div>
-            <div className="text-xs text-gray-400">{p.label}</div>
+            <div className="text-[10px] sm:text-xs text-gray-400">{p.label}</div>
           </div>
         ))}
       </div>

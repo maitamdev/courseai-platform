@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, Gift, Flame, Coins, Star, Sparkles, Check, Crown, Loader2, CheckCircle2 } from 'lucide-react';
+import { Calendar, Gift, Flame, Coins, Star, Sparkles, Crown, Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -199,26 +199,26 @@ export const DailyRewards = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-2xl p-6 border border-green-500/30">
+    <div className="bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-green-500/30">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-            <Calendar className="w-6 h-6 text-white" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+            <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-xl font-bold text-white">Điểm Danh Hàng Ngày</h3>
-            <p className="text-gray-400 text-sm">Đăng nhập mỗi ngày để nhận thưởng!</p>
+            <h3 className="text-base sm:text-xl font-bold text-white">Điểm Danh Hàng Ngày</h3>
+            <p className="text-gray-400 text-xs sm:text-sm">Đăng nhập mỗi ngày để nhận thưởng!</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 px-4 py-2 bg-green-500/20 rounded-xl">
-          <Flame className="w-5 h-5 text-green-400" />
-          <span className="font-bold text-green-400">{currentStreak} ngày</span>
+        <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-green-500/20 rounded-lg sm:rounded-xl self-start sm:self-auto">
+          <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+          <span className="font-bold text-green-400 text-sm sm:text-base">{currentStreak} ngày</span>
         </div>
       </div>
 
-      {/* Rewards Grid */}
-      <div className="grid grid-cols-7 gap-2 mb-6">
+      {/* Rewards Grid - Responsive */}
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5 sm:gap-2 mb-4 sm:mb-6">
         {DAILY_REWARDS.map((reward, index) => {
           const isPast = index < currentStreak;
           const isCurrent = index === currentStreak;
@@ -226,7 +226,7 @@ export const DailyRewards = () => {
           return (
             <div
               key={reward.day}
-              className={`relative p-3 rounded-xl text-center transition-all ${
+              className={`relative p-2 sm:p-3 rounded-lg sm:rounded-xl text-center transition-all ${
                 isPast
                   ? 'bg-green-500/20 border-2 border-green-500/50'
                   : isCurrent && canClaim
@@ -236,19 +236,19 @@ export const DailyRewards = () => {
                   : 'bg-gray-800/50 border-2 border-gray-700/50 opacity-50'
               }`}
             >
-              <div className="flex items-center justify-center mb-1">
+              <div className="flex items-center justify-center mb-0.5 sm:mb-1">
                 {isPast ? (
-                  <CheckCircle2 className="w-6 h-6 text-green-400" />
+                  <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />
                 ) : reward.isSpecial ? (
-                  <Crown className="w-6 h-6 text-yellow-400" />
+                  <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400" />
                 ) : (
-                  <Gift className="w-6 h-6 text-emerald-400" />
+                  <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
                 )}
               </div>
-              <div className="text-xs text-gray-400">Ngày {reward.day}</div>
-              <div className="text-xs text-emerald-400 font-bold">+{reward.coins}</div>
+              <div className="text-[10px] sm:text-xs text-gray-400">Ngày {reward.day}</div>
+              <div className="text-[10px] sm:text-xs text-emerald-400 font-bold">+{reward.coins}</div>
               {reward.bonus && (
-                <div className="absolute -top-2 -right-2 px-1.5 py-0.5 bg-emerald-500 text-[10px] font-bold text-gray-900 rounded">
+                <div className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 px-1 sm:px-1.5 py-0.5 bg-emerald-500 text-[8px] sm:text-[10px] font-bold text-gray-900 rounded">
                   x2
                 </div>
               )}
@@ -261,22 +261,22 @@ export const DailyRewards = () => {
       <button
         onClick={claimReward}
         disabled={!canClaim || claiming}
-        className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2 ${
+        className={`w-full py-3 sm:py-4 rounded-lg sm:rounded-xl font-bold text-sm sm:text-lg transition-all flex items-center justify-center gap-2 ${
           canClaim
             ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white hover:opacity-90 shadow-lg shadow-green-500/30'
             : 'bg-gray-700 text-gray-400 cursor-not-allowed'
         }`}
       >
         {claiming ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
+          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
         ) : canClaim ? (
           <>
-            <Gift className="w-5 h-5" />
+            <Gift className="w-4 h-4 sm:w-5 sm:h-5" />
             Nhận Thưởng Ngày {(currentStreak % 7) + 1}
           </>
         ) : (
           <>
-            <CheckCircle2 className="w-5 h-5" />
+            <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
             <span>Đã nhận hôm nay</span>
           </>
         )}
