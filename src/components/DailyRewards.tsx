@@ -39,7 +39,19 @@ export const DailyRewards = () => {
     setLoading(true);
     
     try {
-      // Get or create daily rewards record
+      // Thử dùng server function trước
+      const { data: statusData, error: statusError } = await supabase.rpc('get_user_rewards_status', {
+        p_user_id: user.id
+      });
+
+      if (!statusError && statusData) {
+        setCurrentStreak(statusData.daily_streak || 0);
+        setCanClaim(!statusData.daily_claimed);
+        setLoading(false);
+        return;
+      }
+
+      // Fallback to direct query
       const { data, error } = await supabase
         .from('daily_rewards')
         .select('*')
@@ -47,8 +59,6 @@ export const DailyRewards = () => {
         .single();
 
       if (error && error.code === 'PGRST116') {
-        // No record exists, create one
-        await supabase.from('daily_rewards').insert({ user_id: user.id });
         setCurrentStreak(0);
         setCanClaim(true);
       } else if (data) {
@@ -92,9 +102,53 @@ export const DailyRewards = () => {
     if (!user || !canClaim || claiming || !profile) return;
     setClaiming(true);
 
-    const now = new Date();
+    try {
+      // Gọi database function để claim - đảm bảo chỉ 1 lần/ngày
+      const { data, error } = await supabase.rpc('claim_daily_reward', {
+        p_user_id: user.id
+      });
+
+      if (error) {
+        console.error('Error claiming reward:', error);
+        // Fallback to old logic if function doesn't exist
+        await claimRewardFallback();
+        return;
+      }
+
+      if (!data.success) {
+        // Đã claim rồi
+        setCanClaim(false);
+        setClaiming(false);
+        return;
+      }
+
+      // Cập nhật localStorage để sync
+      localStorage.setItem(`streak_${user.id}`, JSON.stringify({
+        streak: data.streak,
+        lastClaim: new Date().toISOString(),
+      }));
+
+      // Refresh profile để lấy coins/XP mới
+      await refreshProfile();
+
+      const reward = DAILY_REWARDS[data.day - 1];
+      setCurrentStreak(data.streak);
+      setCanClaim(false);
+      setClaimedReward({ ...reward, coins: data.coins, xp: data.xp });
+      setShowReward(true);
+    } catch {
+      // Fallback nếu function chưa tồn tại
+      await claimRewardFallback();
+    }
     
-    // Calculate new streak
+    setClaiming(false);
+  };
+
+  // Fallback function nếu database function chưa có
+  const claimRewardFallback = async () => {
+    if (!user || !profile) return;
+    
+    const now = new Date();
     let newStreak = currentStreak;
     const saved = localStorage.getItem(`streak_${user.id}`);
     if (saved) {
@@ -102,7 +156,7 @@ export const DailyRewards = () => {
       const lastDate = data.lastClaim ? new Date(data.lastClaim) : null;
       if (lastDate) {
         const diffHours = (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60);
-        if (diffHours > 48) newStreak = 0; // Reset if more than 48h
+        if (diffHours > 48) newStreak = 0;
       }
     }
     newStreak = (newStreak % 7) + 1;
@@ -112,56 +166,21 @@ export const DailyRewards = () => {
     const totalCoins = reward.coins * bonusMultiplier;
     const totalXP = reward.xp * bonusMultiplier;
 
-    // Save to localStorage first (always works)
     localStorage.setItem(`streak_${user.id}`, JSON.stringify({
       streak: newStreak,
       lastClaim: now.toISOString(),
     }));
 
-    // Update profile coins and XP
-    const { error: updateError } = await supabase.from('profiles').update({
+    await supabase.from('profiles').update({
       total_coins: (profile.total_coins || 0) + totalCoins,
       xp: (profile.xp || 0) + totalXP,
     }).eq('id', user.id);
 
-    if (updateError) {
-      console.error('Error updating profile:', updateError);
-      setClaiming(false);
-      return;
-    }
-
-    // Try to save to database tables (optional, may fail if tables don't exist)
-    try {
-      const today = now.toISOString().split('T')[0];
-      
-      await supabase.from('daily_rewards').upsert({
-        user_id: user.id,
-        current_streak: newStreak,
-        max_streak: Math.max(newStreak, currentStreak),
-        last_claim_date: today,
-        total_claims: 1,
-        updated_at: now.toISOString()
-      });
-
-      await supabase.from('daily_reward_claims').insert({
-        user_id: user.id,
-        day_number: newStreak,
-        coins_earned: totalCoins,
-        xp_earned: totalXP,
-        bonus_multiplier: bonusMultiplier
-      });
-    } catch {
-      // Tables don't exist yet, that's okay - localStorage is the backup
-    }
-
-    // Refresh profile to get updated coins
     await refreshProfile();
-
     setCurrentStreak(newStreak);
     setCanClaim(false);
     setClaimedReward({ ...reward, coins: totalCoins, xp: totalXP });
     setShowReward(true);
-    setClaiming(false);
   };
 
 

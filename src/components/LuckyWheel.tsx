@@ -42,6 +42,18 @@ export const LuckyWheel = () => {
     setLoading(true);
 
     try {
+      // Thử dùng server function trước
+      const { data: statusData, error: statusError } = await supabase.rpc('get_user_rewards_status', {
+        p_user_id: user.id
+      });
+
+      if (!statusError && statusData) {
+        setFreeSpins(statusData.can_spin ? 1 : 0);
+        setLoading(false);
+        return;
+      }
+
+      // Fallback to direct query
       const { data, error } = await supabase
         .from('lucky_wheel_spins')
         .select('*')
@@ -49,13 +61,10 @@ export const LuckyWheel = () => {
         .single();
 
       if (error && error.code === 'PGRST116') {
-        // No record, create one
-        await supabase.from('lucky_wheel_spins').insert({ user_id: user.id });
         setFreeSpins(1);
       } else if (data) {
         const today = new Date().toISOString().split('T')[0];
         if (data.last_spin_date !== today) {
-          // New day, reset spins
           setFreeSpins(1);
         } else {
           setFreeSpins(data.free_spins_remaining || 0);
@@ -73,6 +82,8 @@ export const LuckyWheel = () => {
         } else {
           setFreeSpins(localData.freeSpins || 0);
         }
+      } else {
+        setFreeSpins(1);
       }
     }
     setLoading(false);
@@ -94,7 +105,33 @@ export const LuckyWheel = () => {
     setSpinning(true);
     setShowResult(false);
 
-    const selectedPrize = selectPrize();
+    // Gọi database function trước để đảm bảo chỉ spin 1 lần/ngày
+    let serverPrize: Prize | null = null;
+    
+    try {
+      const { data, error } = await supabase.rpc('spin_lucky_wheel', {
+        p_user_id: user.id
+      });
+
+      if (error) {
+        console.error('Spin error:', error);
+        // Fallback to client-side logic
+        serverPrize = selectPrize();
+      } else if (!data.success) {
+        // Đã hết lượt
+        setSpinning(false);
+        setFreeSpins(0);
+        return;
+      } else {
+        // Tìm prize tương ứng từ server response
+        serverPrize = PRIZES.find(p => p.type === data.prize_type && p.value === data.prize_value) || PRIZES[0];
+      }
+    } catch {
+      // Fallback nếu function chưa tồn tại
+      serverPrize = selectPrize();
+    }
+
+    const selectedPrize = serverPrize;
     const prizeIndex = PRIZES.findIndex(p => p.id === selectedPrize.id);
     const segmentAngle = 360 / PRIZES.length;
     const targetAngle = 360 - (prizeIndex * segmentAngle) - (segmentAngle / 2);
@@ -107,44 +144,16 @@ export const LuckyWheel = () => {
       setPrize(selectedPrize);
       setShowResult(true);
       setSpinning(false);
-      const newFreeSpins = freeSpins - 1;
-      setFreeSpins(newFreeSpins);
+      setFreeSpins(0);
 
-      // Save to localStorage first (always works)
+      // Save to localStorage
       localStorage.setItem(`spin_${user.id}`, JSON.stringify({
         lastSpin: new Date().toISOString(),
-        freeSpins: newFreeSpins,
+        freeSpins: 0,
       }));
 
-      // Update profile coins or XP
-      const updateData = selectedPrize.type === 'coins'
-        ? { total_coins: (profile.total_coins || 0) + selectedPrize.value }
-        : { xp: (profile.xp || 0) + selectedPrize.value };
-      
-      await supabase.from('profiles').update(updateData).eq('id', user.id);
+      // Refresh profile để lấy coins/XP mới từ server
       await refreshProfile();
-
-      // Try to save to database tables (optional)
-      try {
-        const today = new Date().toISOString().split('T')[0];
-        
-        await supabase.from('lucky_wheel_spins').upsert({
-          user_id: user.id,
-          free_spins_remaining: newFreeSpins,
-          last_spin_date: today,
-          total_spins: 1,
-          updated_at: new Date().toISOString()
-        });
-
-        await supabase.from('lucky_wheel_history').insert({
-          user_id: user.id,
-          prize_type: selectedPrize.type,
-          prize_value: selectedPrize.value,
-          prize_label: selectedPrize.label
-        });
-      } catch {
-        // Tables don't exist yet, that's okay
-      }
     }, 4000);
   };
 
