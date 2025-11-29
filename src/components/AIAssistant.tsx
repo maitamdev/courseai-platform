@@ -246,7 +246,7 @@ export const AIAssistant = () => {
       {/* Floating Button - Positioned above mobile navbar */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`fixed bottom-24 sm:bottom-20 lg:bottom-6 right-4 lg:right-6 z-40 group transition-all duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
+        className={`fixed bottom-32 sm:bottom-24 lg:bottom-6 right-4 lg:right-6 z-40 group transition-all duration-300 ${isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'}`}
       >
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full blur-lg opacity-50 group-hover:opacity-75 transition-opacity animate-pulse"></div>
@@ -263,8 +263,8 @@ export const AIAssistant = () => {
       {isOpen && (
         <div className={`fixed z-50 transition-all duration-300 ${
           isMinimized 
-            ? 'bottom-24 sm:bottom-20 lg:bottom-6 right-4 lg:right-6 w-72 sm:w-80' 
-            : 'bottom-24 sm:bottom-20 lg:bottom-6 right-2 sm:right-4 lg:right-6 left-2 sm:left-auto w-auto sm:w-[380px] lg:w-[420px] h-[60vh] sm:h-[600px] max-h-[75vh]'
+            ? 'bottom-32 sm:bottom-24 lg:bottom-6 right-4 lg:right-6 w-72 sm:w-80' 
+            : 'bottom-32 sm:bottom-24 lg:bottom-6 right-2 sm:right-4 lg:right-6 left-2 sm:left-auto w-auto sm:w-[380px] lg:w-[420px] h-[55vh] sm:h-[600px] max-h-[70vh]'
         }`}>
           <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 to-green-500/20 rounded-3xl blur-xl"></div>
           
