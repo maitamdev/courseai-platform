@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Gamepad2, Trophy, Star, Lock, Bug } from 'lucide-react';
+import { Gamepad2, Trophy, Star, Lock, Bug, Sword } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { GameLevelPlayer } from './GameLevelPlayer';
 import { CodeHeroGame } from './CodeHeroGame';
+import { DungeonCodeQuest } from './DungeonCodeQuest';
 
 type GameLevel = {
   id: string;
@@ -36,6 +37,7 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedLevel, setSelectedLevel] = useState<GameLevel | null>(null);
   const [showCodeHero, setShowCodeHero] = useState(false);
+  const [showDungeonQuest, setShowDungeonQuest] = useState(false);
 
   useEffect(() => {
     fetchCategories();
@@ -210,20 +212,45 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
             </div>
           </div>
 
-          {/* Coming Soon Card */}
-          <div className="relative bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl overflow-hidden border-2 border-gray-600/30 opacity-70">
-            <div className="relative h-40 bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-              <div className="text-5xl opacity-50">🚀</div>
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                <span className="px-4 py-2 bg-gray-700 text-white font-bold rounded-lg">Sắp ra mắt</span>
+          {/* Dungeon Code Quest Card */}
+          <div 
+            onClick={() => setShowDungeonQuest(true)}
+            className="group relative bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-2xl overflow-hidden border-2 border-purple-500/30 hover:border-purple-400 transition-all cursor-pointer hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/20"
+          >
+            <div className="relative h-40 bg-gradient-to-br from-purple-700 to-pink-700 flex items-center justify-center overflow-hidden">
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJyZ2JhKDAsMCwwLDAuMykiLz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIGZpbGw9InJnYmEoMCwwLDAsMC4yKSIvPjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSJyZ2JhKDAsMCwwLDAuMikiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-50"></div>
+              <div className="relative flex items-center gap-6">
+                <div className="w-14 h-14 bg-purple-500 rounded-lg flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">🧙</span>
+                </div>
+                <Sword className="w-10 h-10 text-yellow-400 animate-pulse" />
+                <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                  <span className="text-2xl">👹</span>
+                </div>
+              </div>
+              <div className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-purple-400 to-pink-500 text-white text-xs font-black rounded-full">
+                ⚔️ NEW
+              </div>
+              <div className="absolute top-3 right-3 px-2 py-1 bg-purple-500/80 text-white text-xs font-bold rounded">
+                5 Màn
               </div>
             </div>
             <div className="p-4">
-              <h3 className="text-xl font-black text-gray-400 mb-1">JavaScript Quest</h3>
-              <p className="text-gray-500 text-sm mb-3">Học JavaScript qua các nhiệm vụ thú vị!</p>
-              <div className="flex gap-2">
-                <span className="px-2 py-1 bg-gray-700/50 text-gray-500 text-xs rounded font-medium">JavaScript</span>
-                <span className="px-2 py-1 bg-gray-700/50 text-gray-500 text-xs rounded font-medium">RPG</span>
+              <h3 className="text-xl font-black text-white mb-1 group-hover:text-purple-400 transition-colors">
+                Dungeon Code Quest
+              </h3>
+              <p className="text-gray-400 text-sm mb-3">
+                Khám phá hầm ngục, chiến đấu quái vật bằng kiến thức Python!
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-2">
+                  <span className="px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded font-medium">Python</span>
+                  <span className="px-2 py-1 bg-pink-500/20 text-pink-400 text-xs rounded font-medium">RPG</span>
+                </div>
+                <div className="flex items-center gap-1 text-yellow-400 text-sm">
+                  <Star className="w-4 h-4 fill-yellow-400" />
+                  <span className="font-bold">4.9</span>
+                </div>
               </div>
             </div>
           </div>
@@ -362,6 +389,21 @@ export const GameCategories = ({ onTreasureQuestClick }: GameCategoriesProps) =>
               ✕
             </button>
             <CodeHeroGame />
+          </div>
+        </div>
+      )}
+
+      {/* Dungeon Code Quest Modal */}
+      {showDungeonQuest && (
+        <div className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="relative bg-gray-900 rounded-3xl p-6 max-w-5xl w-full border border-purple-700/50">
+            <button
+              onClick={() => setShowDungeonQuest(false)}
+              className="absolute top-4 right-4 p-2 hover:bg-gray-700 rounded-lg text-gray-400 hover:text-white z-10"
+            >
+              ✕
+            </button>
+            <DungeonCodeQuest />
           </div>
         </div>
       )}
