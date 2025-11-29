@@ -13,8 +13,11 @@ import { Friends } from './Friends';
 import { Messages } from './Messages';
 import { Events } from './Events';
 import { SocialFeed } from './SocialFeed';
+import { DailyRewards } from './DailyRewards';
+import { LuckyWheel } from './LuckyWheel';
+import { Achievements } from './Achievements';
 
-type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social';
+type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards' | 'achievements';
 
 export const Dashboard = () => {
   useAuth(); // Keep auth context active
@@ -141,6 +144,22 @@ export const Dashboard = () => {
             {activeTab === 'social' && (
               <div key="social" className="animate-fadeIn">
                 <SocialFeed />
+              </div>
+            )}
+
+            {activeTab === 'rewards' && (
+              <div key="rewards" className="animate-fadeIn space-y-6">
+                <h1 className="text-3xl font-black text-white mb-6">🎁 Phần Thưởng Hàng Ngày</h1>
+                <div className="grid lg:grid-cols-2 gap-6">
+                  <DailyRewards />
+                  <LuckyWheel />
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'achievements' && (
+              <div key="achievements" className="animate-fadeIn">
+                <Achievements />
               </div>
             )}
 
