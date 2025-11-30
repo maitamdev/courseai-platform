@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 import { Coins, LogOut, User, Zap, BookOpen, Gamepad2, Home, Users, MessageCircle, Trophy, X, QrCode, Gift, Calendar, MoreHorizontal, Search } from 'lucide-react';
 import { QRTopup } from './QRTopup';
 import { Notifications } from './Notifications';
 import { SearchModal } from './SearchModal';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'treasure-quest' | 'friends' | 'messages' | 'events' | 'social' | 'rewards' | 'forum';
 
@@ -24,6 +26,7 @@ type HeaderProps = {
 
 export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
   const { profile, signOut, user } = useAuth();
+  const { t } = useLanguage();
   const [unreadCount, setUnreadCount] = useState(0);
   const [showCoinModal, setShowCoinModal] = useState(false);
   const [packages, setPackages] = useState<CoinPackage[]>([]);
@@ -73,13 +76,13 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
   };
 
   const menuItems = [
-    { id: 'home' as Tab, label: 'Trang chủ', icon: Home },
-    { id: 'lessons' as Tab, label: 'Khóa học', icon: BookOpen },
-    { id: 'games' as Tab, label: 'Trò chơi', icon: Gamepad2 },
-    { id: 'forum' as Tab, label: 'Hỏi đáp', icon: MessageCircle },
-    { id: 'rewards' as Tab, label: 'Phần thưởng', icon: Calendar },
-    { id: 'events' as Tab, label: 'Sự kiện', icon: Trophy },
-    { id: 'friends' as Tab, label: 'Bạn bè', icon: Users },
+    { id: 'home' as Tab, label: t('nav.home'), icon: Home },
+    { id: 'lessons' as Tab, label: t('nav.courses'), icon: BookOpen },
+    { id: 'games' as Tab, label: t('nav.games'), icon: Gamepad2 },
+    { id: 'forum' as Tab, label: t('nav.forum'), icon: MessageCircle },
+    { id: 'rewards' as Tab, label: t('nav.rewards'), icon: Calendar },
+    { id: 'events' as Tab, label: t('nav.events'), icon: Trophy },
+    { id: 'friends' as Tab, label: t('nav.friends'), icon: Users },
   ];
 
   return (
@@ -99,7 +102,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               <h1 className="text-sm sm:text-lg md:text-2xl font-black text-white drop-shadow-lg">
                 <span className="text-[#c4e538]">CODE</span><span className="text-white">MIND</span>
               </h1>
-              <p className="text-[8px] sm:text-[10px] md:text-xs text-white/80 font-medium">Học lập trình với AI</p>
+              <p className="text-[8px] sm:text-[10px] md:text-xs text-white/80 font-medium">{t('nav.home') === 'Home' ? 'Learn coding with AI' : 'Học lập trình với AI'}</p>
             </div>
           </div>
 
@@ -142,10 +145,15 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             <button
               onClick={() => setShowSearch(true)}
               className="hidden sm:flex p-2 bg-gray-800/80 hover:bg-gray-700 rounded-lg transition-all"
-              title="Tìm kiếm (Ctrl+K)"
+              title={t('common.search')}
             >
               <Search className="w-5 h-5 text-gray-300" />
             </button>
+
+            {/* Language Switcher */}
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
 
             {/* Notifications */}
             <div className="hidden sm:block">
@@ -156,7 +164,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             <button
               onClick={() => setShowCoinModal(true)}
               className="group relative bg-gradient-to-r from-emerald-500 via-green-400 to-emerald-500 text-gray-900 px-2 md:pl-3 md:pr-4 py-1.5 md:py-2 rounded-lg md:rounded-xl flex items-center gap-1.5 md:gap-2 shadow-lg hover:shadow-emerald-500/40 transition-all cursor-pointer overflow-hidden"
-              title="Bấm để nạp xu"
+              title={t('shop.buyCoins')}
             >
               <Coins className="w-4 h-4 md:w-5 md:h-5 text-gray-900" />
               <span className="font-black text-sm md:text-lg text-gray-900">{(profile?.total_coins || 0).toLocaleString()}</span>
@@ -181,7 +189,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             <button
               onClick={() => onTabChange?.('profile')}
               className="group hidden lg:flex items-center gap-3 bg-gray-800/80 backdrop-blur-md pl-1.5 pr-4 py-1.5 rounded-xl border border-gray-600/50 hover:border-purple-500/50 hover:bg-gray-700/80 transition-all cursor-pointer"
-              title="Xem hồ sơ"
+              title={t('nav.profile')}
             >
               <div className="relative">
                 <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-purple-500/50 group-hover:ring-purple-400 transition-all">
@@ -216,7 +224,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             <button
               onClick={signOut}
               className="p-2 md:p-2.5 bg-red-500/20 backdrop-blur-md hover:bg-red-500/30 rounded-lg md:rounded-xl transition-all border border-red-500/30 group"
-              title="Đăng xuất"
+              title={t('common.logout')}
             >
               <LogOut className="w-4 md:w-5 h-4 md:h-5 text-red-400 group-hover:text-red-300 transition-all" />
             </button>
@@ -264,7 +272,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
             }`}
           >
             <MoreHorizontal className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Thêm</span>
+            <span className="text-[10px] font-medium">{t('common.seeMore')}</span>
           </button>
         </div>
 
@@ -305,7 +313,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                 }`}
               >
                 <User className="w-6 h-6" />
-                <span className="text-xs font-medium">Hồ sơ</span>
+                <span className="text-xs font-medium">{t('nav.profile')}</span>
               </button>
             </div>
           </div>
@@ -332,8 +340,8 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                   <Coins className="w-5 h-5 text-emerald-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-white">Nạp Xu</h2>
-                  <p className="text-sm text-gray-400">Số dư: <span className="text-emerald-400 font-bold">{profile?.total_coins || 0} xu</span></p>
+                  <h2 className="text-xl font-bold text-white">{t('shop.buyCoins')}</h2>
+                  <p className="text-sm text-gray-400">{t('nav.home') === 'Home' ? 'Balance' : 'Số dư'}: <span className="text-emerald-400 font-bold">{profile?.total_coins || 0} {t('nav.home') === 'Home' ? 'coins' : 'xu'}</span></p>
                 </div>
               </div>
               <button
@@ -398,7 +406,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
                           : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                       }`}>
                         <QrCode className="w-3 h-3" />
-                        Nạp ngay
+                        {t('nav.home') === 'Home' ? 'Buy Now' : 'Nạp ngay'}
                       </button>
                     </div>
                   </div>
@@ -408,7 +416,7 @@ export const Header = ({ activeTab, onTabChange }: HeaderProps) => {
               {packages.length === 0 && (
                 <div className="text-center py-12">
                   <Coins className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                  <p className="text-gray-400">Đang tải gói xu...</p>
+                  <p className="text-gray-400">{t('common.loading')}</p>
                 </div>
               )}
             </div>

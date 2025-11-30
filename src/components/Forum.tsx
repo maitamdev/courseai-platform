@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 import { 
   MessageSquare, Search, Filter, Plus, ArrowLeft, Eye, Clock, 
   ThumbsUp, ThumbsDown, Bookmark, BookmarkCheck, CheckCircle2, 
@@ -103,6 +104,7 @@ const getLevelBadge = (level: number) => {
 };
 
 export default function Forum({ user }: ForumProps) {
+  const { t } = useLanguage();
   const [viewMode, setViewMode] = useState<'home' | 'category' | 'post-detail' | 'new-post' | 'bookmarks' | 'notifications'>('home');
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -395,7 +397,7 @@ export default function Forum({ user }: ForumProps) {
   };
 
   const deleteReply = async (replyId: string) => {
-    if (!confirm('Xóa câu trả lời này?')) return;
+    if (!confirm(t('forum.deleteConfirm'))) return;
     await supabase.from('forum_replies').delete().eq('id', replyId);
     if (selectedPost) fetchPostDetail(selectedPost.id);
   };
@@ -676,7 +678,7 @@ export default function Forum({ user }: ForumProps) {
           {reply.is_accepted && (
             <div className="flex items-center gap-2 text-green-400 text-sm mb-3 pb-3 border-b border-green-500/20">
               <CheckCircle2 className="w-5 h-5" />
-              <span className="font-medium">Câu trả lời được chấp nhận</span>
+              <span className="font-medium">{t('forum.acceptedAnswer')}</span>
             </div>
           )}
           
@@ -772,7 +774,7 @@ export default function Forum({ user }: ForumProps) {
                   <textarea
                     value={replyContent}
                     onChange={(e) => setReplyContent(e.target.value)}
-                    placeholder="Viết câu trả lời..."
+                    placeholder={t('forum.replyPlaceholder')}
                     className="w-full p-3 rounded-lg bg-gray-900/50 border border-gray-600 text-white resize-none focus:outline-none focus:border-blue-500"
                     rows={3}
                   />
@@ -819,8 +821,8 @@ export default function Forum({ user }: ForumProps) {
               <MessageSquare className="w-8 h-8 text-blue-400" />
             </div>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-white">Diễn Đàn Hỏi Đáp</h1>
-              <p className="text-gray-400">Nơi kết nối & chia sẻ kiến thức lập trình</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-white">{t('forum.title')}</h1>
+              <p className="text-gray-400">{t('forum.subtitle')}</p>
             </div>
           </div>
           
@@ -828,15 +830,15 @@ export default function Forum({ user }: ForumProps) {
           <div className="grid grid-cols-3 gap-4 mt-6">
             <div className="text-center p-3 rounded-xl bg-gray-800/50 backdrop-blur-sm">
               <div className="text-2xl font-bold text-white">{stats.totalPosts}</div>
-              <div className="text-xs text-gray-400">Bài viết</div>
+              <div className="text-xs text-gray-400">{t('forum.newPost')}</div>
             </div>
             <div className="text-center p-3 rounded-xl bg-gray-800/50 backdrop-blur-sm">
               <div className="text-2xl font-bold text-white">{stats.totalReplies}</div>
-              <div className="text-xs text-gray-400">Câu trả lời</div>
+              <div className="text-xs text-gray-400">{t('forum.replies')}</div>
             </div>
             <div className="text-center p-3 rounded-xl bg-gray-800/50 backdrop-blur-sm">
               <div className="text-2xl font-bold text-white">{stats.totalUsers}</div>
-              <div className="text-xs text-gray-400">Thành viên</div>
+              <div className="text-xs text-gray-400">{t('nav.home') === 'Home' ? 'Members' : 'Thành viên'}</div>
             </div>
           </div>
         </div>
@@ -849,7 +851,7 @@ export default function Forum({ user }: ForumProps) {
             onClick={() => setViewMode('new-post')}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-medium hover:from-blue-500 hover:to-blue-400 transition-all shadow-lg shadow-blue-500/20"
           >
-            <Plus className="w-5 h-5" /> Đặt câu hỏi
+            <Plus className="w-5 h-5" /> {t('forum.askQuestion')}
           </button>
         )}
         {user && (
@@ -857,7 +859,7 @@ export default function Forum({ user }: ForumProps) {
             onClick={() => { setViewMode('bookmarks'); fetchBookmarkedPosts(); }}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all border border-gray-700"
           >
-            <Bookmark className="w-5 h-5" /> Đã lưu ({bookmarks.length})
+            <Bookmark className="w-5 h-5" /> {t('forum.bookmarks')} ({bookmarks.length})
           </button>
         )}
         {user && (
@@ -865,7 +867,7 @@ export default function Forum({ user }: ForumProps) {
             onClick={() => { setViewMode('notifications'); fetchNotifications(); }}
             className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all border border-gray-700"
           >
-            <Bell className="w-5 h-5" /> Thông báo
+            <Bell className="w-5 h-5" /> {t('forum.notifications')}
             {unreadCount > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
                 {unreadCount > 9 ? '9+' : unreadCount}
@@ -906,7 +908,7 @@ export default function Forum({ user }: ForumProps) {
       {/* Categories Grid */}
       <div>
         <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-          <Tag className="w-5 h-5 text-blue-400" /> Danh mục
+          <Tag className="w-5 h-5 text-blue-400" /> {t('forum.categories')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {categories.map(cat => (
@@ -919,7 +921,7 @@ export default function Forum({ user }: ForumProps) {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Flame className="w-5 h-5 text-orange-400" /> Bài viết mới nhất
+            <Flame className="w-5 h-5 text-orange-400" /> {t('forum.latestPosts')}
           </h2>
           <div className="flex items-center gap-2">
             <button
@@ -928,7 +930,7 @@ export default function Forum({ user }: ForumProps) {
                 sortBy === 'newest' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-400 hover:bg-gray-800'
               }`}
             >
-              Mới nhất
+              {t('forum.newest')}
             </button>
             <button
               onClick={() => setSortBy('popular')}
@@ -936,7 +938,7 @@ export default function Forum({ user }: ForumProps) {
                 sortBy === 'popular' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-400 hover:bg-gray-800'
               }`}
             >
-              Phổ biến
+              {t('forum.trending')}
             </button>
             <button
               onClick={() => setSortBy('unanswered')}
@@ -944,7 +946,7 @@ export default function Forum({ user }: ForumProps) {
                 sortBy === 'unanswered' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-400 hover:bg-gray-800'
               }`}
             >
-              Chưa trả lời
+              {t('forum.unanswered')}
             </button>
           </div>
         </div>
@@ -962,13 +964,13 @@ export default function Forum({ user }: ForumProps) {
         ) : (
           <div className="text-center py-12 text-gray-500">
             <HelpCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>Chưa có bài viết nào</p>
+            <p>{t('forum.noPostsYet')}</p>
             {user && (
               <button
                 onClick={() => setViewMode('new-post')}
                 className="mt-4 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-500"
               >
-                Đặt câu hỏi đầu tiên
+                {t('forum.beFirstToPost')}
               </button>
             )}
           </div>
@@ -1050,7 +1052,7 @@ export default function Forum({ user }: ForumProps) {
               onClick={() => { setNewCategoryId(selectedCategory?.id || ''); setViewMode('new-post'); }}
               className="mt-4 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-500"
             >
-              Đặt câu hỏi đầu tiên
+              {t('forum.beFirstToPost')}
             </button>
           )}
         </div>
@@ -1168,7 +1170,7 @@ export default function Forum({ user }: ForumProps) {
                     type="text"
                     value={editPostTags}
                     onChange={(e) => setEditPostTags(e.target.value)}
-                    placeholder="python, django, api (phân cách bằng dấu phẩy)"
+                    placeholder={t('forum.tagsPlaceholder')}
                     className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-600 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -1256,7 +1258,7 @@ export default function Forum({ user }: ForumProps) {
                 <textarea
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
-                  placeholder="Viết câu trả lời của bạn..."
+                  placeholder={t('forum.replyPlaceholder')}
                   className="w-full p-4 rounded-lg bg-gray-900/50 border border-gray-600 text-white placeholder-gray-500 resize-none focus:outline-none focus:border-blue-500 min-h-[120px]"
                 />
                 <div className="flex justify-end mt-3">
@@ -1265,7 +1267,7 @@ export default function Forum({ user }: ForumProps) {
                     disabled={!replyContent.trim()}
                     className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                   >
-                    <Send className="w-4 h-4" /> Gửi câu trả lời
+                    <Send className="w-4 h-4" /> {t('forum.submitReply')}
                   </button>
                 </div>
               </div>
@@ -1285,7 +1287,7 @@ export default function Forum({ user }: ForumProps) {
             ) : (
               <div className="text-center py-8 text-gray-500">
                 <MessageSquare className="w-10 h-10 mx-auto mb-2 opacity-50" />
-                <p>Chưa có câu trả lời nào</p>
+                <p>{t('nav.home') === 'Home' ? 'No replies yet' : 'Chưa có câu trả lời nào'}</p>
                 <p className="text-sm mt-1">Hãy là người đầu tiên trả lời!</p>
               </div>
             )}
@@ -1312,20 +1314,20 @@ export default function Forum({ user }: ForumProps) {
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-xl font-bold text-white">Đặt câu hỏi mới</h1>
+        <h1 className="text-xl font-bold text-white">{t('nav.home') === 'Home' ? 'Ask a New Question' : 'Đặt câu hỏi mới'}</h1>
       </div>
 
       {/* Form */}
       <div className="bg-gray-800/40 rounded-xl border border-gray-700/50 p-6 space-y-5">
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Danh mục *</label>
+          <label className="block text-sm font-medium text-gray-300 mb-2">{t('forum.categories')} *</label>
           <select
             value={newCategoryId}
             onChange={(e) => setNewCategoryId(e.target.value)}
             className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-600 text-white focus:outline-none focus:border-blue-500"
           >
-            <option value="">Chọn danh mục</option>
+            <option value="">{t('forum.selectCategory')}</option>
             {categories.map(cat => (
               <option key={cat.id} value={cat.id}>{cat.icon} {cat.name}</option>
             ))}
@@ -1334,27 +1336,27 @@ export default function Forum({ user }: ForumProps) {
 
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Tiêu đề *</label>
+          <label className="block text-sm font-medium text-gray-300 mb-2">{t('forum.postTitle')} *</label>
           <input
             type="text"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            placeholder="Tiêu đề câu hỏi của bạn..."
+            placeholder={t('nav.home') === 'Home' ? 'Title of your question...' : 'Tiêu đề câu hỏi của bạn...'}
             className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-600 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
           />
-          <p className="text-xs text-gray-500 mt-1">Tiêu đề nên ngắn gọn và mô tả rõ vấn đề của bạn</p>
+          <p className="text-xs text-gray-500 mt-1">{t('nav.home') === 'Home' ? 'Title should be short and clearly describe your problem' : 'Tiêu đề nên ngắn gọn và mô tả rõ vấn đề của bạn'}</p>
         </div>
 
         {/* Content */}
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">Nội dung *</label>
+          <label className="block text-sm font-medium text-gray-300 mb-2">{t('forum.postContent')} *</label>
           <textarea
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
-            placeholder="Mô tả chi tiết vấn đề của bạn. Nếu có code, hãy paste vào đây..."
+            placeholder={t('nav.home') === 'Home' ? 'Describe your problem in detail. If you have code, paste it here...' : 'Mô tả chi tiết vấn đề của bạn. Nếu có code, hãy paste vào đây...'}
             className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-600 text-white placeholder-gray-500 resize-none focus:outline-none focus:border-blue-500 min-h-[200px] font-mono"
           />
-          <p className="text-xs text-gray-500 mt-1">Cung cấp đầy đủ thông tin: code, lỗi gặp phải, những gì bạn đã thử...</p>
+          <p className="text-xs text-gray-500 mt-1">{t('nav.home') === 'Home' ? 'Provide full info: code, error, what you have tried...' : 'Cung cấp đầy đủ thông tin: code, lỗi gặp phải, những gì bạn đã thử...'}</p>
         </div>
 
         {/* Tags */}
@@ -1364,10 +1366,10 @@ export default function Forum({ user }: ForumProps) {
             type="text"
             value={newTags}
             onChange={(e) => setNewTags(e.target.value)}
-            placeholder="python, django, api (phân cách bằng dấu phẩy)"
+            placeholder={t('forum.tagsPlaceholder')}
             className="w-full px-4 py-3 rounded-lg bg-gray-900/50 border border-gray-600 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
           />
-          <p className="text-xs text-gray-500 mt-1">Tags giúp người khác tìm thấy câu hỏi của bạn dễ dàng hơn</p>
+          <p className="text-xs text-gray-500 mt-1">{t('nav.home') === 'Home' ? 'Tags help others find your question more easily' : 'Tags giúp người khác tìm thấy câu hỏi của bạn dễ dàng hơn'}</p>
         </div>
 
         {/* Submit */}
@@ -1382,7 +1384,7 @@ export default function Forum({ user }: ForumProps) {
             ) : (
               <Send className="w-5 h-5" />
             )}
-            Đăng câu hỏi
+            {t('forum.submitPost')}
           </button>
           <button
             onClick={() => {
@@ -1401,13 +1403,13 @@ export default function Forum({ user }: ForumProps) {
         {/* Tips */}
         <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
           <h3 className="text-sm font-medium text-blue-400 mb-2 flex items-center gap-2">
-            <Lightbulb className="w-4 h-4" /> Mẹo đặt câu hỏi hay
+            <Lightbulb className="w-4 h-4" /> {t('forum.tips')}
           </h3>
           <ul className="text-xs text-gray-400 space-y-1">
-            <li>• Mô tả rõ ràng vấn đề bạn đang gặp phải</li>
-            <li>• Đính kèm code và thông báo lỗi (nếu có)</li>
-            <li>• Liệt kê những gì bạn đã thử</li>
-            <li>• Sử dụng tags phù hợp để dễ tìm kiếm</li>
+            <li>• {t('nav.home') === 'Home' ? 'Clearly describe the problem you are facing' : 'Mô tả rõ ràng vấn đề bạn đang gặp phải'}</li>
+            <li>• {t('nav.home') === 'Home' ? 'Include code and error messages (if any)' : 'Đính kèm code và thông báo lỗi (nếu có)'}</li>
+            <li>• {t('nav.home') === 'Home' ? 'List what you have already tried' : 'Liệt kê những gì bạn đã thử'}</li>
+            <li>• {t('nav.home') === 'Home' ? 'Use appropriate tags for easy searching' : 'Sử dụng tags phù hợp để dễ tìm kiếm'}</li>
           </ul>
         </div>
       </div>
@@ -1427,7 +1429,7 @@ export default function Forum({ user }: ForumProps) {
         </button>
         <div>
           <h1 className="text-xl font-bold text-white flex items-center gap-2">
-            <Bookmark className="w-5 h-5 text-yellow-400" /> Bài viết đã lưu
+            <Bookmark className="w-5 h-5 text-yellow-400" /> {t('nav.home') === 'Home' ? 'Saved Posts' : 'Bài viết đã lưu'}
           </h1>
           <p className="text-sm text-gray-400">{bookmarks.length} bài viết</p>
         </div>

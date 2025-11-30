@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
+import { useLanguage } from './contexts/LanguageContext';
 import { Auth } from './components/Auth';
 import { Dashboard } from './components/Dashboard';
 import { AnimatedBackground } from './components/AnimatedBackground';
@@ -8,6 +9,7 @@ import { AIAssistant } from './components/AIAssistant';
 
 function App() {
   const { user, loading } = useAuth();
+  const { t } = useLanguage();
   const [isResetPassword, setIsResetPassword] = useState(false);
 
   useEffect(() => {
@@ -102,7 +104,7 @@ function App() {
         <div className="min-h-screen flex items-center justify-center relative z-10">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-            <p className="text-gray-200">Đang tải...</p>
+            <p className="text-gray-200">{t('common.loading')}</p>
           </div>
         </div>
       </>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Code2, Users, ChevronLeft, ChevronRight, Zap, Trophy, Target, Sparkles, BookOpen, Rocket, Star, CheckCircle2 } from 'lucide-react';
 import { ScrollReveal } from './ScrollReveal';
 import { supabase } from '../lib/supabase';
+import { useLanguage } from '../contexts/LanguageContext';
 
 type Course = {
   id: string;
@@ -19,11 +20,25 @@ type HomePageProps = {
 };
 
 export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
+  const { t } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [popularCourses, setPopularCourses] = useState<Course[]>([]);
 
-  const slides = [
+  const slides = t('nav.home') === 'Home' ? [
+    {
+      title: 'Leading Online Programming Learning Platform',
+      description: 'Develop professional programming skills with modern learning methods. Courses are systematically designed, combining theory and practice for optimal learning efficiency.',
+    },
+    {
+      title: 'High Quality Courses From Experts',
+      description: 'Over 50+ courses from basic to advanced in JavaScript, Python, C++, React and many other technologies. Content is compiled by experienced programmers in the industry.',
+    },
+    {
+      title: 'Practice With Integrated Development Environment',
+      description: 'Professional code editor built-in, supporting multiple programming languages. Write code, compile and see results instantly without installing software.',
+    },
+  ] : [
     {
       title: 'Nền Tảng Học Lập Trình Trực Tuyến Hàng Đầu',
       description: 'Phát triển kỹ năng lập trình chuyên nghiệp với phương pháp học tập hiện đại. Khóa học được thiết kế bài bản, kết hợp lý thuyết và thực hành để tối ưu hiệu quả học tập.',
