@@ -6,7 +6,8 @@ import {
   Pin, Tag, User, Send, Reply, MoreHorizontal, Trash2, Edit3,
   TrendingUp, HelpCircle, Flame, Award, Crown, Shield, Star,
   ChevronRight, MessageCircle, Zap, Code, Database,
-  GitBranch, Palette, Briefcase, Lightbulb, PartyPopper, Coffee
+  GitBranch, Palette, Briefcase, Lightbulb, PartyPopper, Coffee,
+  Bell, Flag, AtSign, Hash, X, AlertTriangle, Medal
 } from 'lucide-react';
 
 interface Category {
@@ -25,6 +26,7 @@ interface Author {
   username: string;
   avatar_url: string | null;
   level: number;
+  reputation?: number;
 }
 
 interface Post {
@@ -58,6 +60,23 @@ interface ReplyType {
   children?: ReplyType[];
 }
 
+interface Notification {
+  id: string;
+  type: 'reply' | 'vote' | 'accepted' | 'mention';
+  post_id: string | null;
+  reply_id: string | null;
+  actor_id: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+  actor?: { username: string; avatar_url: string | null };
+}
+
+interface TrendingTag {
+  name: string;
+  usage_count: number;
+}
+
 interface ForumProps {
   user: { id: string } | null;
 }
@@ -84,7 +103,7 @@ const getLevelBadge = (level: number) => {
 };
 
 export default function Forum({ user }: ForumProps) {
-  const [viewMode, setViewMode] = useState<'home' | 'category' | 'post-detail' | 'new-post' | 'bookmarks'>('home');
+  const [viewMode, setViewMode] = useState<'home' | 'category' | 'post-detail' | 'new-post' | 'bookmarks' | 'notifications'>('home');
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -112,14 +131,27 @@ export default function Forum({ user }: ForumProps) {
   const [userVotes, setUserVotes] = useState<Record<string, 'up' | 'down'>>({});
   const [bookmarks, setBookmarks] = useState<string[]>([]);
   const [stats, setStats] = useState({ totalPosts: 0, totalReplies: 0, totalUsers: 0 });
+  
+  // New States for Advanced Features
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [trendingTags, setTrendingTags] = useState<TrendingTag[]>([]);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportTarget, setReportTarget] = useState<{ type: 'post' | 'reply'; id: string } | null>(null);
+  const [reportReason, setReportReason] = useState<string>('');
+  const [reportDescription, setReportDescription] = useState('');
+  const [userStats, setUserStats] = useState<{ reputation: number; posts_count: number; accepted_answers: number } | null>(null);
 
   useEffect(() => {
     fetchCategories();
     fetchPosts();
     fetchStats();
+    fetchTrendingTags();
     if (user) {
       fetchUserVotes();
       fetchBookmarks();
+      fetchNotifications();
+      fetchUserStats();
     }
   }, [user]);
 
@@ -140,6 +172,59 @@ export default function Forum({ user }: ForumProps) {
       totalReplies: repliesCount || 0,
       totalUsers: usersCount || 0
     });
+  };
+
+  // Fetch trending tags
+  const fetchTrendingTags = async () => {
+    const { data } = await supabase.from('forum_tags').select('name, usage_count').order('usage_count', { ascending: false }).limit(10);
+    if (data) setTrendingTags(data);
+  };
+
+  // Fetch notifications
+  const fetchNotifications = async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from('forum_notifications')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(20);
+    if (data) {
+      setNotifications(data);
+      setUnreadCount(data.filter(n => !n.is_read).length);
+    }
+  };
+
+  // Fetch user stats (reputation)
+  const fetchUserStats = async () => {
+    if (!user) return;
+    const { data } = await supabase.from('forum_user_stats').select('*').eq('user_id', user.id).single();
+    if (data) setUserStats(data);
+  };
+
+  // Mark notifications as read
+  const markNotificationsRead = async (ids: string[]) => {
+    if (!user || ids.length === 0) return;
+    await supabase.from('forum_notifications').update({ is_read: true }).in('id', ids);
+    setNotifications(prev => prev.map(n => ids.includes(n.id) ? { ...n, is_read: true } : n));
+    setUnreadCount(prev => Math.max(0, prev - ids.length));
+  };
+
+  // Report post/reply
+  const submitReport = async () => {
+    if (!user || !reportTarget || !reportReason) return;
+    const reportData = {
+      reporter_id: user.id,
+      reason: reportReason,
+      description: reportDescription,
+      ...(reportTarget.type === 'post' ? { post_id: reportTarget.id } : { reply_id: reportTarget.id })
+    };
+    await supabase.from('forum_reports').insert(reportData);
+    setShowReportModal(false);
+    setReportTarget(null);
+    setReportReason('');
+    setReportDescription('');
+    alert('Báo cáo đã được gửi. Cảm ơn bạn!');
   };
 
   const fetchCategories = async () => {
@@ -605,39 +690,45 @@ export default function Forum({ user }: ForumProps) {
                 <AuthorBadge author={reply.author} size="sm" />
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-500">{formatDate(reply.created_at)}</span>
-                  {(isOwner || isPostOwner) && (
-                    <div className="relative group">
-                      <button className="p-1.5 rounded-lg hover:bg-gray-700/50 text-gray-400">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </button>
-                      <div className="absolute right-0 top-full mt-1 py-1 bg-gray-800 rounded-lg border border-gray-700 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 min-w-[120px]">
-                        {isOwner && (
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); setEditingReply(reply.id); setEditContent(reply.content); }}
-                            className="w-full px-3 py-2 text-left text-sm text-gray-300 hover:bg-gray-700/50 flex items-center gap-2"
-                          >
-                            <Edit3 className="w-4 h-4" /> Sửa
-                          </button>
-                        )}
-                        {isOwner && (
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); deleteReply(reply.id); }}
-                            className="w-full px-3 py-2 text-left text-sm text-red-400 hover:bg-gray-700/50 flex items-center gap-2"
-                          >
-                            <Trash2 className="w-4 h-4" /> Xóa
-                          </button>
-                        )}
-                        {isPostOwner && !reply.is_accepted && !selectedPost?.is_solved && (
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); markAsSolved(reply.id); }}
-                            className="w-full px-3 py-2 text-left text-sm text-green-400 hover:bg-gray-700/50 flex items-center gap-2"
-                          >
-                            <CheckCircle2 className="w-4 h-4" /> Chấp nhận
-                          </button>
-                        )}
-                      </div>
+                  <div className="relative group">
+                    <button className="p-1.5 rounded-lg hover:bg-gray-700/50 text-gray-400">
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
+                    <div className="absolute right-0 top-full mt-1 py-1 bg-gray-800 rounded-lg border border-gray-700 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 min-w-[120px]">
+                      {isOwner && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setEditingReply(reply.id); setEditContent(reply.content); }}
+                          className="w-full px-3 py-2 text-left text-sm text-gray-300 hover:bg-gray-700/50 flex items-center gap-2"
+                        >
+                          <Edit3 className="w-4 h-4" /> Sửa
+                        </button>
+                      )}
+                      {isOwner && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); deleteReply(reply.id); }}
+                          className="w-full px-3 py-2 text-left text-sm text-red-400 hover:bg-gray-700/50 flex items-center gap-2"
+                        >
+                          <Trash2 className="w-4 h-4" /> Xóa
+                        </button>
+                      )}
+                      {isPostOwner && !reply.is_accepted && !selectedPost?.is_solved && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); markAsSolved(reply.id); }}
+                          className="w-full px-3 py-2 text-left text-sm text-green-400 hover:bg-gray-700/50 flex items-center gap-2"
+                        >
+                          <CheckCircle2 className="w-4 h-4" /> Chấp nhận
+                        </button>
+                      )}
+                      {user && !isOwner && (
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setReportTarget({ type: 'reply', id: reply.id }); setShowReportModal(true); }}
+                          className="w-full px-3 py-2 text-left text-sm text-orange-400 hover:bg-gray-700/50 flex items-center gap-2"
+                        >
+                          <Flag className="w-4 h-4" /> Báo cáo
+                        </button>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </div>
               </div>
               
@@ -769,7 +860,48 @@ export default function Forum({ user }: ForumProps) {
             <Bookmark className="w-5 h-5" /> Đã lưu ({bookmarks.length})
           </button>
         )}
+        {user && (
+          <button
+            onClick={() => { setViewMode('notifications'); fetchNotifications(); }}
+            className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gray-800 text-gray-300 hover:bg-gray-700 transition-all border border-gray-700"
+          >
+            <Bell className="w-5 h-5" /> Thông báo
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
+          </button>
+        )}
+        {user && userStats && (
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 text-yellow-400">
+            <Medal className="w-5 h-5" />
+            <span className="font-medium">{userStats.reputation}</span>
+            <span className="text-yellow-400/70 text-sm">điểm</span>
+          </div>
+        )}
       </div>
+
+      {/* Trending Tags */}
+      {trendingTags.length > 0 && (
+        <div className="p-4 rounded-xl bg-gray-800/40 border border-gray-700/50">
+          <h3 className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
+            <Hash className="w-4 h-4 text-purple-400" /> Tags phổ biến
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {trendingTags.map((tag, i) => (
+              <button
+                key={i}
+                onClick={() => setSearchQuery(tag.name)}
+                className="px-3 py-1.5 rounded-lg bg-purple-500/10 text-purple-400 text-sm hover:bg-purple-500/20 transition-colors flex items-center gap-1"
+              >
+                #{tag.name}
+                <span className="text-xs text-purple-400/60">({tag.usage_count})</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Categories Grid */}
       <div>
@@ -979,6 +1111,15 @@ export default function Forum({ user }: ForumProps) {
             >
               {bookmarks.includes(selectedPost.id) ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
             </button>
+            {user && !isOwner && (
+              <button
+                onClick={() => { setReportTarget({ type: 'post', id: selectedPost.id }); setShowReportModal(true); }}
+                className="p-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-orange-400 transition-colors"
+                title="Báo cáo bài viết"
+              >
+                <Flag className="w-5 h-5" />
+              </button>
+            )}
             {isOwner && !editingPost && (
               <button
                 onClick={startEditPost}
@@ -1318,6 +1459,149 @@ export default function Forum({ user }: ForumProps) {
     </div>
   );
 
+  // Notifications View
+  const renderNotifications = () => (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => { setViewMode('home'); fetchPosts(); }}
+            className="p-2 rounded-lg hover:bg-gray-800 text-gray-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-xl font-bold text-white flex items-center gap-2">
+              <Bell className="w-5 h-5 text-blue-400" /> Thông báo
+            </h1>
+            <p className="text-sm text-gray-400">{unreadCount} chưa đọc</p>
+          </div>
+        </div>
+        {unreadCount > 0 && (
+          <button
+            onClick={() => markNotificationsRead(notifications.filter(n => !n.is_read).map(n => n.id))}
+            className="text-sm text-blue-400 hover:text-blue-300"
+          >
+            Đánh dấu tất cả đã đọc
+          </button>
+        )}
+      </div>
+
+      {/* Notifications List */}
+      {notifications.length > 0 ? (
+        <div className="space-y-2">
+          {notifications.map(notif => (
+            <div
+              key={notif.id}
+              onClick={() => {
+                if (!notif.is_read) markNotificationsRead([notif.id]);
+                if (notif.post_id) {
+                  fetchPostDetail(notif.post_id);
+                  setViewMode('post-detail');
+                }
+              }}
+              className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                notif.is_read 
+                  ? 'bg-gray-800/20 border-gray-700/50 hover:bg-gray-800/40' 
+                  : 'bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20'
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className={`p-2 rounded-lg ${
+                  notif.type === 'reply' ? 'bg-blue-500/20 text-blue-400' :
+                  notif.type === 'vote' ? 'bg-green-500/20 text-green-400' :
+                  notif.type === 'accepted' ? 'bg-yellow-500/20 text-yellow-400' :
+                  'bg-purple-500/20 text-purple-400'
+                }`}>
+                  {notif.type === 'reply' && <MessageCircle className="w-4 h-4" />}
+                  {notif.type === 'vote' && <ThumbsUp className="w-4 h-4" />}
+                  {notif.type === 'accepted' && <CheckCircle2 className="w-4 h-4" />}
+                  {notif.type === 'mention' && <AtSign className="w-4 h-4" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-gray-300">{notif.message}</p>
+                  <p className="text-xs text-gray-500 mt-1">{formatDate(notif.created_at)}</p>
+                </div>
+                {!notif.is_read && (
+                  <div className="w-2 h-2 rounded-full bg-blue-500" />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 text-gray-500">
+          <Bell className="w-12 h-12 mx-auto mb-3 opacity-50" />
+          <p>Chưa có thông báo nào</p>
+        </div>
+      )}
+    </div>
+  );
+
+  // Report Modal
+  const ReportModal = () => {
+    if (!showReportModal) return null;
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
+        <div className="bg-gray-800 rounded-2xl border border-gray-700 w-full max-w-md p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <Flag className="w-5 h-5 text-red-400" /> Báo cáo vi phạm
+            </h3>
+            <button onClick={() => setShowReportModal(false)} className="p-1 hover:bg-gray-700 rounded-lg">
+              <X className="w-5 h-5 text-gray-400" />
+            </button>
+          </div>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm text-gray-300 mb-2">Lý do báo cáo *</label>
+              <select
+                value={reportReason}
+                onChange={(e) => setReportReason(e.target.value)}
+                className="w-full px-4 py-2.5 rounded-lg bg-gray-900 border border-gray-600 text-white focus:outline-none focus:border-red-500"
+              >
+                <option value="">Chọn lý do</option>
+                <option value="spam">Spam / Quảng cáo</option>
+                <option value="inappropriate">Nội dung không phù hợp</option>
+                <option value="harassment">Quấy rối / Xúc phạm</option>
+                <option value="misinformation">Thông tin sai lệch</option>
+                <option value="other">Khác</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm text-gray-300 mb-2">Mô tả chi tiết</label>
+              <textarea
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+                placeholder="Mô tả thêm về vấn đề..."
+                className="w-full px-4 py-3 rounded-lg bg-gray-900 border border-gray-600 text-white placeholder-gray-500 resize-none focus:outline-none focus:border-red-500 h-24"
+              />
+            </div>
+            
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={submitReport}
+                disabled={!reportReason}
+                className="flex-1 py-2.5 rounded-lg bg-red-600 text-white font-medium hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+              >
+                <AlertTriangle className="w-4 h-4" /> Gửi báo cáo
+              </button>
+              <button
+                onClick={() => setShowReportModal(false)}
+                className="px-6 py-2.5 rounded-lg bg-gray-700 text-gray-300 hover:bg-gray-600 transition-colors"
+              >
+                Hủy
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // Main Render
   return (
     <div className="min-h-screen bg-gray-900 p-4 md:p-6 lg:p-8">
@@ -1342,7 +1626,11 @@ export default function Forum({ user }: ForumProps) {
         {viewMode === 'post-detail' && renderPostDetail()}
         {viewMode === 'new-post' && renderNewPost()}
         {viewMode === 'bookmarks' && renderBookmarks()}
+        {viewMode === 'notifications' && renderNotifications()}
       </div>
+      
+      {/* Report Modal */}
+      <ReportModal />
     </div>
   );
 }
