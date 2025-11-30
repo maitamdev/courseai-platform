@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { MessageCircle, Send, X, Bot, User, Sparkles, Code2, Trash2, ChevronDown, Database, Cloud, Brain, Palette, Terminal, Cpu, Layers } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 
 type Message = {

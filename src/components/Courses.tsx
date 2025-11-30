@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { BookOpen, Users, Clock, Star, Play, CheckCircle, Lock, ChevronDown, ChevronUp, X, Gift, Rocket, Award } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 import { Certificate } from './Certificate';
 
@@ -61,6 +62,7 @@ type Course = {
 
 export const Courses = () => {
   const { user, profile } = useAuth();
+  const { t } = useLanguage();
   const [courses, setCourses] = useState<Course[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState('all');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
@@ -225,9 +227,9 @@ export const Courses = () => {
 
   const getLevelText = (level: string) => {
     switch (level) {
-      case 'beginner': return 'Cơ bản';
-      case 'intermediate': return 'Trung cấp';
-      case 'advanced': return 'Nâng cao';
+      case 'beginner': return t('nav.home') === 'Home' ? 'Beginner' : 'Cơ bản';
+      case 'intermediate': return t('nav.home') === 'Home' ? 'Intermediate' : 'Trung cấp';
+      case 'advanced': return t('nav.home') === 'Home' ? 'Advanced' : 'Nâng cao';
       default: return level;
     }
   };
@@ -255,19 +257,21 @@ export const Courses = () => {
 
   const handlePurchase = async (course: Course) => {
     if (!user || !profile) {
-      alert('Vui lòng đăng nhập để mua khóa học!');
+      alert(t('nav.home') === 'Home' ? 'Please login to purchase this course!' : 'Vui lòng đăng nhập để mua khóa học!');
       return;
     }
 
     // Kiểm tra đã mua chưa
     if (purchasedCourses.has(course.id)) {
-      alert('Bạn đã sở hữu khóa học này!');
+      alert(t('nav.home') === 'Home' ? 'You already own this course!' : 'Bạn đã sở hữu khóa học này!');
       return;
     }
 
     // Kiểm tra đủ xu không
     if (profile.total_coins < course.price_coins) {
-      alert(`Không đủ xu! Bạn cần ${course.price_coins} xu nhưng chỉ có ${profile.total_coins} xu.`);
+      alert(t('nav.home') === 'Home' 
+        ? `Not enough coins! You need ${course.price_coins} coins but only have ${profile.total_coins} coins.`
+        : `Không đủ xu! Bạn cần ${course.price_coins} xu nhưng chỉ có ${profile.total_coins} xu.`);
       return;
     }
 
@@ -292,17 +296,19 @@ export const Courses = () => {
         user_id: user.id,
         transaction_type: 'purchase',
         amount: -course.price_coins,
-        description: `Mua khóa học: ${course.title}`
+        description: t('nav.home') === 'Home' ? `Purchased course: ${course.title}` : `Mua khóa học: ${course.title}`
       });
 
       setPurchasedCourses(new Set([...purchasedCourses, course.id]));
-      alert(`Mua khóa học "${course.title}" thành công!`);
+      alert(t('nav.home') === 'Home' 
+        ? `Successfully purchased "${course.title}"!` 
+        : `Mua khóa học "${course.title}" thành công!`);
     } catch (error: any) {
       console.error('Error purchasing course:', error);
       if (error.code === '23505') {
-        alert('Bạn đã sở hữu khóa học này!');
+        alert(t('nav.home') === 'Home' ? 'You already own this course!' : 'Bạn đã sở hữu khóa học này!');
       } else {
-        alert('Có lỗi xảy ra khi mua khóa học!');
+        alert(t('nav.home') === 'Home' ? 'An error occurred while purchasing the course!' : 'Có lỗi xảy ra khi mua khóa học!');
       }
     }
   };
@@ -385,7 +391,7 @@ export const Courses = () => {
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
-    return `${mins} phút`;
+    return t('nav.home') === 'Home' ? `${mins} min` : `${mins} phút`;
   };
 
   if (loading) {
@@ -393,7 +399,7 @@ export const Courses = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center py-12">
           <div className="w-16 h-16 border-4 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-400">Đang tải khóa học...</p>
+          <p className="text-gray-400">{t('nav.home') === 'Home' ? 'Loading courses...' : 'Đang tải khóa học...'}</p>
         </div>
       </div>
     );
@@ -404,8 +410,8 @@ export const Courses = () => {
     return (
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-black text-white mb-2"> KHOÁ HỌC</h1>
-          <p className="text-gray-400">Chọn khóa học và bắt đầu hành trình lập trình của bạn</p>
+          <h1 className="text-4xl font-black text-white mb-2">{t('nav.home') === 'Home' ? 'COURSES' : ' KHOÁ HỌC'}</h1>
+          <p className="text-gray-400">{t('nav.home') === 'Home' ? 'Choose a course and start your programming journey' : 'Chọn khóa học và bắt đầu hành trình lập trình của bạn'}</p>
         </div>
 
         {/* Filter */}
@@ -420,7 +426,7 @@ export const Courses = () => {
                   : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
               }`}
             >
-              {lang === 'all' ? 'Tất cả' : lang}
+              {lang === 'all' ? (t('nav.home') === 'Home' ? 'All' : 'Tất cả') : lang}
             </button>
           ))}
         </div>
@@ -478,11 +484,11 @@ export const Courses = () => {
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-700">
                   {course.price_coins === 0 ? (
-                    <span className="text-green-400 font-bold">Miễn phí</span>
+                    <span className="text-green-400 font-bold">{t('nav.home') === 'Home' ? 'Free' : 'Miễn phí'}</span>
                   ) : (
-                    <span className="text-emerald-400 font-bold">{course.price_coins} xu</span>
+                    <span className="text-emerald-400 font-bold">{course.price_coins} {t('nav.home') === 'Home' ? 'coins' : 'xu'}</span>
                   )}
-                  <span className="text-sm text-gray-400">{getTotalLessons(course)} bài học</span>
+                  <span className="text-sm text-gray-400">{getTotalLessons(course)} {t('nav.home') === 'Home' ? 'lessons' : 'bài học'}</span>
                 </div>
               </div>
             </div>
@@ -506,7 +512,7 @@ export const Courses = () => {
         }}
         className="mb-6 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg flex items-center gap-2"
       >
-        ← Quay lại
+        ← {t('nav.home') === 'Home' ? 'Back' : 'Quay lại'}
       </button>
 
       {/* Course Header */}
@@ -520,7 +526,7 @@ export const Courses = () => {
               </span>
               {isPurchased && (
                 <span className="px-3 py-1 bg-green-500 text-white text-sm font-bold rounded-full">
-                  ✓ Đã sở hữu
+                  ✓ {t('nav.home') === 'Home' ? 'Owned' : 'Đã sở hữu'}
                 </span>
               )}
             </div>
@@ -531,11 +537,11 @@ export const Courses = () => {
         <div className="flex items-center gap-6 text-white/80 text-sm mb-6">
           <span className="flex items-center gap-1">
             <Users className="w-4 h-4" />
-            {selectedCourse.student_count} học viên
+            {selectedCourse.student_count} {t('nav.home') === 'Home' ? 'students' : 'học viên'}
           </span>
           <span className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            {selectedCourse.duration_hours} giờ
+            {selectedCourse.duration_hours} {t('nav.home') === 'Home' ? 'hours' : 'giờ'}
           </span>
           <span className="flex items-center gap-1">
             <Star className="w-4 h-4 text-emerald-300 fill-emerald-300" />
@@ -543,7 +549,7 @@ export const Courses = () => {
           </span>
           <span className="flex items-center gap-1">
             <BookOpen className="w-4 h-4" />
-            {getTotalLessons(selectedCourse)} bài học
+            {getTotalLessons(selectedCourse)} {t('nav.home') === 'Home' ? 'lessons' : 'bài học'}
           </span>
         </div>
 
@@ -551,7 +557,7 @@ export const Courses = () => {
         {isPurchased && (
           <div className="bg-white/20 rounded-xl p-4 mb-6">
             <div className="flex justify-between text-white text-sm mb-2">
-              <span>Tiến độ học tập</span>
+              <span>{t('nav.home') === 'Home' ? 'Learning Progress' : 'Tiến độ học tập'}</span>
               <span className="font-bold">{progress}%</span>
             </div>
             <div className="w-full bg-white/30 rounded-full h-2 mb-3">
@@ -564,7 +570,7 @@ export const Courses = () => {
                 className="w-full py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:scale-[1.02]"
               >
                 <Award className="w-5 h-5" />
-                🎉 Nhận Chứng Chỉ Hoàn Thành
+                🎉 {t('nav.home') === 'Home' ? 'Get Completion Certificate' : 'Nhận Chứng Chỉ Hoàn Thành'}
               </button>
             )}
           </div>
@@ -575,15 +581,16 @@ export const Courses = () => {
           <div className="space-y-4">
             <div className="bg-green-500/20 border border-green-500/30 rounded-xl p-4">
               <p className="text-green-300 text-sm">
-                🔒 <strong>Khóa học trả phí:</strong> Bạn cần mua khóa học này để truy cập tất cả bài học. 
-                Chỉ bài học đầu tiên được miễn phí để xem trước.
+                {t('nav.home') === 'Home' 
+                  ? '🔒 Paid course: You need to purchase this course to access all lessons. Only the first lesson is free to preview.'
+                  : '🔒 Khóa học trả phí: Bạn cần mua khóa học này để truy cập tất cả bài học. Chỉ bài học đầu tiên được miễn phí để xem trước.'}
               </p>
             </div>
             <button
               onClick={() => handlePurchase(selectedCourse)}
               className="px-8 py-3 bg-emerald-400 hover:bg-emerald-500 text-gray-900 rounded-xl font-bold"
             >
-              Mua khóa học - {selectedCourse.price_coins} xu
+              {t('nav.home') === 'Home' ? `Buy Course - ${selectedCourse.price_coins} coins` : `Mua khóa học - ${selectedCourse.price_coins} xu`}
             </button>
           </div>
         )}
@@ -591,7 +598,9 @@ export const Courses = () => {
         {selectedCourse.price_coins === 0 && (
           <div className="bg-green-500/20 border border-green-500/30 rounded-xl p-4">
             <p className="text-green-300 text-sm">
-              🎉 <strong>Khóa học miễn phí:</strong> Bạn có thể truy cập tất cả bài học trong khóa học này!
+              {t('nav.home') === 'Home' 
+                ? '🎉 Free course: You can access all lessons in this course!'
+                : '🎉 Khóa học miễn phí: Bạn có thể truy cập tất cả bài học trong khóa học này!'}
             </p>
           </div>
         )}
@@ -618,8 +627,12 @@ export const Courses = () => {
               <Lock className="w-8 h-8 text-emerald-400" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white mb-1">Mua khóa học để xem lộ trình đầy đủ</h3>
-              <p className="text-gray-400">Bạn có thể xem trước bài học đầu tiên miễn phí bên dưới.</p>
+              <h3 className="text-xl font-bold text-white mb-1">
+                {t('nav.home') === 'Home' ? 'Purchase course to see full curriculum' : 'Mua khóa học để xem lộ trình đầy đủ'}
+              </h3>
+              <p className="text-gray-400">
+                {t('nav.home') === 'Home' ? 'You can preview the first lesson for free below.' : 'Bạn có thể xem trước bài học đầu tiên miễn phí bên dưới.'}
+              </p>
             </div>
           </div>
         </div>
@@ -642,7 +655,7 @@ export const Courses = () => {
                 <div className="text-left">
                   <h3 className="font-bold text-white text-lg mb-1">{section.title}</h3>
                   <p className="text-sm text-gray-400">
-                    {section.lessons.length} bài học • {Math.round(section.lessons.reduce((sum, l) => sum + l.video_duration, 0) / 60)} phút
+                    {section.lessons.length} {t('nav.home') === 'Home' ? 'lessons' : 'bài học'} • {Math.round(section.lessons.reduce((sum, l) => sum + l.video_duration, 0) / 60)} {t('nav.home') === 'Home' ? 'min' : 'phút'}
                   </p>
                 </div>
               </div>
@@ -696,17 +709,23 @@ export const Courses = () => {
                               lesson.lesson_type === 'exercise' ? 'bg-green-500/20 text-green-400' :
                               'bg-purple-500/20 text-purple-400'
                             }`}>
-                              {lesson.lesson_type === 'video' ? '📹 Video' : lesson.lesson_type === 'exercise' ? '✏️ Bài tập' : '❓ Quiz'}
+                              {lesson.lesson_type === 'video' 
+                                ? (t('nav.home') === 'Home' ? '📹 Video' : '📹 Video') 
+                                : lesson.lesson_type === 'exercise' 
+                                  ? (t('nav.home') === 'Home' ? '✏️ Exercise' : '✏️ Bài tập') 
+                                  : (t('nav.home') === 'Home' ? '❓ Quiz' : '❓ Quiz')}
                             </span>
                             {lesson.is_free && !isPurchased && (
                               <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-medium rounded flex items-center gap-1">
                                 <Gift className="w-3 h-3" />
-                                Miễn phí
+                                {t('nav.home') === 'Home' ? 'Free' : 'Miễn phí'}
                               </span>
                             )}
                             {isLocked && (
                               <span className="px-2 py-0.5 bg-red-500/20 text-red-400 text-xs font-medium rounded">
-                                🔒 {isPurchased ? 'Hoàn thành bài trước' : 'Cần mua'}
+                                🔒 {isPurchased 
+                                  ? (t('nav.home') === 'Home' ? 'Complete previous' : 'Hoàn thành bài trước') 
+                                  : (t('nav.home') === 'Home' ? 'Purchase required' : 'Cần mua')}
                               </span>
                             )}
                           </div>
@@ -781,7 +800,7 @@ export const Courses = () => {
                       <div className="text-center">
                         <Play className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
                         <p className="text-gray-400">Video: {selectedLesson.title}</p>
-                        <p className="text-sm text-gray-500">Thời lượng: {formatDuration(selectedLesson.video_duration)}</p>
+                        <p className="text-sm text-gray-500">{t('nav.home') === 'Home' ? 'Duration' : 'Thời lượng'}: {formatDuration(selectedLesson.video_duration)}</p>
                       </div>
                     </div>
                   )}
@@ -790,7 +809,7 @@ export const Courses = () => {
                   {selectedLesson.content?.overview && (
                     <div className="bg-gray-700/50 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-white mb-3 flex items-center gap-2">
-                        📋 Tổng quan
+                        📋 {t('nav.home') === 'Home' ? 'Overview' : 'Tổng quan'}
                       </h3>
                       <p className="text-gray-300 leading-relaxed">{selectedLesson.content.overview}</p>
                     </div>
@@ -800,7 +819,7 @@ export const Courses = () => {
                   {selectedLesson.content?.theory && selectedLesson.content.theory.length > 0 && (
                     <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-blue-400 mb-3 flex items-center gap-2">
-                        <BookOpen className="w-5 h-5" /> Kiến thức chính
+                        <BookOpen className="w-5 h-5" /> {t('nav.home') === 'Home' ? 'Key Concepts' : 'Kiến thức chính'}
                       </h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.theory.map((item, idx) => (
@@ -817,7 +836,7 @@ export const Courses = () => {
                   {selectedLesson.content?.applications && selectedLesson.content.applications.length > 0 && (
                     <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-cyan-400 mb-3 flex items-center gap-2">
-                        <Rocket className="w-5 h-5" /> Ứng dụng thực tế
+                        <Rocket className="w-5 h-5" /> {t('nav.home') === 'Home' ? 'Real-World Applications' : 'Ứng dụng thực tế'}
                       </h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.applications.map((app, idx) => (
@@ -834,7 +853,7 @@ export const Courses = () => {
                   {selectedLesson.content?.companies && selectedLesson.content.companies.length > 0 && (
                     <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-green-400 mb-3 flex items-center gap-2">
-                        🏢 Các công ty lớn sử dụng Python
+                        🏢 {t('nav.home') === 'Home' ? 'Major Companies Using Python' : 'Các công ty lớn sử dụng Python'}
                       </h3>
                       <div className="grid grid-cols-2 gap-2">
                         {selectedLesson.content.companies.map((company, idx) => (
@@ -851,7 +870,7 @@ export const Courses = () => {
                   {selectedLesson.content?.learning_goals && selectedLesson.content.learning_goals.length > 0 && (
                     <div className="bg-indigo-500/10 border border-indigo-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-indigo-400 mb-3 flex items-center gap-2">
-                        🎯 Mục tiêu học tập của khóa học
+                        🎯 {t('nav.home') === 'Home' ? 'Learning Objectives' : 'Mục tiêu học tập của khóa học'}
                       </h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.learning_goals.map((goal, idx) => (
@@ -867,7 +886,7 @@ export const Courses = () => {
                   {selectedLesson.content?.key_points && selectedLesson.content.key_points.length > 0 && (
                     <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-emerald-400 mb-3 flex items-center gap-2">
-                        ⭐ Điểm quan trọng cần nhớ
+                        ⭐ {t('nav.home') === 'Home' ? 'Key Takeaways' : 'Điểm quan trọng cần nhớ'}
                       </h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.key_points.map((point, idx) => (
@@ -884,7 +903,7 @@ export const Courses = () => {
                   {selectedLesson.content?.examples && selectedLesson.content.examples.length > 0 && (
                     <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-green-400 mb-3 flex items-center gap-2">
-                        💻 Ví dụ minh họa
+                        💻 {t('nav.home') === 'Home' ? 'Code Examples' : 'Ví dụ minh họa'}
                       </h3>
                       {selectedLesson.content.examples.map((example, idx) => (
                         <pre key={idx} className="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-3 last:mb-0">
@@ -898,7 +917,7 @@ export const Courses = () => {
                   {selectedLesson.content?.tips && selectedLesson.content.tips.length > 0 && (
                     <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-5 mb-6">
                       <h3 className="font-bold text-purple-400 mb-3 flex items-center gap-2">
-                        💡 Mẹo hay
+                        💡 {t('nav.home') === 'Home' ? 'Pro Tips' : 'Mẹo hay'}
                       </h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.tips.map((tip, idx) => (
@@ -917,13 +936,13 @@ export const Courses = () => {
               {selectedLesson.lesson_type === 'exercise' && (
                 <>
                   <div className="bg-gray-900/50 rounded-xl p-4 mb-6">
-                    <h3 className="font-bold text-white mb-2">📝 Yêu cầu bài tập</h3>
+                    <h3 className="font-bold text-white mb-2">📝 {t('nav.home') === 'Home' ? 'Exercise Requirements' : 'Yêu cầu bài tập'}</h3>
                     <p className="text-gray-300">{selectedLesson.description}</p>
                   </div>
 
                   {/* Code Editor */}
                   <div className="mb-6">
-                    <h3 className="font-bold text-white mb-3">💻 Viết code của bạn</h3>
+                    <h3 className="font-bold text-white mb-3">💻 {t('nav.home') === 'Home' ? 'Write Your Code' : 'Viết code của bạn'}</h3>
                     <textarea
                       value={userCode}
                       onChange={(e) => {
@@ -931,7 +950,7 @@ export const Courses = () => {
                         setSubmitResult(null);
                       }}
                       className="w-full h-48 bg-gray-900 text-green-400 font-mono text-sm p-4 rounded-xl border border-gray-700 focus:border-emerald-400 focus:outline-none resize-none"
-                      placeholder="Viết code của bạn ở đây..."
+                      placeholder={t('nav.home') === 'Home' ? 'Write your code here...' : 'Viết code của bạn ở đây...'}
                       spellCheck={false}
                     />
                   </div>
@@ -939,13 +958,13 @@ export const Courses = () => {
                   {/* Kết quả nộp bài */}
                   {submitResult === 'correct' && (
                     <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 mb-6">
-                      <p className="text-green-400 font-bold">✅ Chính xác! Bạn đã hoàn thành bài tập.</p>
+                      <p className="text-green-400 font-bold">✅ {t('nav.home') === 'Home' ? 'Correct! You have completed the exercise.' : 'Chính xác! Bạn đã hoàn thành bài tập.'}</p>
                     </div>
                   )}
                   {submitResult === 'wrong' && (
                     <div className="bg-red-500/20 border border-red-500/50 rounded-xl p-4 mb-6">
-                      <p className="text-red-400 font-bold">❌ Chưa đúng! Hãy kiểm tra lại code của bạn.</p>
-                      <p className="text-gray-400 text-sm mt-1">Gợi ý: Xem lại yêu cầu bài tập và các gợi ý bên dưới.</p>
+                      <p className="text-red-400 font-bold">❌ {t('nav.home') === 'Home' ? 'Incorrect! Please check your code.' : 'Chưa đúng! Hãy kiểm tra lại code của bạn.'}</p>
+                      <p className="text-gray-400 text-sm mt-1">{t('nav.home') === 'Home' ? 'Hint: Review the exercise requirements and hints below.' : 'Gợi ý: Xem lại yêu cầu bài tập và các gợi ý bên dưới.'}</p>
                     </div>
                   )}
 
@@ -966,13 +985,13 @@ export const Courses = () => {
                     disabled={!userCode.trim()}
                     className="w-full py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-xl font-bold mb-6"
                   >
-                    Nộp bài
+                    {t('nav.home') === 'Home' ? 'Submit' : 'Nộp bài'}
                   </button>
 
                   {/* Gợi ý */}
                   {selectedLesson.content?.hints && selectedLesson.content.hints.length > 0 && (
                     <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-5 mb-6">
-                      <h3 className="font-bold text-emerald-400 mb-3">💡 Gợi ý</h3>
+                      <h3 className="font-bold text-emerald-400 mb-3">💡 {t('nav.home') === 'Home' ? 'Hints' : 'Gợi ý'}</h3>
                       <ul className="space-y-2">
                         {selectedLesson.content.hints.map((hint, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-gray-300">
@@ -988,7 +1007,7 @@ export const Courses = () => {
                   {selectedLesson.content?.solution && (
                     <details className="mb-6">
                       <summary className="cursor-pointer bg-green-500/10 border border-green-500/30 rounded-xl p-4 text-green-400 font-bold">
-                        🔓 Xem lời giải (click để mở)
+                        🔓 {t('nav.home') === 'Home' ? 'View Solution (click to expand)' : 'Xem lời giải (click để mở)'}
                       </summary>
                       <pre className="bg-gray-900 rounded-b-xl p-4 overflow-x-auto mt-0 border border-t-0 border-green-500/30">
                         <code className="text-green-400 text-sm whitespace-pre-wrap">
@@ -1024,7 +1043,7 @@ export const Courses = () => {
               {/* Mô tả */}
               {selectedLesson.description && selectedLesson.lesson_type === 'video' && (
                 <div className="bg-gray-900/50 rounded-xl p-4 mb-6">
-                  <h3 className="font-bold text-white mb-2">📖 Mô tả bài học</h3>
+                  <h3 className="font-bold text-white mb-2">📖 {t('nav.home') === 'Home' ? 'Lesson Description' : 'Mô tả bài học'}</h3>
                   <p className="text-gray-300">{selectedLesson.description}</p>
                 </div>
               )}
@@ -1043,11 +1062,11 @@ export const Courses = () => {
                           }}
                           className="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-lg"
                         >
-                          ✓ Hoàn thành bài tập
+                          ✓ {t('nav.home') === 'Home' ? 'Complete Exercise' : 'Hoàn thành bài tập'}
                         </button>
                       ) : (
                         <div className="text-center py-4 bg-gray-700/50 text-gray-400 rounded-xl font-bold text-lg">
-                          🔒 Nộp bài đúng để hoàn thành
+                          🔒 {t('nav.home') === 'Home' ? 'Submit correct answer to complete' : 'Nộp bài đúng để hoàn thành'}
                         </div>
                       )
                     ) : (
@@ -1059,13 +1078,13 @@ export const Courses = () => {
                         }}
                         className="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-lg"
                       >
-                        ✓ Hoàn thành bài học
+                        ✓ {t('nav.home') === 'Home' ? 'Complete Lesson' : 'Hoàn thành bài học'}
                       </button>
                     )}
                   </>
                 ) : (
                   <div className="text-center py-4 bg-green-500/20 text-green-400 rounded-xl font-bold text-lg">
-                    ✓ Đã hoàn thành bài học này
+                    ✓ {t('nav.home') === 'Home' ? 'This lesson has been completed' : 'Đã hoàn thành bài học này'}
                   </div>
                 )}
               </div>

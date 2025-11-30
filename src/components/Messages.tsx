@@ -5,6 +5,7 @@ import {
   Users, Palette, Search as SearchIcon, Play, Volume2, Loader2
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 
 // Emoji categories
@@ -18,12 +19,12 @@ const EMOJI_CATEGORIES = [
 
 // Chat themes
 const CHAT_THEMES = [
-  { id: 'default', name: 'Mặc định', gradient: 'from-emerald-400 to-emerald-500', bg: 'bg-gray-900/95' },
-  { id: 'ocean', name: 'Đại dương', gradient: 'from-blue-400 to-cyan-500', bg: 'bg-slate-900/95' },
-  { id: 'sunset', name: 'Hoàng hôn', gradient: 'from-green-400 to-pink-500', bg: 'bg-gray-900/95' },
-  { id: 'forest', name: 'Rừng xanh', gradient: 'from-green-400 to-emerald-500', bg: 'bg-gray-900/95' },
-  { id: 'purple', name: 'Tím mộng', gradient: 'from-purple-400 to-pink-500', bg: 'bg-gray-900/95' },
-  { id: 'fire', name: 'Lửa', gradient: 'from-red-500 to-green-500', bg: 'bg-gray-900/95' },
+  { id: 'default', name: 'Default', nameVi: 'Mặc định', gradient: 'from-emerald-400 to-emerald-500', bg: 'bg-gray-900/95' },
+  { id: 'ocean', name: 'Ocean', nameVi: 'Đại dương', gradient: 'from-blue-400 to-cyan-500', bg: 'bg-slate-900/95' },
+  { id: 'sunset', name: 'Sunset', nameVi: 'Hoàng hôn', gradient: 'from-green-400 to-pink-500', bg: 'bg-gray-900/95' },
+  { id: 'forest', name: 'Forest', nameVi: 'Rừng xanh', gradient: 'from-green-400 to-emerald-500', bg: 'bg-gray-900/95' },
+  { id: 'purple', name: 'Purple Dream', nameVi: 'Tím mộng', gradient: 'from-purple-400 to-pink-500', bg: 'bg-gray-900/95' },
+  { id: 'fire', name: 'Fire', nameVi: 'Lửa', gradient: 'from-red-500 to-green-500', bg: 'bg-gray-900/95' },
 ];
 
 const REACTION_EMOJIS = ['❤️', '😂', '😮', '😢', '😡', '👍'];
@@ -68,6 +69,7 @@ type GroupChat = {
 
 export const Messages = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedFriend, setSelectedFriend] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);

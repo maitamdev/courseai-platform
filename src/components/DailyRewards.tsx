@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Calendar, Gift, Flame, Coins, Star, Sparkles, Crown, Loader2, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 
 type DayReward = {
@@ -23,6 +24,7 @@ const DAILY_REWARDS: DayReward[] = [
 
 export const DailyRewards = () => {
   const { user, profile, refreshProfile } = useAuth();
+  const { t } = useLanguage();
   const [currentStreak, setCurrentStreak] = useState(0);
   const [canClaim, setCanClaim] = useState(false);
   const [claiming, setClaiming] = useState(false);
@@ -228,13 +230,13 @@ export const DailyRewards = () => {
             <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-base sm:text-xl font-bold text-white">Điểm Danh Hàng Ngày</h3>
-            <p className="text-gray-400 text-xs sm:text-sm">Đăng nhập mỗi ngày để nhận thưởng!</p>
+            <h3 className="text-base sm:text-xl font-bold text-white">{t('nav.home') === 'Home' ? 'Daily Check-in' : 'Điểm Danh Hàng Ngày'}</h3>
+            <p className="text-gray-400 text-xs sm:text-sm">{t('nav.home') === 'Home' ? 'Log in daily to claim rewards!' : 'Đăng nhập mỗi ngày để nhận thưởng!'}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-green-500/20 rounded-lg sm:rounded-xl self-start sm:self-auto">
           <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-          <span className="font-bold text-green-400 text-sm sm:text-base">{currentStreak} ngày</span>
+          <span className="font-bold text-green-400 text-sm sm:text-base">{currentStreak} {t('nav.home') === 'Home' ? 'days' : 'ngày'}</span>
         </div>
       </div>
 
@@ -266,7 +268,7 @@ export const DailyRewards = () => {
                   <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-400" />
                 )}
               </div>
-              <div className="text-[10px] sm:text-xs text-gray-400">Ngày {reward.day}</div>
+              <div className="text-[10px] sm:text-xs text-gray-400">{t('nav.home') === 'Home' ? `Day ${reward.day}` : `Ngày ${reward.day}`}</div>
               <div className="text-[10px] sm:text-xs text-emerald-400 font-bold">+{reward.coins}</div>
               {reward.bonus && (
                 <div className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 px-1 sm:px-1.5 py-0.5 bg-emerald-500 text-[8px] sm:text-[10px] font-bold text-gray-900 rounded">
@@ -293,12 +295,12 @@ export const DailyRewards = () => {
         ) : canClaim ? (
           <>
             <Gift className="w-4 h-4 sm:w-5 sm:h-5" />
-            Nhận Thưởng Ngày {(currentStreak % 7) + 1}
+            {t('nav.home') === 'Home' ? `Claim Day ${(currentStreak % 7) + 1} Reward` : `Nhận Thưởng Ngày ${(currentStreak % 7) + 1}`}
           </>
         ) : (
           <>
             <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>Đã nhận hôm nay</span>
+            <span>{t('nav.home') === 'Home' ? 'Already claimed today' : 'Đã nhận hôm nay'}</span>
           </>
         )}
       </button>
@@ -308,12 +310,12 @@ export const DailyRewards = () => {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowReward(false)}>
           <div className="bg-gradient-to-br from-emerald-900 to-green-900 rounded-3xl p-8 max-w-sm w-full text-center border-2 border-emerald-500/50 animate-bounce-in">
             <Sparkles className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-black text-white mb-2">Phần Thưởng!</h2>
-            <p className="text-gray-300 mb-6">Ngày {currentStreak} - Streak tiếp tục!</p>
+            <h2 className="text-2xl font-black text-white mb-2">{t('nav.home') === 'Home' ? 'Reward!' : 'Phần Thưởng!'}</h2>
+            <p className="text-gray-300 mb-6">{t('nav.home') === 'Home' ? `Day ${currentStreak} - Streak continues!` : `Ngày ${currentStreak} - Streak tiếp tục!`}</p>
             <div className="flex justify-center gap-6 mb-6">
               <div className="text-center">
                 <div className="text-3xl font-black text-emerald-400">+{claimedReward.coins}</div>
-                <div className="text-sm text-gray-400 flex items-center gap-1 justify-center"><Coins className="w-4 h-4" /> Xu</div>
+                <div className="text-sm text-gray-400 flex items-center gap-1 justify-center"><Coins className="w-4 h-4" /> {t('nav.home') === 'Home' ? 'Coins' : 'Xu'}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-black text-purple-400">+{claimedReward.xp}</div>
@@ -321,7 +323,7 @@ export const DailyRewards = () => {
               </div>
             </div>
             <button onClick={() => setShowReward(false)} className="px-6 py-3 bg-white/20 hover:bg-white/30 text-white rounded-xl font-bold">
-              Tuyệt vời!
+              {t('nav.home') === 'Home' ? 'Awesome!' : 'Tuyệt vời!'}
             </button>
           </div>
         </div>

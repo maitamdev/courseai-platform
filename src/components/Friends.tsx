@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Users, UserPlus, Search, Trophy, MessageCircle, X, Crown, Zap, Coins, Star, TrendingUp, UserCheck, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 
 type Friend = {
@@ -35,6 +36,7 @@ type LeaderboardUser = {
 
 export const Friends = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'friends' | 'requests' | 'search' | 'leaderboard'>('friends');
   const [friends, setFriends] = useState<Friend[]>([]);
   const [requests, setRequests] = useState<FriendRequest[]>([]);
@@ -110,7 +112,7 @@ export const Friends = () => {
   const sendFriendRequest = async (receiverId: string) => {
     if (!user) return;
     await supabase.from('friend_requests').insert({ sender_id: user.id, receiver_id: receiverId, status: 'pending' });
-    alert('Đã gửi lời mời kết bạn!');
+    alert(t('nav.home') === 'Home' ? 'Friend request sent!' : 'Đã gửi lời mời kết bạn!');
   };
 
   const acceptRequest = async (requestId: string, _senderId: string) => {
@@ -125,7 +127,8 @@ export const Friends = () => {
   };
 
   const unfriend = async (friendId: string, friendName: string) => {
-    if (!user || !confirm(`Hủy kết bạn với ${friendName}?`)) return;
+    const confirmMsg = t('nav.home') === 'Home' ? `Unfriend ${friendName}?` : `Hủy kết bạn với ${friendName}?`;
+    if (!user || !confirm(confirmMsg)) return;
     await supabase.from('friendships').delete().eq('user_id', user.id).eq('friend_id', friendId);
     await supabase.from('friendships').delete().eq('user_id', friendId).eq('friend_id', user.id);
     fetchFriends();
@@ -139,10 +142,10 @@ export const Friends = () => {
   const formatTime = (date: string) => {
     const diff = Date.now() - new Date(date).getTime();
     const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins} phút trước`;
+    if (mins < 60) return t('nav.home') === 'Home' ? `${mins} minutes ago` : `${mins} phút trước`;
     const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours} giờ trước`;
-    return `${Math.floor(hours / 24)} ngày trước`;
+    if (hours < 24) return t('nav.home') === 'Home' ? `${hours} hours ago` : `${hours} giờ trước`;
+    return t('nav.home') === 'Home' ? `${Math.floor(hours / 24)} days ago` : `${Math.floor(hours / 24)} ngày trước`;
   };
 
   return (

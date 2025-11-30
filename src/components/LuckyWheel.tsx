@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Gift, RotateCw, Coins, Star, Gem, Crown, Trophy, Sparkles, Zap, Award } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 
 type Prize = {
   id: number;
   label: string;
+  labelEn: string;
   value: number;
   type: 'coins' | 'xp';
   color: string;
@@ -14,14 +16,14 @@ type Prize = {
 };
 
 const PRIZES: Prize[] = [
-  { id: 1, label: '5 Xu', value: 5, type: 'coins', color: '#10b981', iconType: 'coins', probability: 25 },
-  { id: 2, label: '10 XP', value: 10, type: 'xp', color: '#8b5cf6', iconType: 'star', probability: 25 },
-  { id: 3, label: '15 Xu', value: 15, type: 'coins', color: '#10b981', iconType: 'coins', probability: 20 },
-  { id: 4, label: '25 XP', value: 25, type: 'xp', color: '#8b5cf6', iconType: 'sparkles', probability: 15 },
-  { id: 5, label: '30 Xu', value: 30, type: 'coins', color: '#10b981', iconType: 'gem', probability: 8 },
-  { id: 6, label: '50 XP', value: 50, type: 'xp', color: '#8b5cf6', iconType: 'zap', probability: 5 },
-  { id: 7, label: '100 Xu', value: 100, type: 'coins', color: '#ef4444', iconType: 'crown', probability: 1.5 },
-  { id: 8, label: '200 XP', value: 200, type: 'xp', color: '#ef4444', iconType: 'trophy', probability: 0.5 },
+  { id: 1, label: '5 Xu', labelEn: '5 Coins', value: 5, type: 'coins', color: '#10b981', iconType: 'coins', probability: 25 },
+  { id: 2, label: '10 XP', labelEn: '10 XP', value: 10, type: 'xp', color: '#8b5cf6', iconType: 'star', probability: 25 },
+  { id: 3, label: '15 Xu', labelEn: '15 Coins', value: 15, type: 'coins', color: '#10b981', iconType: 'coins', probability: 20 },
+  { id: 4, label: '25 XP', labelEn: '25 XP', value: 25, type: 'xp', color: '#8b5cf6', iconType: 'sparkles', probability: 15 },
+  { id: 5, label: '30 Xu', labelEn: '30 Coins', value: 30, type: 'coins', color: '#10b981', iconType: 'gem', probability: 8 },
+  { id: 6, label: '50 XP', labelEn: '50 XP', value: 50, type: 'xp', color: '#8b5cf6', iconType: 'zap', probability: 5 },
+  { id: 7, label: '100 Xu', labelEn: '100 Coins', value: 100, type: 'coins', color: '#ef4444', iconType: 'crown', probability: 1.5 },
+  { id: 8, label: '200 XP', labelEn: '200 XP', value: 200, type: 'xp', color: '#ef4444', iconType: 'trophy', probability: 0.5 },
 ];
 
 const PrizeIcon = ({ type, className, style }: { type: Prize['iconType']; className?: string; style?: React.CSSProperties }) => {
@@ -41,6 +43,7 @@ const PrizeIcon = ({ type, className, style }: { type: Prize['iconType']; classN
 
 export const LuckyWheel = () => {
   const { user, profile, refreshProfile } = useAuth();
+  const { t } = useLanguage();
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [prize, setPrize] = useState<Prize | null>(null);

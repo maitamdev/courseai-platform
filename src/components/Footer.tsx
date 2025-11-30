@@ -1,9 +1,11 @@
 import { Code2, Facebook, Twitter, Youtube, Mail, Phone, MapPin, Send, Heart, Sparkles, Github, Linkedin, Instagram } from 'lucide-react';
 import { useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const Footer = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,8 +39,8 @@ export const Footer = () => {
                   <Sparkles className="w-6 h-6 text-emerald-400 animate-pulse" />
                   <span className="text-emerald-400 font-semibold text-sm uppercase tracking-wider">Newsletter</span>
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold mb-2">Đăng ký nhận tin mới</h3>
-                <p className="text-gray-400 max-w-md">Nhận thông báo về khóa học mới, tips lập trình và ưu đãi độc quyền!</p>
+                <h3 className="text-2xl md:text-3xl font-bold mb-2">{t('nav.home') === 'Home' ? 'Subscribe to Newsletter' : 'Đăng ký nhận tin mới'}</h3>
+                <p className="text-gray-400 max-w-md">{t('nav.home') === 'Home' ? 'Get notifications about new courses, coding tips and exclusive offers!' : 'Nhận thông báo về khóa học mới, tips lập trình và ưu đãi độc quyền!'}</p>
               </div>
               <form onSubmit={handleSubscribe} className="w-full lg:w-auto">
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -48,7 +50,7 @@ export const Footer = () => {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Nhập email của bạn"
+                      placeholder={t('nav.home') === 'Home' ? 'Enter your email' : 'Nhập email của bạn'}
                       className="w-full sm:w-80 pl-12 pr-4 py-4 rounded-xl bg-gray-900/80 border border-gray-700 text-white placeholder-gray-500 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none transition-all"
                     />
                   </div>
@@ -58,12 +60,12 @@ export const Footer = () => {
                   >
                     {subscribed ? (
                       <>
-                        <span>Đã đăng ký!</span>
+                        <span>{t('nav.home') === 'Home' ? 'Subscribed!' : 'Đã đăng ký!'}</span>
                         <Heart className="w-5 h-5 text-red-300 animate-pulse" />
                       </>
                     ) : (
                       <>
-                        <span>Đăng ký</span>
+                        <span>{t('nav.home') === 'Home' ? 'Subscribe' : 'Đăng ký'}</span>
                         <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </>
                     )}
@@ -94,7 +96,9 @@ export const Footer = () => {
               </div>
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              Nền tảng học lập trình thông minh với AI, giúp bạn học code hiệu quả và thú vị như chơi game.
+              {t('nav.home') === 'Home' 
+                ? 'Smart AI-powered programming learning platform that makes learning to code effective and fun like playing games.'
+                : 'Nền tảng học lập trình thông minh với AI, giúp bạn học code hiệu quả và thú vị như chơi game.'}
             </p>
             
             {/* Social Links */}
@@ -122,16 +126,22 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-bold mb-6 flex items-center gap-2">
               <span className="w-8 h-0.5 bg-gradient-to-r from-emerald-500 to-transparent rounded-full"></span>
-              Khóa học
+              {t('nav.home') === 'Home' ? 'Courses' : 'Khóa học'}
             </h4>
             <ul className="space-y-3">
-              {[
+              {(t('nav.home') === 'Home' ? [
+                'JavaScript Basics',
+                'React & React Native',
+                'Python for Beginners',
+                'Full-Stack Development',
+                'Data Structures & Algorithms',
+              ] : [
                 'JavaScript cơ bản',
                 'React & React Native',
                 'Python cho người mới',
                 'Full-Stack Development',
                 'Data Structures & Algorithms',
-              ].map((item, idx) => (
+              ]).map((item, idx) => (
                 <li key={idx}>
                   <a href="#" className="group flex items-center gap-2 text-gray-400 hover:text-emerald-400 transition-colors">
                     <span className="w-1.5 h-1.5 bg-gray-600 rounded-full group-hover:bg-emerald-500 transition-colors"></span>
@@ -146,16 +156,22 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-bold mb-6 flex items-center gap-2">
               <span className="w-8 h-0.5 bg-gradient-to-r from-emerald-500 to-transparent rounded-full"></span>
-              Hỗ trợ
+              {t('nav.home') === 'Home' ? 'Support' : 'Hỗ trợ'}
             </h4>
             <ul className="space-y-3">
-              {[
+              {(t('nav.home') === 'Home' ? [
+                'Help Center',
+                'FAQ',
+                'Terms of Service',
+                'Privacy Policy',
+                'Contact Us',
+              ] : [
                 'Trung tâm trợ giúp',
                 'Câu hỏi thường gặp',
                 'Điều khoản sử dụng',
                 'Chính sách bảo mật',
                 'Liên hệ với chúng tôi',
-              ].map((item, idx) => (
+              ]).map((item, idx) => (
                 <li key={idx}>
                   <a href="#" className="group flex items-center gap-2 text-gray-400 hover:text-emerald-400 transition-colors">
                     <span className="w-1.5 h-1.5 bg-gray-600 rounded-full group-hover:bg-emerald-500 transition-colors"></span>
@@ -170,7 +186,7 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-bold mb-6 flex items-center gap-2">
               <span className="w-8 h-0.5 bg-gradient-to-r from-emerald-500 to-transparent rounded-full"></span>
-              Liên hệ
+              {t('nav.home') === 'Home' ? 'Contact' : 'Liên hệ'}
             </h4>
             <ul className="space-y-4">
               <li>
@@ -211,7 +227,7 @@ export const Footer = () => {
               <Heart className="w-4 h-4 text-red-500 animate-pulse" /> 
             </p>
             <div className="flex flex-wrap justify-center gap-6 text-sm">
-              {['Về chúng tôi', 'Blog', 'Tuyển dụng', 'Đối tác'].map((item, idx) => (
+              {(t('nav.home') === 'Home' ? ['About Us', 'Blog', 'Careers', 'Partners'] : ['Về chúng tôi', 'Blog', 'Tuyển dụng', 'Đối tác']).map((item, idx) => (
                 <a 
                   key={idx}
                   href="#" 

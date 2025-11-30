@@ -148,7 +148,7 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
                 isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
               }`}
             >
-              BẮT ĐẦU KHÓA HỌC
+              {t('nav.home') === 'Home' ? 'START LEARNING' : 'BẮT ĐẦU KHÓA HỌC'}
             </button>
           </div>
 
@@ -177,18 +177,37 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
           <div className="text-center mb-8 sm:mb-12 md:mb-16">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-emerald-400/20 rounded-full mb-3 sm:mb-4">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
-              <span className="text-emerald-400 font-bold text-xs sm:text-sm">Tại Sao Chọn CodeMind AI?</span>
+              <span className="text-emerald-400 font-bold text-xs sm:text-sm">{t('nav.home') === 'Home' ? 'Why Choose CodeMind AI?' : 'Tại Sao Chọn CodeMind AI?'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 sm:mb-4">
-              Học Lập Trình Hiệu Quả Hơn
+              {t('nav.home') === 'Home' ? 'Learn Programming More Effectively' : 'Học Lập Trình Hiệu Quả Hơn'}
             </h2>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto px-2">
-              Nền tảng được thiết kế để tối ưu hóa trải nghiệm học tập của bạn
+              {t('nav.home') === 'Home' ? 'Platform designed to optimize your learning experience' : 'Nền tảng được thiết kế để tối ưu hóa trải nghiệm học tập của bạn'}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {[
+            {(t('nav.home') === 'Home' ? [
+              {
+                icon: Zap,
+                title: 'Fast Learning',
+                description: 'Optimized learning methods help you absorb knowledge 3x faster.',
+                color: 'from-emerald-400 to-green-500'
+              },
+              {
+                icon: Target,
+                title: 'Clear Roadmap',
+                description: 'Each step is designed in detail, helping you go from basic to advanced.',
+                color: 'from-blue-400 to-cyan-500'
+              },
+              {
+                icon: Trophy,
+                title: 'Prestigious Certificate',
+                description: 'Receive recognized certificates upon course completion.',
+                color: 'from-purple-400 to-pink-500'
+              }
+            ] : [
               {
                 icon: Zap,
                 title: 'Học Tập Nhanh Chóng',
@@ -207,7 +226,7 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
                 description: 'Nhận chứng chỉ được công nhận sau khi hoàn thành khóa học.',
                 color: 'from-purple-400 to-pink-500'
               }
-            ].map((feature, index) => {
+            ]).map((feature, index) => {
               const Icon = feature.icon;
               return (
                 <ScrollReveal key={index}>
@@ -238,12 +257,17 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
       <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 w-full py-12 sm:py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
-            {[
+            {(t('nav.home') === 'Home' ? [
+              { number: '10K+', label: 'Students', icon: Users, color: 'from-blue-500 to-cyan-500' },
+              { number: '50+', label: 'Courses', icon: BookOpen, color: 'from-purple-500 to-pink-500' },
+              { number: '100+', label: 'Lessons', icon: Rocket, color: 'from-green-500 to-emerald-500' },
+              { number: '4.9★', label: 'Rating', icon: Star, color: 'from-emerald-400 to-green-500' }
+            ] : [
               { number: '10K+', label: 'Học viên', icon: Users, color: 'from-blue-500 to-cyan-500' },
               { number: '50+', label: 'Khóa học', icon: BookOpen, color: 'from-purple-500 to-pink-500' },
               { number: '100+', label: 'Bài học', icon: Rocket, color: 'from-green-500 to-emerald-500' },
               { number: '4.9★', label: 'Đánh giá', icon: Star, color: 'from-emerald-400 to-green-500' }
-            ].map((stat, index) => {
+            ]).map((stat, index) => {
               const Icon = stat.icon;
               return (
                 <ScrollReveal key={index}>
@@ -272,13 +296,13 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
           <div className="text-center mb-8 sm:mb-12 md:mb-16">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-400/20 rounded-full mb-3 sm:mb-4">
               <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
-              <span className="text-blue-400 font-bold text-xs sm:text-sm">Khóa Học Nổi Bật</span>
+              <span className="text-blue-400 font-bold text-xs sm:text-sm">{t('nav.home') === 'Home' ? 'Featured Courses' : 'Khóa Học Nổi Bật'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 sm:mb-4">
-              Khóa Học Được Yêu Thích Nhất
+              {t('nav.home') === 'Home' ? 'Most Popular Courses' : 'Khóa Học Được Yêu Thích Nhất'}
             </h2>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/70 max-w-2xl mx-auto px-2">
-              Được hàng ngàn học viên tin tưởng và đánh giá cao
+              {t('nav.home') === 'Home' ? 'Trusted and highly rated by thousands of students' : 'Được hàng ngàn học viên tin tưởng và đánh giá cao'}
             </p>
           </div>
 
@@ -303,7 +327,11 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
               // Mỗi khóa học lấy ảnh khác nhau dựa trên index
               const getImage = () => allImages[index % allImages.length];
 
-              const levelMap: Record<string, string> = {
+              const levelMap: Record<string, string> = t('nav.home') === 'Home' ? {
+                'beginner': 'Beginner',
+                'intermediate': 'Intermediate',
+                'advanced': 'Advanced'
+              } : {
                 'beginner': 'Cơ bản',
                 'intermediate': 'Trung cấp',
                 'advanced': 'Nâng cao'
@@ -344,10 +372,10 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
                     <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/60 mb-3 sm:mb-4">
                       <div className="flex items-center gap-1">
                         <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
-                        <span>Khóa học</span>
+                        <span>{t('nav.home') === 'Home' ? 'Course' : 'Khóa học'}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <span className="text-emerald-400 font-bold">{course.price_coins} xu</span>
+                        <span className="text-emerald-400 font-bold">{course.price_coins} {t('nav.home') === 'Home' ? 'coins' : 'xu'}</span>
                       </div>
                     </div>
 
@@ -362,7 +390,7 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
                       }}
                       className="w-full py-2.5 sm:py-3 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold text-sm sm:text-base rounded-lg sm:rounded-xl transition-all hover:shadow-lg"
                     >
-                      Xem Chi Tiết
+                      {t('nav.home') === 'Home' ? 'View Details' : 'Xem Chi Tiết'}
                     </button>
                   </div>
                 </div>
@@ -378,15 +406,37 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
           <div className="text-center mb-8 sm:mb-12 md:mb-16">
             <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-purple-400/20 rounded-full mb-3 sm:mb-4">
               <Star className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
-              <span className="text-purple-400 font-bold text-xs sm:text-sm">Học Viên Nói Gì</span>
+              <span className="text-purple-400 font-bold text-xs sm:text-sm">{t('nav.home') === 'Home' ? 'What Students Say' : 'Học Viên Nói Gì'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white mb-3 sm:mb-4">
-              Câu Chuyện Thành Công
+              {t('nav.home') === 'Home' ? 'Success Stories' : 'Câu Chuyện Thành Công'}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {[
+            {(t('nav.home') === 'Home' ? [
+              {
+                name: 'John Smith',
+                role: 'Frontend Developer',
+                avatar: '👨‍💻',
+                rating: 5,
+                comment: 'The React course helped me land my dream job. Very practical and easy to understand!'
+              },
+              {
+                name: 'Sarah Johnson',
+                role: 'Data Scientist',
+                avatar: '👩‍💼',
+                rating: 5,
+                comment: 'Python for AI is the best course I\'ve ever taken. The instructor is very enthusiastic!'
+              },
+              {
+                name: 'Mike Williams',
+                role: 'Full Stack Developer',
+                avatar: '👨‍🎓',
+                rating: 5,
+                comment: 'From zero to hero in just 6 months. CodeMind AI truly changed my life!'
+              }
+            ] : [
               {
                 name: 'Nguyễn Văn A',
                 role: 'Frontend Developer',
@@ -408,7 +458,7 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
                 rating: 5,
                 comment: 'Từ zero đến hero chỉ trong 6 tháng. CodeMind AI thực sự thay đổi cuộc đời tôi!'
               }
-            ].map((testimonial, index) => (
+            ]).map((testimonial, index) => (
               <div key={index} className="bg-gray-700/50 backdrop-blur-sm rounded-xl sm:rounded-2xl p-5 sm:p-6 md:p-8 border border-gray-600 hover:border-emerald-400 transition-all hover:scale-[1.02] sm:hover:scale-105">
                 <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
                   <div className="text-3xl sm:text-4xl md:text-5xl">{testimonial.avatar}</div>
@@ -434,15 +484,19 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full mb-4 sm:mb-6">
             <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-            <span className="text-white font-bold text-xs sm:text-sm">Ưu Đãi Đặc Biệt</span>
+            <span className="text-white font-bold text-xs sm:text-sm">{t('nav.home') === 'Home' ? 'Special Offer' : 'Ưu Đãi Đặc Biệt'}</span>
           </div>
           
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-tight">
-            Bắt Đầu Hành Trình<br />Lập Trình Của Bạn
+            {t('nav.home') === 'Home' ? 'Start Your Programming Journey' : 'Bắt Đầu Hành Trình'}<br />{t('nav.home') === 'Home' ? 'Today' : 'Lập Trình Của Bạn'}
           </h2>
           
           <p className="text-sm sm:text-base md:text-xl lg:text-2xl text-white/90 mb-6 sm:mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed px-2">
-            Tham gia cùng <span className="font-bold">10,000+ học viên</span> đang học lập trình hiệu quả mỗi ngày
+            {t('nav.home') === 'Home' ? (
+              <>Join <span className="font-bold">10,000+ students</span> learning programming effectively every day</>
+            ) : (
+              <>Tham gia cùng <span className="font-bold">10,000+ học viên</span> đang học lập trình hiệu quả mỗi ngày</>
+            )}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
@@ -450,29 +504,29 @@ export const HomePage = ({ onGetStarted, onViewCourse }: HomePageProps) => {
               onClick={onGetStarted}
               className="group w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 bg-gray-900 hover:bg-gray-800 text-white rounded-lg sm:rounded-xl font-bold text-sm sm:text-base md:text-lg transition-all hover:scale-105 shadow-2xl flex items-center justify-center gap-2 sm:gap-3"
             >
-              <span>ĐĂNG KÝ NGAY</span>
+              <span>{t('nav.home') === 'Home' ? 'SIGN UP NOW' : 'ĐĂNG KÝ NGAY'}</span>
               <Rocket className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
               onClick={onGetStarted}
               className="w-full sm:w-auto px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-lg sm:rounded-xl font-bold text-sm sm:text-base md:text-lg transition-all border-2 border-white/30 hover:border-white/50"
             >
-              Xem Demo
+              {t('nav.home') === 'Home' ? 'View Demo' : 'Xem Demo'}
             </button>
           </div>
 
           <div className="mt-8 sm:mt-10 md:mt-12 flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-6 md:gap-8 text-white/90">
             <div className="flex items-center justify-center gap-2">
               <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">Miễn phí 7 ngày</span>
+              <span className="font-medium text-sm sm:text-base">{t('nav.home') === 'Home' ? '7 days free trial' : 'Miễn phí 7 ngày'}</span>
             </div>
             <div className="flex items-center justify-center gap-2">
               <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">Không cần thẻ tín dụng</span>
+              <span className="font-medium text-sm sm:text-base">{t('nav.home') === 'Home' ? 'No credit card required' : 'Không cần thẻ tín dụng'}</span>
             </div>
             <div className="flex items-center justify-center gap-2">
               <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="font-medium text-sm sm:text-base">Hủy bất cứ lúc nào</span>
+              <span className="font-medium text-sm sm:text-base">{t('nav.home') === 'Home' ? 'Cancel anytime' : 'Hủy bất cứ lúc nào'}</span>
             </div>
           </div>
         </div>

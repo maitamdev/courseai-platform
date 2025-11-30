@@ -12,6 +12,7 @@ import {
   LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 
 type QuestType = 'lesson' | 'game' | 'social' | 'login';
@@ -44,8 +45,17 @@ const DEFAULT_QUESTS: Omit<Quest, 'current' | 'claimed'>[] = [
   { id: '5', title: 'Nhắn tin', description: 'Gửi 3 tin nhắn cho bạn bè', iconName: 'MessageCircle', target: 3, reward: { coins: 10, xp: 20 }, type: 'social' },
 ];
 
+const DEFAULT_QUESTS_EN: Omit<Quest, 'current' | 'claimed'>[] = [
+  { id: '1', title: 'Login', description: 'Log into the system', iconName: 'Zap', target: 1, reward: { coins: 5, xp: 10 }, type: 'login' },
+  { id: '2', title: 'Complete 2 lessons', description: 'Finish 2 lessons', iconName: 'BookOpen', target: 2, reward: { coins: 20, xp: 40 }, type: 'lesson' },
+  { id: '3', title: 'Play a game', description: 'Play any game', iconName: 'Gamepad2', target: 1, reward: { coins: 15, xp: 30 }, type: 'game' },
+  { id: '4', title: 'Add friend', description: 'Send 1 friend request', iconName: 'Users', target: 1, reward: { coins: 10, xp: 20 }, type: 'social' },
+  { id: '5', title: 'Send messages', description: 'Send 3 messages to friends', iconName: 'MessageCircle', target: 3, reward: { coins: 10, xp: 20 }, type: 'social' },
+];
+
 export const DailyQuests = () => {
   const { user, profile, refreshProfile } = useAuth();
+  const { t } = useLanguage();
   const [quests, setQuests] = useState<Quest[]>([]);
   const [loading, setLoading] = useState(true);
 

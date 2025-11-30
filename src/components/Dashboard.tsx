@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Gift } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { AIAssistant } from './AIAssistant';
 import { Header } from './Header';
 import { Footer } from './Footer';
@@ -23,6 +24,7 @@ type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'friends' | 'mes
 
 export const Dashboard = () => {
   const { user } = useAuth(); // Get user from auth context
+  const { t } = useLanguage();
   
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     try {
@@ -157,7 +159,7 @@ export const Dashboard = () => {
               <div key="rewards" className="animate-fadeIn space-y-6">
                 <h1 className="text-3xl font-black text-white mb-6 flex items-center gap-3">
                   <Gift className="w-8 h-8 text-emerald-400" />
-                  Phần Thưởng & Nhiệm Vụ
+                  {t('nav.home') === 'Home' ? 'Rewards & Quests' : 'Phần Thưởng & Nhiệm Vụ'}
                 </h1>
                 <div className="grid lg:grid-cols-2 gap-6">
                   <DailyRewards />

@@ -4,6 +4,7 @@ import {
   Calendar, Timer, Award, ChevronRight, Loader2
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 
 type Event = {
@@ -42,6 +43,7 @@ type LeaderboardEntry = {
 
 export const Events = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);

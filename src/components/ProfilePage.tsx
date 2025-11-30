@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { User, BookOpen, Coins, Calendar, LogOut, Award, ShoppingBag, Camera, Code2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { AvatarSelector } from './AvatarSelector';
 import { Achievements } from './Achievements';
 import { CodePlayground } from './CodePlayground';
@@ -26,6 +27,7 @@ type CoinTransaction = {
 
 export const ProfilePage = () => {
   const { user, profile, refreshProfile } = useAuth();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'info' | 'courses' | 'transactions' | 'achievements' | 'playground'>('info');
   const [purchasedCourses, setPurchasedCourses] = useState<PurchasedCourse[]>([]);
   const [transactions, setTransactions] = useState<CoinTransaction[]>([]);
