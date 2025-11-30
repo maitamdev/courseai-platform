@@ -17,7 +17,7 @@ import { SocialFeed } from './SocialFeed';
 import { DailyRewards } from './DailyRewards';
 import { LuckyWheel } from './LuckyWheel';
 import { DailyQuests } from './DailyQuests';
-import { Forum } from './Forum';
+import Forum from './Forum';
 
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'friends' | 'messages' | 'events' | 'social' | 'rewards' | 'forum';
 
