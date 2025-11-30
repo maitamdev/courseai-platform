@@ -22,7 +22,7 @@ import Forum from './Forum';
 type Tab = 'home' | 'lessons' | 'games' | 'coins' | 'profile' | 'friends' | 'messages' | 'events' | 'social' | 'rewards' | 'forum';
 
 export const Dashboard = () => {
-  useAuth(); // Keep auth context active
+  const { user } = useAuth(); // Get user from auth context
   
   const [activeTab, setActiveTab] = useState<Tab>(() => {
     try {
@@ -169,7 +169,7 @@ export const Dashboard = () => {
 
             {activeTab === 'forum' && (
               <div key="forum" className="animate-fadeIn">
-                <Forum />
+                <Forum user={user} />
               </div>
             )}
 
